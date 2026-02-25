@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import Importer from '@/components/Importer';
 import Reader from '@/components/Reader';
@@ -10,7 +8,7 @@ type AppState =
   | { view: 'import' }
   | { view: 'read'; chunks: string[]; title: string; initialChunk: number };
 
-export default function Home() {
+export default function App() {
   const [state, setState] = useState<AppState>({ view: 'import' });
 
   // Restore previous session on first load
@@ -58,4 +56,3 @@ export default function Home() {
 
   return <Importer onTextReady={handleTextReady} />;
 }
-
