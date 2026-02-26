@@ -82,7 +82,7 @@ export default function Reader({ chunks, title, initialChunk = 0, onBack, onPosi
       {/* Scrollable chunk feed */}
       <div
         ref={containerRef}
-        className="flex-1 overflow-y-scroll"
+        className="flex-1 overflow-hidden overflow-y-scroll"
         style={{ scrollSnapType: 'y mandatory' }}
       >
         {/* Top spacer so first chunk starts centered */}
