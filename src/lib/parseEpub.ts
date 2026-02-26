@@ -60,8 +60,78 @@ export async function parseEpub(buffer: ArrayBuffer): Promise<string> {
     if (!root) continue;
 
     root.querySelectorAll("script, style").forEach((el) => el.remove());
-    const text = (root.textContent || "").replace(/\s+/g, " ").trim();
-    if (text.length > 0) textParts.push(text);
+
+    // Helper to serialize element with simple structure and inline styles
+    function serializeNode(node: Node): string {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent || "";
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        return "";
+      }
+      const el = node as HTMLElement;
+      const tag = el.tagName.toLowerCase();
+      let content = Array.from(el.childNodes).map(serializeNode).join("");
+      switch (tag) {
+        case "h1":
+          return `\n\n# ${content.trim()}\n\n`;
+        case "h2":
+          return `\n\n## ${content.trim()}\n\n`;
+        case "h3":
+          return `\n\n### ${content.trim()}\n\n`;
+        case "h4":
+          return `\n\n#### ${content.trim()}\n\n`;
+        case "h5":
+          return `\n\n##### ${content.trim()}\n\n`;
+        case "h6":
+          return `\n\n###### ${content.trim()}\n\n`;
+        case "b":
+        case "strong":
+          return `**${content}**`;
+        case "i":
+        case "em":
+          return `*${content}*`;
+        case "u":
+          return `_${content}_`;
+        case "br":
+          return "\n";
+        case "p":
+          return `\n\n${content.trim()}\n\n`;
+        case "li":
+          return `- ${content.trim()}\n`;
+        case "ul":
+        case "ol":
+          return `\n${content}\n`;
+        default:
+          return content;
+      }
+    }
+
+    // Only serialize block-level elements (p, h1-h6, ul, ol, etc.) at top level
+    const blocks = Array.from(root.children).filter(
+      (el) =>
+        [
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "h5",
+          "h6",
+          "p",
+          "ul",
+          "ol",
+          "blockquote",
+          "pre",
+        ].includes(el.tagName.toLowerCase()),
+    );
+    let part = "";
+    if (blocks.length > 0) {
+      part = blocks.map(serializeNode).join("").replace(/\n{3,}/g, "\n\n");
+    } else {
+      part = serializeNode(root).replace(/\n{3,}/g, "\n\n");
+    }
+    part = part.replace(/[ \t]+/g, " ").replace(/\n +/g, "\n").trim();
+    if (part.length > 0) textParts.push(part);
   }
 
   return textParts.join("\n\n");

@@ -2,8 +2,6 @@
  * Splits a block of text into bite-sized chunks (roughly 1-3 sentences each).
  */
 
-const SENTENCES_PER_CHUNK = 2;
-
 function splitIntoSentences(text: string): string[] {
   // Normalize whitespace and line breaks
   const normalized = text
@@ -28,30 +26,92 @@ function splitIntoSentences(text: string): string[] {
 }
 
 export function chunkText(text: string): string[] {
-  const sentences = splitIntoSentences(text);
-
-  if (sentences.length === 0) {
-    // Fallback: split by paragraphs
-    const paragraphs = text
-      .split(/\n{2,}/)
-      .map((p) => p.trim())
-      .filter((p) => p.length > 0);
-
-    if (paragraphs.length === 0) {
-      // Last resort: split by newlines
-      return text
-        .split("\n")
-        .map((l) => l.trim())
-        .filter((l) => l.length > 0);
-    }
-    return paragraphs;
-  }
-
+  const lines = text.split(/\n/);
   const chunks: string[] = [];
-  for (let i = 0; i < sentences.length; i += SENTENCES_PER_CHUNK) {
-    const group = sentences.slice(i, i + SENTENCES_PER_CHUNK).join(" ");
-    chunks.push(group);
+  let currentChunk: string[] = [];
+
+  function isHeading(line: string): boolean {
+    // Only consider markdown h1 and h2 headings
+    return /^(#|##)\s+.+/.test(line);
   }
 
-  return chunks;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.length === 0) continue;
+    if (isHeading(line)) {
+      if (currentChunk.length > 0) {
+        chunks.push(currentChunk.join(" ").trim());
+        currentChunk = [];
+      }
+      chunks.push(line); // heading is its own chunk
+    } else {
+      currentChunk.push(line);
+    }
+  }
+  if (currentChunk.length > 0) {
+    chunks.push(currentChunk.join(" ").trim());
+  }
+
+  // Now, further split non-heading chunks into sentences as before
+  const finalChunks: string[] = [];
+  for (const chunk of chunks) {
+    if (isHeading(chunk)) {
+      finalChunks.push(chunk);
+    } else {
+      const sentences = splitIntoSentences(chunk);
+      const MIN_CHARS = 80;
+      const HARD_MAX = 600;
+      let i = 0;
+      while (i < sentences.length) {
+        let subChunk = sentences[i];
+        let nextIdx = i + 1;
+        if (subChunk.length > HARD_MAX) {
+          let splitIdx = subChunk.lastIndexOf(" ", HARD_MAX);
+          if (splitIdx === -1 || splitIdx < MIN_CHARS) splitIdx = HARD_MAX;
+          const firstPart = subChunk.slice(0, splitIdx) + "...";
+          const rest = subChunk.slice(splitIdx).trim();
+          finalChunks.push(firstPart);
+          if (rest.length > 0) {
+            sentences.splice(i + 1, 0, rest);
+          }
+          i++;
+          continue;
+        }
+        while (subChunk.length < MIN_CHARS && nextIdx < sentences.length) {
+          const testChunk = subChunk + " " + sentences[nextIdx];
+          if (testChunk.length > HARD_MAX) {
+            break;
+          }
+          subChunk = testChunk;
+          nextIdx++;
+        }
+        if (subChunk.length < MIN_CHARS && nextIdx < sentences.length) {
+          const testChunk = subChunk + " " + sentences[nextIdx];
+          if (testChunk.length <= HARD_MAX) {
+            subChunk = testChunk;
+            nextIdx++;
+          }
+        }
+        while (subChunk.length > HARD_MAX && nextIdx > i + 1) {
+          nextIdx--;
+          subChunk = sentences.slice(i, nextIdx).join(" ");
+        }
+        if (subChunk.length > HARD_MAX) {
+          let splitIdx = subChunk.lastIndexOf(" ", HARD_MAX);
+          if (splitIdx === -1 || splitIdx < MIN_CHARS) splitIdx = HARD_MAX;
+          const firstPart = subChunk.slice(0, splitIdx) + "...";
+          const rest = subChunk.slice(splitIdx).trim();
+          finalChunks.push(firstPart);
+          if (rest.length > 0) {
+            sentences.splice(nextIdx, 0, rest);
+          }
+          i = nextIdx + 1;
+          continue;
+        }
+        finalChunks.push(subChunk);
+        i = nextIdx;
+      }
+    }
+  }
+  return finalChunks;
 }
