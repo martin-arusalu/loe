@@ -19,3 +19,15 @@ body {
   /* Prevent pull-to-refresh interference on mobile */
   overscroll-behavior: none;
 }
+
+/* Disable scrollbars on every element */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE / Edge */
+}
+
+*::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
