@@ -154,9 +154,7 @@ export default function Reader({ chunks, title, initialChunk = 0, onBack, onPosi
               style={{ scrollSnapAlign: 'center' }}
             >
               <div
-                className={`max-w-xl w-full transition-all duration-500 ${
-                  index === curIndex ? 'opacity-100 scale-100' : 'opacity-20 scale-95'
-                }`}
+                className="max-w-xl w-full"
               >
                 <div className="text-stone-100 text-xl md:text-2xl leading-relaxed font-serif text-balance prose prose-invert prose-headings:font-semibold prose-p:my-4 prose-h1:my-6 prose-h2:my-5 prose-h3:my-4 prose-strong:font-bold prose-em:italic prose-ul:my-4 prose-ol:my-4 prose-li:my-1">
                   <Streamdown>{chunks[index]}</Streamdown>
