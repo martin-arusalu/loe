@@ -101,7 +101,7 @@ export default function Reader({ chunks, title, initialChunk = 0, onBack, onPosi
             onClick={onBack}
             className="pointer-events-auto text-stone-500 hover:text-stone-300 transition-colors text-sm whitespace-nowrap min-w-0 flex-shrink-0 flex items-center"
           >
-            ← Back
+            ← Tagasi
           </button>
           {curIndex < chunks.length && (
             <span className="text-stone-500 text-sm tabular-nums whitespace-nowrap min-w-0 flex-shrink-0 flex items-center justify-end">
@@ -136,13 +136,13 @@ export default function Reader({ chunks, title, initialChunk = 0, onBack, onPosi
             >
               <div className="text-center max-w-sm">
                 <div className="text-5xl mb-6">✓</div>
-                <h2 className="text-stone-200 text-2xl font-semibold mb-2">You finished it.</h2>
-                <p className="text-stone-500 mb-8 text-sm">{chunks.length} chunks · {title}</p>
+                <h2 className="text-stone-200 text-2xl font-semibold mb-2">Oled lõpetanud.</h2>
+                <p className="text-stone-500 mb-8 text-sm">{chunks.length} tükki · {title}</p>
                 <button
                   onClick={onBack}
                   className="px-6 py-3 rounded-xl bg-amber-400 text-stone-950 font-semibold hover:bg-amber-300 transition-colors"
                 >
-                  Read something else
+                  Loe midagi muud
                 </button>
               </div>
             </div>
@@ -169,7 +169,7 @@ export default function Reader({ chunks, title, initialChunk = 0, onBack, onPosi
       {curIndex === 0 && (
         <div className="absolute bottom-8 left-0 right-0 flex justify-center pointer-events-none">
           <div className="flex flex-col items-center gap-1 text-stone-600 text-xs animate-bounce">
-            <span>scroll</span>
+            <span>keri</span>
             <span>↓</span>
           </div>
         </div>

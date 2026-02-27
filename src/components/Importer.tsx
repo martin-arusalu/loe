@@ -30,14 +30,14 @@ export default function Importer({ onTextReady }: ImporterProps) {
         }
 
         if (!text.trim()) {
-          setError('No readable text found in the file.');
+          setError('Failist ei leitud loetavat teksti.');
           return;
         }
 
         onTextReady(text, file.name.replace(/\.[^.]+$/, ''));
       } catch (err) {
         console.error(err);
-        setError('Failed to parse the file. Please try a different file.');
+        setError('Faili töötlemine ebaõnnestus. Palun proovi teist faili.');
       } finally {
         setLoading(false);
       }
@@ -65,15 +65,15 @@ export default function Importer({ onTextReady }: ImporterProps) {
   const handlePasteSubmit = () => {
     const text = pasteValue.trim();
     if (!text) return;
-    onTextReady(text, 'Pasted text');
+    onTextReady(text, 'Kleebitud tekst');
     setPasteValue('');
   };
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-12 py-10 gap-10">
       <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-stone-50 mb-2">ReedFeed</h1>
-        <p className="text-stone-400 text-lg">Read anything, one bite at a time.</p>
+        <h1 className="text-4xl font-bold tracking-tight text-stone-50 mb-2">Loe</h1>
+        <p className="text-stone-400 text-lg">Loe kõike, üks amps korraga.</p>
       </div>
 
       {/* Drop zone */}
@@ -84,13 +84,13 @@ export default function Importer({ onTextReady }: ImporterProps) {
       >
         <input {...getInputProps()} />
         {loading ? (
-          <p className="text-stone-400 animate-pulse">Parsing file…</p>
+          <p className="text-stone-400 animate-pulse">Faili töödeldakse…</p>
         ) : isDragActive ? (
-          <p className="text-amber-400 font-medium">Drop it here…</p>
+          <p className="text-amber-400 font-medium">Tõsta siia…</p>
         ) : (
           <>
-            <p className="text-stone-300 font-medium mb-1">Drop a file here, or click to browse</p>
-            <p className="text-stone-500 text-sm">Supports PDF, EPUB, and TXT</p>
+            <p className="text-stone-300 font-medium mb-1">Tõsta fail siia või klõpsa, et sirvida</p>
+            <p className="text-stone-500 text-sm">Toetab PDF, EPUB ja TXT faile</p>
           </>
         )}
       </div>
@@ -102,7 +102,7 @@ export default function Importer({ onTextReady }: ImporterProps) {
       {/* Divider */}
       <div className="flex items-center gap-3 w-full max-w-xl text-stone-600">
         <div className="flex-1 h-px bg-stone-800" />
-        <span className="text-sm">or paste text</span>
+        <span className="text-sm">või kleebi tekst</span>
         <div className="flex-1 h-px bg-stone-800" />
       </div>
 
@@ -111,7 +111,7 @@ export default function Importer({ onTextReady }: ImporterProps) {
         <textarea
           className="w-full h-40 rounded-xl bg-stone-900 border border-stone-700 text-stone-200 p-4 text-sm resize-none
             placeholder:text-stone-600 focus:outline-none focus:border-amber-400 transition-colors"
-          placeholder="Paste your text here…"
+          placeholder="Kleebi oma tekst siia…"
           value={pasteValue}
           onChange={(e) => setPasteValue(e.target.value)}
         />
@@ -121,7 +121,7 @@ export default function Importer({ onTextReady }: ImporterProps) {
           className="self-end px-6 py-2 rounded-xl bg-amber-400 text-stone-950 font-semibold text-sm
             disabled:opacity-30 disabled:cursor-not-allowed hover:bg-amber-300 transition-colors"
         >
-          Start reading →
+          Alusta lugemist →
         </button>
       </div>
     </div>

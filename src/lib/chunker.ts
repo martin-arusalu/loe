@@ -40,7 +40,7 @@ export function chunkText(text: string): string[] {
     if (line.length === 0) continue;
     if (isHeading(line)) {
       if (currentChunk.length > 0) {
-        chunks.push(currentChunk.join(" ").trim());
+        chunks.push(currentChunk.join("  \n").trim());
         currentChunk = [];
       }
       chunks.push(line); // heading is its own chunk
@@ -49,7 +49,7 @@ export function chunkText(text: string): string[] {
     }
   }
   if (currentChunk.length > 0) {
-    chunks.push(currentChunk.join(" ").trim());
+    chunks.push(currentChunk.join("  \n").trim());
   }
 
   // Now, further split non-heading chunks into sentences as before
@@ -59,8 +59,8 @@ export function chunkText(text: string): string[] {
       finalChunks.push(chunk);
     } else {
       const sentences = splitIntoSentences(chunk);
-      const MIN_CHARS = 80;
-      const HARD_MAX = 600;
+      const MIN_CHARS = 60;
+      const HARD_MAX = 300;
       let i = 0;
       while (i < sentences.length) {
         let subChunk = sentences[i];

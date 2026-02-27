@@ -38,7 +38,6 @@ export default function App() {
   };
 
   const handleBack = () => {
-    clearSession();
     setState({ view: 'import' });
   };
 

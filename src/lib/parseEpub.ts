@@ -10,7 +10,7 @@ export async function parseEpub(buffer: ArrayBuffer): Promise<string> {
   // 1. Find the OPF path from META-INF/container.xml
   const containerXml = await zip.file("META-INF/container.xml")?.async("text");
   if (!containerXml) {
-    throw new Error("Invalid EPUB: missing META-INF/container.xml");
+    throw new Error("Vigane EPUB: puudub META-INF/container.xml");
   }
 
   const containerDoc = new DOMParser().parseFromString(
@@ -20,11 +20,15 @@ export async function parseEpub(buffer: ArrayBuffer): Promise<string> {
   const opfPath = containerDoc
     .querySelector("rootfile")
     ?.getAttribute("full-path");
-  if (!opfPath) throw new Error("Invalid EPUB: cannot find OPF path");
+  if (!opfPath) throw new Error("Vigane EPUB: OPF faili asukohta ei leitud");
 
   // 2. Parse the OPF to get spine item hrefs in reading order
   const opfXml = await zip.file(opfPath)?.async("text");
-  if (!opfXml) throw new Error(`Invalid EPUB: cannot read OPF at ${opfPath}`);
+  if (!opfXml) {
+    throw new Error(
+      `Vigane EPUB: OPF faili ei õnnestu lugeda asukohas ${opfPath}`,
+    );
+  }
 
   const opfDoc = new DOMParser().parseFromString(opfXml, "application/xml");
   const opfDir = opfPath.includes("/") ? opfPath.replace(/\/[^/]+$/, "/") : "";
@@ -72,6 +76,8 @@ export async function parseEpub(buffer: ArrayBuffer): Promise<string> {
       const el = node as HTMLElement;
       const tag = el.tagName.toLowerCase();
       let content = Array.from(el.childNodes).map(serializeNode).join("");
+      console.log("TAG:", tag);
+      console.log(content);
       switch (tag) {
         case "h1":
           return `\n\n# ${content.trim()}\n\n`;
