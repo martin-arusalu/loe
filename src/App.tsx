@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
+import HomeScreen from '@/components/HomeScreen';
 import Importer from '@/components/Importer';
 import Reader from '@/components/Reader';
 import { chunkText } from '@/lib/chunker';
 import { clearSession, loadSession, saveSession } from '@/lib/storage';
 
 type AppState =
+  | { view: 'home' }
   | { view: 'import' }
   | { view: 'read'; chunks: string[]; title: string; initialChunk: number };
 
 export default function App() {
-  const [state, setState] = useState<AppState>({ view: 'import' });
+  const [state, setState] = useState<AppState>({ view: 'home' });
 
   // Restore previous session on first load
   useEffect(() => {
@@ -26,6 +28,15 @@ export default function App() {
   }, []);
 
   const handleTextReady = (text: string, title: string) => {
+    // TODO: When want to download MD, comment this in.
+    // const blob = new Blob([text], { type: 'text/markdown' });
+    // const url = URL.createObjectURL(blob);
+    // const a = document.createElement('a');
+    // a.href = url;
+    // a.download = `${title}.md`;
+    // a.click();
+    // URL.revokeObjectURL(url);
+
     const chunks = chunkText(text);
     if (chunks.length === 0) return;
     saveSession({ title, chunks, position: 0 });
@@ -38,7 +49,7 @@ export default function App() {
   };
 
   const handleBack = () => {
-    setState({ view: 'import' });
+    setState({ view: 'home' });
   };
 
   if (state.view === 'read') {
@@ -53,5 +64,14 @@ export default function App() {
     );
   }
 
-  return <Importer onTextReady={handleTextReady} />;
+  if (state.view === 'import') {
+    return <Importer onTextReady={handleTextReady} />;
+  }
+
+  return (
+    <HomeScreen
+      onTextReady={handleTextReady}
+      onImport={() => setState({ view: 'import' })}
+    />
+  );
 }

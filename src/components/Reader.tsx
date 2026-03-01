@@ -78,8 +78,24 @@ export default function Reader({ chunks, title, initialChunk = 0, onBack, onPosi
       }
     };
 
-    el.addEventListener('scrollend', handleScrollEnd);
-    return () => el.removeEventListener('scrollend', handleScrollEnd);
+    // `scrollend` is only available in Safari 17.4+ — fall back to a debounced
+    // scroll listener on older iOS devices where the event never fires.
+    const supportsScrollEnd = 'onscrollend' in window;
+    if (supportsScrollEnd) {
+      el.addEventListener('scrollend', handleScrollEnd);
+      return () => el.removeEventListener('scrollend', handleScrollEnd);
+    } else {
+      let timer: ReturnType<typeof setTimeout>;
+      const handleScroll = () => {
+        clearTimeout(timer);
+        timer = setTimeout(handleScrollEnd, 150);
+      };
+      el.addEventListener('scroll', handleScroll, { passive: true });
+      return () => {
+        el.removeEventListener('scroll', handleScroll);
+        clearTimeout(timer);
+      };
+    }
   }, [curIndex, prevIndex, nextIndex, chunks.length]);
 
   const progress = chunks.length > 0
