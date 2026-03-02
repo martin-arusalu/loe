@@ -1,15 +1,25 @@
 import { useState } from 'react';
 import { PREDEFINED_BOOKS } from '@/lib/predefinedBooks';
+import { Book } from '@/lib/storage';
 
 interface HomeScreenProps {
+  library: Book[];
   onTextReady: (text: string, title: string) => void;
   onImport: () => void;
+  onOpenBook: (book: Book) => void;
+  onDeleteBook: (id: string) => void;
 }
 
-export default function HomeScreen({ onTextReady, onImport }: HomeScreenProps) {
+export default function HomeScreen({ library, onTextReady, onImport, onOpenBook, onDeleteBook }: HomeScreenProps) {
   const [showBooks, setShowBooks] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const formatProgress = (book: Book) => {
+    if (!book.chunks.length) return '';
+    const pct = Math.round((book.position / book.chunks.length) * 100);
+    return `${pct}%`;
+  };
 
   const handleBookSelect = async (book: (typeof PREDEFINED_BOOKS)[number]) => {
     setError(null);
@@ -32,10 +42,44 @@ export default function HomeScreen({ onTextReady, onImport }: HomeScreenProps) {
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10">
       <div className="text-center">
         <h1 className="text-4xl font-bold tracking-tight text-stone-50 mb-2">Lauselt</h1>
-        <p className="text-stone-400 text-lg">Loe kõike, üks amps korraga.</p>
+        <p className="text-stone-400 text-lg">Kasuta väikseid hetki, et lugeda pikki raamatuid.</p>
       </div>
 
       <div className="w-full max-w-sm flex flex-col gap-4">
+
+        {/* Saved library */}
+        {library.length > 0 && (
+          <div className="rounded-2xl bg-stone-900 border border-stone-800 overflow-hidden">
+            <p className="px-6 py-3 text-xs font-semibold uppercase tracking-widest text-stone-500 border-b border-stone-800">
+              Minu raamatukogu
+            </p>
+            {library.map((book) => (
+              <div
+                key={book.id}
+                className="flex items-center border-b border-stone-800 last:border-b-0"
+              >
+                <button
+                  onClick={() => onOpenBook(book)}
+                  className="flex-1 flex items-center justify-between px-6 py-4 text-left hover:bg-stone-800 transition-colors"
+                >
+                  <div className="min-w-0">
+                    <p className="text-stone-200 font-medium text-sm truncate">{book.title}</p>
+                    <p className="text-stone-500 text-xs mt-0.5">{formatProgress(book)}</p>
+                  </div>
+                  <span className="text-stone-600 text-sm ml-3 shrink-0">›</span>
+                </button>
+                <button
+                  onClick={() => onDeleteBook(book.id)}
+                  className="px-4 py-4 text-stone-600 hover:text-red-400 transition-colors text-lg leading-none shrink-0"
+                  title="Kustuta"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Classics option */}
         <div className="rounded-2xl bg-stone-900 border border-stone-800 overflow-hidden">
           <button

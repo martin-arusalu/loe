@@ -1,55 +1,116 @@
 /**
- * Persists the current reading session (chunks + position) to IndexedDB.
- * IndexedDB is used instead of localStorage to handle large book texts.
+ * Persists reading sessions to IndexedDB.
+ * Supports multiple books; the most recently opened is tracked as "current".
  */
 
 const DB_NAME = "reedfeed";
-const DB_VERSION = 1;
-const STORE = "session";
-const KEY = "current";
+const DB_VERSION = 2;
+const BOOKS_STORE = "books";
+const META_STORE = "meta";
+const CURRENT_KEY = "currentBookId";
 
-export interface Session {
+export interface Book {
+  id: string; // stable slug derived from title
   title: string;
   chunks: string[];
   position: number;
+  lastOpened: number; // unix ms timestamp
+}
+
+export function bookId(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\u00C0-\u024F]+/gi, "-")
+    .replace(/^-|-$/g, "") ||
+    "book";
 }
 
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = () => {
-      req.result.createObjectStore(STORE);
+    req.onupgradeneeded = (event) => {
+      const db = req.result;
+      // migrate: drop old session store if it exists
+      if ((event.oldVersion ?? 0) < 2) {
+        if (db.objectStoreNames.contains("session")) {
+          db.deleteObjectStore("session");
+        }
+        db.createObjectStore(BOOKS_STORE);
+        db.createObjectStore(META_STORE);
+      }
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
 }
 
-export async function saveSession(session: Session): Promise<void> {
+export async function saveBook(book: Book): Promise<void> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, "readwrite");
-    tx.objectStore(STORE).put(session, KEY);
+    const tx = db.transaction(BOOKS_STORE, "readwrite");
+    tx.objectStore(BOOKS_STORE).put(book, book.id);
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });
 }
 
-export async function loadSession(): Promise<Session | null> {
+export async function loadBook(id: string): Promise<Book | null> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, "readonly");
-    const req = tx.objectStore(STORE).get(KEY);
-    req.onsuccess = () => resolve((req.result as Session) ?? null);
+    const tx = db.transaction(BOOKS_STORE, "readonly");
+    const req = tx.objectStore(BOOKS_STORE).get(id);
+    req.onsuccess = () => resolve((req.result as Book) ?? null);
     req.onerror = () => reject(req.error);
   });
 }
 
-export async function clearSession(): Promise<void> {
+export async function loadAllBooks(): Promise<Book[]> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, "readwrite");
-    tx.objectStore(STORE).delete(KEY);
+    const tx = db.transaction(BOOKS_STORE, "readonly");
+    const req = tx.objectStore(BOOKS_STORE).getAll();
+    req.onsuccess = () => {
+      const books = (req.result as Book[]).sort((a, b) =>
+        b.lastOpened - a.lastOpened
+      );
+      resolve(books);
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function deleteBook(id: string): Promise<void> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction([BOOKS_STORE, META_STORE], "readwrite");
+    tx.objectStore(BOOKS_STORE).delete(id);
+    // clear current if it points to this book
+    const metaReq = tx.objectStore(META_STORE).get(CURRENT_KEY);
+    metaReq.onsuccess = () => {
+      if (metaReq.result === id) {
+        tx.objectStore(META_STORE).delete(CURRENT_KEY);
+      }
+    };
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+export async function getCurrentBookId(): Promise<string | null> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(META_STORE, "readonly");
+    const req = tx.objectStore(META_STORE).get(CURRENT_KEY);
+    req.onsuccess = () => resolve((req.result as string) ?? null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function setCurrentBookId(id: string): Promise<void> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(META_STORE, "readwrite");
+    tx.objectStore(META_STORE).put(id, CURRENT_KEY);
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });

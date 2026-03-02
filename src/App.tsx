@@ -3,51 +3,78 @@ import HomeScreen from '@/components/HomeScreen';
 import Importer from '@/components/Importer';
 import Reader from '@/components/Reader';
 import { chunkText } from '@/lib/chunker';
-import { clearSession, loadSession, saveSession } from '@/lib/storage';
+import {
+  Book,
+  bookId,
+  deleteBook,
+  getCurrentBookId,
+  loadAllBooks,
+  loadBook,
+  saveBook,
+  setCurrentBookId,
+} from '@/lib/storage';
 
 type AppState =
   | { view: 'home' }
   | { view: 'import' }
-  | { view: 'read'; chunks: string[]; title: string; initialChunk: number };
+  | { view: 'read'; book: Book };
 
 export default function App() {
   const [state, setState] = useState<AppState>({ view: 'home' });
+  const [library, setLibrary] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Restore previous session on first load
   useEffect(() => {
-    loadSession().then((session) => {
-      if (session && session.chunks.length > 0) {
-        setState({
-          view: 'read',
-          chunks: session.chunks,
-          title: session.title,
-          initialChunk: session.position,
-        });
+    Promise.all([loadAllBooks(), getCurrentBookId()]).then(([books, currentId]) => {
+      setLibrary(books);
+      if (currentId) {
+        const current = books.find((b) => b.id === currentId) ?? null;
+        if (current) {
+          setState({ view: 'read', book: current });
+        }
       }
       setLoading(false);
     });
   }, []);
 
-  const handleTextReady = (text: string, title: string) => {
-    // TODO: When want to download MD, comment this in.
-    // const blob = new Blob([text], { type: 'text/markdown' });
-    // const url = URL.createObjectURL(blob);
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = `${title}.md`;
-    // a.click();
-    // URL.revokeObjectURL(url);
-
+  const handleTextReady = async (text: string, title: string) => {
     const chunks = chunkText(text);
     if (chunks.length === 0) return;
-    saveSession({ title, chunks, position: 0 });
-    setState({ view: 'read', chunks, title, initialChunk: 0 });
+
+    const id = bookId(title);
+    // Preserve existing position if the same book is opened again
+    const existing = await loadBook(id);
+    const book: Book = {
+      id,
+      title,
+      chunks,
+      position: existing ? existing.position : 0,
+      lastOpened: Date.now(),
+    };
+    await saveBook(book);
+    await setCurrentBookId(id);
+    setLibrary(await loadAllBooks());
+    setState({ view: 'read', book });
   };
 
-  const handlePositionChange = (position: number) => {
+  const handlePositionChange = async (position: number) => {
     if (state.view !== 'read') return;
-    saveSession({ title: state.title, chunks: state.chunks, position });
+    const updatedBook: Book = { ...state.book, position };
+    await saveBook(updatedBook);
+    setState({ view: 'read', book: updatedBook });
+  };
+
+  const handleOpenBook = async (book: Book) => {
+    await setCurrentBookId(book.id);
+    const fresh = await loadBook(book.id);
+    setState({ view: 'read', book: fresh ?? book });
+  };
+
+  const handleDeleteBook = async (id: string) => {
+    await deleteBook(id);
+    const books = await loadAllBooks();
+    setLibrary(books);
   };
 
   const handleBack = () => {
@@ -74,9 +101,9 @@ export default function App() {
   if (state.view === 'read') {
     return (
       <Reader
-        chunks={state.chunks}
-        title={state.title}
-        initialChunk={state.initialChunk}
+        chunks={state.book.chunks}
+        title={state.book.title}
+        initialChunk={state.book.position}
         onBack={handleBack}
         onPositionChange={handlePositionChange}
       />
@@ -89,8 +116,11 @@ export default function App() {
 
   return (
     <HomeScreen
+      library={library}
       onTextReady={handleTextReady}
       onImport={() => setState({ view: 'import' })}
+      onOpenBook={handleOpenBook}
+      onDeleteBook={handleDeleteBook}
     />
   );
 }
