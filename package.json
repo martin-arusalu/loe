@@ -10,6 +10,7 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.35.4",
     "@sentry/react": "^10.40.0",
     "@tailwindcss/typography": "^0.5.19",
     "jszip": "^3.10.1",

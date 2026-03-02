@@ -20,6 +20,36 @@ body {
   overscroll-behavior: none;
 }
 
+/* Streamdown heading styles */
+[data-streamdown="heading-1"] {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+}
+
+[data-streamdown="heading-2"] {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.3;
+  letter-spacing: 0;
+  margin-bottom: 0.75rem;
+}
+
+[data-streamdown="heading-3"] {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
 /* Disable scrollbars on every element */
 * {
   scrollbar-width: none; /* Firefox */

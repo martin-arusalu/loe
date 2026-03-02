@@ -12,6 +12,7 @@ type AppState =
 
 export default function App() {
   const [state, setState] = useState<AppState>({ view: 'home' });
+  const [loading, setLoading] = useState(true);
 
   // Restore previous session on first load
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function App() {
           initialChunk: session.position,
         });
       }
+      setLoading(false);
     });
   }, []);
 
@@ -51,6 +53,23 @@ export default function App() {
   const handleBack = () => {
     setState({ view: 'home' });
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center gap-4 bg-stone-950">
+        <p className="text-stone-500 text-lg tracking-wide">Laen…</p>
+        <div className="flex gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="h-2 w-2 rounded-full bg-stone-500 animate-bounce"
+              style={{ animationDelay: `${i * 0.15}s` }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (state.view === 'read') {
     return (

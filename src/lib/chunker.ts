@@ -10,9 +10,13 @@ function splitIntoSentences(text: string): string[] {
     .replace(/\n{3,}/g, "\n\n") // collapse excessive blank lines
     .trim();
 
-  // Split on sentence-ending punctuation followed by whitespace or end of string.
-  // Handles: . ! ? followed by space/newline and an uppercase letter or end of text.
-  const raw = normalized.split(/(?<=[.!?])\s+(?=[A-Z"'"'])/);
+  // Split on sentence-ending punctuation (optionally followed by a closing quote)
+  // followed by whitespace and a letter or opening quote.
+  // Handles: . ! ? — optionally followed by » " " then space/newline.
+  // Also splits on : when directly followed by an opening quote (e.g. `Something: „quote`).
+  const raw = normalized.split(
+    /(?<=[.!?—][»""]?)\s+(?=[\p{L}«"„])|(?<=:)\s+(?=[«"„])/u,
+  );
 
   const sentences: string[] = [];
   for (const s of raw) {
@@ -60,13 +64,16 @@ export function chunkText(text: string): string[] {
     } else {
       const sentences = splitIntoSentences(chunk);
       const MIN_CHARS = 60;
-      const HARD_MAX = 300;
+      const TARGET_MAX = 300; // preferred ceiling; avoid exceeding when combining sentences
+      const SOFT_MAX = 380; // soft ceiling; individual sentences under this are kept whole
+      const HARD_MAX = 500; // hard ceiling; force-split anything longer
       let i = 0;
       while (i < sentences.length) {
         let subChunk = sentences[i];
         let nextIdx = i + 1;
+        // Force-split truly long individual sentences
         if (subChunk.length > HARD_MAX) {
-          let splitIdx = subChunk.lastIndexOf(" ", HARD_MAX);
+          let splitIdx = subChunk.lastIndexOf(" ", TARGET_MAX);
           if (splitIdx === -1 || splitIdx < MIN_CHARS) splitIdx = HARD_MAX;
           const firstPart = subChunk.slice(0, splitIdx) + "...";
           const rest = subChunk.slice(splitIdx).trim();
@@ -77,27 +84,31 @@ export function chunkText(text: string): string[] {
           i++;
           continue;
         }
+        // Try to combine short sentences, staying within TARGET_MAX
         while (subChunk.length < MIN_CHARS && nextIdx < sentences.length) {
           const testChunk = subChunk + " " + sentences[nextIdx];
-          if (testChunk.length > HARD_MAX) {
+          if (testChunk.length > TARGET_MAX) {
             break;
           }
           subChunk = testChunk;
           nextIdx++;
         }
+        // One more sentence allowed up to SOFT_MAX if still short
         if (subChunk.length < MIN_CHARS && nextIdx < sentences.length) {
           const testChunk = subChunk + " " + sentences[nextIdx];
-          if (testChunk.length <= HARD_MAX) {
+          if (testChunk.length <= SOFT_MAX) {
             subChunk = testChunk;
             nextIdx++;
           }
         }
-        while (subChunk.length > HARD_MAX && nextIdx > i + 1) {
+        // Shrink back if somehow over SOFT_MAX
+        while (subChunk.length > SOFT_MAX && nextIdx > i + 1) {
           nextIdx--;
           subChunk = sentences.slice(i, nextIdx).join(" ");
         }
-        if (subChunk.length > HARD_MAX) {
-          let splitIdx = subChunk.lastIndexOf(" ", HARD_MAX);
+        // Last resort: force-split if still over SOFT_MAX (edge case)
+        if (subChunk.length > SOFT_MAX) {
+          let splitIdx = subChunk.lastIndexOf(" ", TARGET_MAX);
           if (splitIdx === -1 || splitIdx < MIN_CHARS) splitIdx = HARD_MAX;
           const firstPart = subChunk.slice(0, splitIdx) + "...";
           const rest = subChunk.slice(splitIdx).trim();
@@ -113,5 +124,15 @@ export function chunkText(text: string): string[] {
       }
     }
   }
+
+  // TODO: Comment in when needed. dev stats: average chunk character length
+  // if (finalChunks.length > 0) {
+  //   const total = finalChunks.reduce((sum, c) => sum + c.length, 0);
+  //   const avg = Math.round(total / finalChunks.length);
+  //   const min = Math.min(...finalChunks.map((c) => c.length));
+  //   const max = Math.max(...finalChunks.map((c) => c.length));
+  //   console.log(`[chunker] ${finalChunks.length} chunks — avg: ${avg} chars, min: ${min}, max: ${max}`);
+  // }
+
   return finalChunks;
 }
