@@ -1,11 +1,3 @@
-
-
-# Minu sõbrad
-Ernst Enno
-TARTUS, 1910.
-
-
-  
 ## Minu esimene sõber.
 
 Tol ajal, kus ma weel Köödsä kõrtsis kõnesid pidasin, mõisa puiestik weel nii pikk oli, et mitu korda ära kulus puhata, enne kui teisi otsa jõudsid, — tol õndsal ajal, kui puud weel nii paksud ja kõrged oliwad, et kuidagi otsa ronida ei saanud, — kus wunn tundmata, kartulipüss katsumata, habemelõks proowimata ja lingukiwi weel üle isa kapstamaa lendama ei ulatanud, — oli mul üks sõber.

@@ -1,6 +1,3 @@
-# Kõrboja peremees 
-Anton Hansen Tammsaare
-  
 ## 1
 
 Võis kella seitsme, kaheksa paiku olla, kui Katku Villu aidalakas heintel ärkas. Küll tundis ta alles kehas unerammestust, aga magada enam ei saanud: luis-kondes uimles mingisugune magus valu, nagu ta seda oli tunnud paljude aastate eest, kui ta oli mõelnud minna kalale, jahile või ühes teistega kuhugi kaugemale metsa marjule.
