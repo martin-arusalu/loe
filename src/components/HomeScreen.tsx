@@ -31,7 +31,7 @@ export default function HomeScreen({ onTextReady, onImport }: HomeScreenProps) {
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10">
       <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-stone-50 mb-2">Loe</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-stone-50 mb-2">Lauselt</h1>
         <p className="text-stone-400 text-lg">Loe kõike, üks amps korraga.</p>
       </div>
 
@@ -43,7 +43,7 @@ export default function HomeScreen({ onTextReady, onImport }: HomeScreenProps) {
             className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-stone-800 transition-colors"
           >
             <div>
-              <p className="font-semibold text-stone-50 text-base">Loe olemasolevast klassikat</p>
+              <p className="font-semibold text-stone-50 text-base">Loe olemasolevat klassikat</p>
               <p className="text-stone-500 text-sm mt-0.5">Eesti kirjanduse klassika</p>
             </div>
             <span

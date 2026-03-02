@@ -84,7 +84,7 @@ export default function App() {
   }
 
   if (state.view === 'import') {
-    return <Importer onTextReady={handleTextReady} />;
+    return <Importer onTextReady={handleTextReady} onBack={handleBack} />;
   }
 
   return (
