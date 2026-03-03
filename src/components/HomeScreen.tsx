@@ -60,7 +60,7 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
               >
                 <button
                   onClick={() => onOpenBook(book)}
-                  className="flex-1 flex items-center justify-between px-6 py-4 text-left hover:bg-stone-800 transition-colors"
+                  className="flex-1 flex min-w-0 items-center justify-between px-6 py-4 text-left hover:bg-stone-800 transition-colors"
                 >
                   <div className="min-w-0">
                     <p className="text-stone-200 font-medium text-sm truncate">{book.title}</p>
