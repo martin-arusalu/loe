@@ -41,7 +41,14 @@ export function chunkText(text: string): string[] {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    if (line.length === 0) continue;
+    if (line.length === 0) {
+      // Blank line = stanza/paragraph boundary → flush current chunk.
+      if (currentChunk.length > 0) {
+        chunks.push(currentChunk.join("  \n").trim());
+        currentChunk = [];
+      }
+      continue;
+    }
     if (isHeading(line)) {
       if (currentChunk.length > 0) {
         chunks.push(currentChunk.join("  \n").trim());
@@ -60,6 +67,9 @@ export function chunkText(text: string): string[] {
   const finalChunks: string[] = [];
   for (const chunk of chunks) {
     if (isHeading(chunk)) {
+      finalChunks.push(chunk);
+    } else if (chunk.includes("\n")) {
+      // Multi-line chunk (poetry stanza) — already naturally broken, skip sentence splitting.
       finalChunks.push(chunk);
     } else {
       const sentences = splitIntoSentences(chunk);
@@ -131,7 +141,9 @@ export function chunkText(text: string): string[] {
   //   const avg = Math.round(total / finalChunks.length);
   //   const min = Math.min(...finalChunks.map((c) => c.length));
   //   const max = Math.max(...finalChunks.map((c) => c.length));
-  //   console.log(`[chunker] ${finalChunks.length} chunks — avg: ${avg} chars, min: ${min}, max: ${max}`);
+  //   console.log(
+  //     `[chunker] ${finalChunks.length} chunks — avg: ${avg} chars, min: ${min}, max: ${max}`,
+  //   );
   // }
 
   return finalChunks;

@@ -1,6 +1,7 @@
 import { track } from "@amplitude/analytics-browser";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Streamdown } from "streamdown";
+import remarkBreaks from "remark-breaks";
+import { defaultRemarkPlugins, Streamdown } from "streamdown";
 
 interface ReaderProps {
   chunks: string[];
@@ -197,7 +198,14 @@ export default function Reader(
               >
                 <div className="max-w-xl w-full">
                   <div className="text-stone-100 text-xl md:text-2xl leading-relaxed font-serif text-balance prose prose-invert prose-p:my-4 prose-strong:font-bold prose-em:italic prose-ul:my-4 prose-ol:my-4 prose-li:my-1">
-                    <Streamdown>{chunks[index]}</Streamdown>
+                    <Streamdown
+                      remarkPlugins={[
+                        ...Object.values(defaultRemarkPlugins),
+                        remarkBreaks,
+                      ]}
+                    >
+                      {chunks[index]}
+                    </Streamdown>
                   </div>
                 </div>
               </div>

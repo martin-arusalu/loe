@@ -23,7 +23,7 @@ body {
 /* Streamdown heading styles */
 [data-streamdown="heading-1"] {
   font-family: var(--font-serif);
-  font-size: 1.75rem;
+  font-size: 1.9rem;
   font-weight: 700;
   font-style: italic;
   line-height: 1.25;
@@ -33,7 +33,7 @@ body {
 
 [data-streamdown="heading-2"] {
   font-family: var(--font-serif);
-  font-size: 1.55rem;
+  font-size: 1.7rem;
   font-weight: 600;
   font-style: italic;
   line-height: 1.3;
