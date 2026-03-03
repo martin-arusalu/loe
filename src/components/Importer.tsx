@@ -85,8 +85,8 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-12 py-10 gap-10">
       <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-stone-50 mb-2">Lauselt</h1>
-        <p className="text-stone-400 text-lg">Kasuta väikseid hetki, et lugeda pikki raamatuid.</p>
+        <h1 className="text-4xl font-bold tracking-tight text-stone-50 mb-2">Oma raamat</h1>
+        <p className="text-stone-400 text-lg">Lae üles oma raamat, et alustada lugemist</p>
       </div>
 
       {/* Drop zone */}

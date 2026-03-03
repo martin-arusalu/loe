@@ -39,38 +39,67 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
   };
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-stone-50 mb-2">Lauselt</h1>
-        <p className="text-stone-400 text-lg">Kasuta väikseid hetki, et lugeda pikki raamatuid.</p>
+    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10"
+    >
+      {/* Hero header */}
+      <div className="text-center select-none">
+        <h1
+          className="text-2xl font-thin tracking-[0.7rem] text-stone-50 mb-2 font-serif"
+        >
+          Lauselt
+        </h1>
+
+        <p
+          className="text-stone-500 text-base"
+        >
+          Kasuta väikseid hetki, et saada palju loetud.
+        </p>
       </div>
 
-      <div className="w-full max-w-sm flex flex-col gap-4">
+      <div className="w-full max-w-sm flex flex-col gap-3">
 
         {/* Saved library */}
         {library.length > 0 && (
-          <div className="rounded-2xl bg-stone-900 border border-stone-800 overflow-hidden">
-            <p className="px-6 py-3 text-xs font-semibold uppercase tracking-widest text-stone-500 border-b border-stone-800">
-              Minu raamatukogu
-            </p>
+          <div
+            className="rounded-2xl bg-stone-900 border border-stone-800 overflow-hidden"
+          >
+            <p className="px-6 py-3 text-xs font-semibold uppercase tracking-widest text-stone-500 border-b border-stone-800">Minu raamatukogu</p>
             {library.map((book) => (
               <div
                 key={book.id}
-                className="flex items-center border-b border-stone-800 last:border-b-0"
+                className="flex items-center border-b border-stone-800 last:border-0"
               >
                 <button
                   onClick={() => onOpenBook(book)}
-                  className="flex-1 flex min-w-0 items-center justify-between px-6 py-4 text-left hover:bg-stone-800 transition-colors"
+                  className="flex-1 flex min-w-0 items-center justify-between px-6 py-4 text-left hover:bg-stone-600 transition-colors duration-150"
                 >
-                  <div className="min-w-0">
-                    <p className="text-stone-200 font-medium text-sm truncate">{book.title}</p>
-                    <p className="text-stone-500 text-xs mt-0.5">{formatProgress(book)}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-stone-200 font-medium text-sm truncate">
+                      {book.title}
+                    </p>
+                    {book.chunks.length > 0 && (
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs text-stone-600">
+                          {formatProgress(book)}
+                        </span>
+                        <div
+                          className="h-0.5 rounded-full w-full overflow-hidden bg-stone-800"
+                        >
+                          <div
+                            className="h-full rounded-full transition-all bg-yellow-500"
+                            style={{
+                              width: formatProgress(book),
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <span className="text-stone-600 text-sm ml-3 shrink-0">›</span>
                 </button>
                 <button
                   onClick={() => onDeleteBook(book.id)}
-                  className="px-4 py-4 text-stone-600 hover:text-red-400 transition-colors text-lg leading-none shrink-0"
+                  className="px-4 py-4 text-stone-600 hover:text-red-400 text-lg leading-none shrink-0 transition-colors duration-150"
                   title="Kustuta"
                 >
                   ×
@@ -81,14 +110,22 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
         )}
 
         {/* Classics option */}
-        <div className="rounded-2xl bg-stone-900 border border-stone-800 overflow-hidden">
+        <div
+          className="rounded-2xl bg-stone-900 border border-stone-800 overflow-hidden"
+        >
           <button
             onClick={() => setShowBooks((v) => !v)}
             className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-stone-800 transition-colors"
           >
-            <div>
-              <p className="font-semibold text-stone-50 text-base">Loe olemasolevat klassikat</p>
-              <p className="text-stone-500 text-sm mt-0.5">Eesti kirjanduse klassika</p>
+            <div className="flex items-start gap-3">
+              <div>
+                <p className="font-semibold text-stone-50 text-base">
+                  Loe olemasolevat klassikat
+                </p>
+                <p className="text-stone-600 text-sm mt-0.5 italic">
+                  Eesti kirjanduse klassika
+                </p>
+              </div>
             </div>
             <span
               className={`text-stone-400 text-lg transition-transform duration-200 ${showBooks ? 'rotate-90' : ''}`}
@@ -104,17 +141,17 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
                   key={book.path}
                   onClick={() => handleBookSelect(book)}
                   disabled={loading !== null}
-                  className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-stone-800 transition-colors
-                    disabled:opacity-50 disabled:cursor-not-allowed border-b border-stone-800 last:border-b-0"
+                  className="w-full flex items-center justify-between px-6 py-4 text-left transition-colors
+                    disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div>
                     <p className="text-stone-200 font-medium text-sm">{book.title}</p>
-                    <p className="text-stone-500 text-xs mt-0.5">{book.author}</p>
+                    <p className="text-stone-200 text-xs mt-0.5 italic">{book.author}</p>
                   </div>
                   {loading === book.path ? (
                     <span className="text-amber-400 text-xs animate-pulse">Laen…</span>
                   ) : (
-                    <span className="text-stone-600 text-sm">›</span>
+                    <span className="text-amber-400 text-sm">›</span>
                   )}
                 </button>
               ))}
@@ -125,15 +162,26 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
         {/* Import option */}
         <button
           onClick={onImport}
-          className="w-full rounded-2xl bg-stone-900 border border-stone-800 px-6 py-5 text-left
-            hover:bg-stone-800 transition-colors"
+          className="w-full rounded-2xl bg-stone-900 border border-stone-800 px-6 py-5 text-left hover:bg-stone-800 transition-colors"
         >
-          <p className="font-semibold text-stone-50 text-base">Impordi oma raamat</p>
-          <p className="text-stone-500 text-sm mt-0.5">PDF, EPUB, TXT või kleebi tekst</p>
+          <div className="flex items-start gap-3">
+            <div>
+              <p className="font-semibold text-stone-50 text-base">Lae üles oma raamat</p>
+              <p className="text-stone-600 text-sm mt-0.5 italic">
+                PDF, EPUB, TXT või kleebi tekst
+              </p>
+            </div>
+          </div>
         </button>
       </div>
 
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && (
+        <p
+          className="text-red-400 text-sm px-4 py-2 rounded-lg"
+        >
+          {error}
+        </p>
+      )}
     </div>
   );
 }
