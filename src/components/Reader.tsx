@@ -77,10 +77,7 @@ export default function Reader(
       } else if (scrolledToNext) {
         needsRecenter.current = true;
         setCurIndex(nextIndex!);
-        // Only report numeric chunk position, not the completion-card slot.
-        if (nextIndex! < chunks.length) {
-          onPositionChangeRef.current?.(nextIndex!);
-        }
+        onPositionChangeRef.current?.(nextIndex!);
       }
 
       track("chunk scrolled", {

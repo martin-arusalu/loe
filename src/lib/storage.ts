@@ -15,6 +15,7 @@ export interface Book {
   chunks: string[];
   position: number;
   lastOpened: number; // unix ms timestamp
+  lastRead?: number; // unix ms timestamp — updated on every scroll
 }
 
 export function bookId(title: string): string {
@@ -71,7 +72,7 @@ export async function loadAllBooks(): Promise<Book[]> {
     const req = tx.objectStore(BOOKS_STORE).getAll();
     req.onsuccess = () => {
       const books = (req.result as Book[]).sort((a, b) =>
-        b.lastOpened - a.lastOpened
+        (b.lastRead ?? b.lastOpened) - (a.lastRead ?? a.lastOpened)
       );
       resolve(books);
     };

@@ -60,7 +60,7 @@ export default function App() {
 
   const handlePositionChange = async (position: number) => {
     if (state.view !== 'read') return;
-    const updatedBook: Book = { ...state.book, position };
+    const updatedBook: Book = { ...state.book, position, lastRead: Date.now() };
     await saveBook(updatedBook);
     setState({ view: 'read', book: updatedBook });
   };

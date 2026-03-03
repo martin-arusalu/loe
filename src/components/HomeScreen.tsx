@@ -64,7 +64,7 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
             className="rounded-2xl bg-stone-900 border border-stone-800 overflow-hidden"
           >
             <p className="px-6 py-3 text-xs font-semibold uppercase tracking-widest text-stone-500 border-b border-stone-800">Minu raamatukogu</p>
-            {library.map((book) => (
+            {[...library].sort((a, b) => (b.lastRead ?? b.lastOpened) - (a.lastRead ?? a.lastOpened)).map((book) => (
               <div
                 key={book.id}
                 className="flex items-center border-b border-stone-800 last:border-0"
