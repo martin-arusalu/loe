@@ -77,7 +77,9 @@ export default function App() {
     setLibrary(books);
   };
 
-  const handleBack = () => {
+  const handleBack = async () => {
+    const books = await loadAllBooks();
+    setLibrary(books);
     setState({ view: 'home' });
   };
 
