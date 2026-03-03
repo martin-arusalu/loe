@@ -1,10 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { registerSW } from "virtual:pwa-register";
 import * as amplitude from "@amplitude/analytics-browser";
 import * as Sentry from "@sentry/react";
 import { GlobalWorkerOptions } from "pdfjs-dist";
 import "./app/globals.css";
 import App from "./App";
+
+
+registerSW({ immediate: true });
 
 Sentry.init({
   dsn:
