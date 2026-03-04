@@ -11,7 +11,6 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ library, onTextReady, onImport, onOpenBook, onDeleteBook }: HomeScreenProps) {
-  const [showBooks, setShowBooks] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,6 +36,9 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
       setLoading(null);
     }
   };
+
+  const stillToRead = PREDEFINED_BOOKS
+                .filter(b => !library.find(e => e.title === b.title)) // hide already imported books
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10"
@@ -110,33 +112,27 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
         )}
 
         {/* Classics option */}
-        <div
+        {stillToRead.length > 0 && (<div
           className="rounded-2xl bg-stone-900 border border-stone-800 overflow-hidden"
         >
           <button
-            onClick={() => setShowBooks((v) => !v)}
             className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-stone-800 transition-colors"
           >
             <div className="flex items-start gap-3">
               <div>
                 <p className="font-semibold text-stone-50 text-base">
-                  Loe olemasolevat klassikat
+                  Vali lugemiseks raamat
                 </p>
                 <p className="text-stone-600 text-sm mt-0.5 italic">
                   Eesti kirjanduse klassika
                 </p>
               </div>
             </div>
-            <span
-              className={`text-stone-400 text-lg transition-transform duration-200 ${showBooks ? 'rotate-90' : ''}`}
-            >
-              ›
-            </span>
           </button>
 
-          {showBooks && (
             <div className="border-t border-stone-800">
-              {PREDEFINED_BOOKS.map((book) => (
+              {stillToRead
+                .map((book) => (
                 <button
                   key={book.path}
                   onClick={() => handleBookSelect(book)}
@@ -156,8 +152,7 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
                 </button>
               ))}
             </div>
-          )}
-        </div>
+        </div>)}
 
         {/* Import option */}
         <button
