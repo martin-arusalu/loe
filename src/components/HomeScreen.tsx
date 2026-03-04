@@ -146,7 +146,7 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
                 >
                   <div>
                     <p className="text-stone-200 font-medium text-sm">{book.title}</p>
-                    <p className="text-stone-200 text-xs mt-0.5 italic">{book.author}</p>
+                    <p className="text-stone-200 text-stone-500 text-xs mt-0.5 italic">{book.author}</p>
                   </div>
                   {loading === book.path ? (
                     <span className="text-amber-400 text-xs animate-pulse">Laen…</span>
