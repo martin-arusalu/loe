@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { parsePdf } from '@/lib/parsePdf';
 import { parseEpub } from '@/lib/parseEpub';
 
 
@@ -22,9 +21,7 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
         const buffer = await file.arrayBuffer();
         let text = '';
 
-        if (file.name.endsWith('.pdf')) {
-          text = await parsePdf(buffer);
-        } else if (file.name.endsWith('.epub')) {
+        if (file.name.endsWith('.epub')) {
           text = await parseEpub(buffer);
         } else {
           // plain text
@@ -67,7 +64,6 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'application/pdf': ['.pdf'],
       'application/epub+zip': ['.epub'],
       'text/plain': ['.txt'],
     },
@@ -103,7 +99,7 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
         ) : (
           <>
             <p className="text-stone-300 font-medium mb-1">Tõsta fail siia või klõpsa, et sirvida</p>
-            <p className="text-stone-500 text-sm">Toetab PDF, EPUB ja TXT faile</p>
+            <p className="text-stone-500 text-sm">Toetab EPUB ja TXT faile</p>
           </>
         )}
       </div>

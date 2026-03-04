@@ -44,7 +44,7 @@ yarn preview
 
 - `src/` — Main source code
   - `components/` — React components
-  - `lib/` — Utility libraries (e.g., EPUB/PDF parsing)
+  - `lib/` — Utility libraries (e.g., EPUB parsing)
   - `app/` — Global styles and app-level files
 - `public/` — Static assets
 

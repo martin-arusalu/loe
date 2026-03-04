@@ -71,7 +71,7 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
               >
                 <button
                   onClick={() => onOpenBook(book)}
-                  className="flex-1 flex min-w-0 items-center justify-between px-6 py-4 text-left hover:bg-stone-600 transition-colors duration-150"
+                  className="flex-1 flex min-w-0 items-center justify-between px-6 py-4 text-left hover:bg-stone-800 transition-colors duration-150"
                 >
                   <div className="min-w-0 flex-1">
                     <p className="text-stone-200 font-medium text-sm truncate">
@@ -141,7 +141,7 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
                   key={book.path}
                   onClick={() => handleBookSelect(book)}
                   disabled={loading !== null}
-                  className="w-full flex items-center justify-between px-6 py-4 text-left transition-colors
+                  className="w-full flex items-center justify-between px-6 py-4 text-left transition-colors hover:bg-stone-800
                     disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div>
@@ -168,7 +168,7 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
             <div>
               <p className="font-semibold text-stone-50 text-base">Lae üles oma raamat</p>
               <p className="text-stone-600 text-sm mt-0.5 italic">
-                PDF, EPUB, TXT või kleebi tekst
+                EPUB, TXT või kleebi tekst
               </p>
             </div>
           </div>
