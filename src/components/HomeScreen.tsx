@@ -168,7 +168,7 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
             <div>
               <p className="font-semibold text-stone-50 text-base">Lae üles oma raamat</p>
               <p className="text-stone-600 text-sm mt-0.5 italic">
-                EPUB, TXT või kleebi tekst
+                EPUB formaadis failid
               </p>
             </div>
           </div>

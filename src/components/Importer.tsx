@@ -65,7 +65,6 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
     onDrop,
     accept: {
       'application/epub+zip': ['.epub'],
-      'text/plain': ['.txt'],
     },
     multiple: false,
   });
@@ -99,7 +98,7 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
         ) : (
           <>
             <p className="text-stone-300 font-medium mb-1">Tõsta fail siia või klõpsa, et sirvida</p>
-            <p className="text-stone-500 text-sm">Toetab EPUB ja TXT faile</p>
+            <p className="text-stone-500 text-sm">Toetab EPUB formaadis faile</p>
           </>
         )}
       </div>
@@ -108,22 +107,8 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
         <p className="text-red-400 text-sm -mt-4">{error}</p>
       )}
 
-      {/* Divider */}
-      <div className="flex items-center gap-3 w-full max-w-xl text-stone-600">
-        <div className="flex-1 h-px bg-stone-800" />
-        <span className="text-sm">või kleebi tekst</span>
-        <div className="flex-1 h-px bg-stone-800" />
-      </div>
-
-      {/* Paste area */}
+      {/* action area */}
       <div className="w-full max-w-xl flex flex-col gap-3">
-        <textarea
-          className="w-full h-40 rounded-xl bg-stone-900 border border-stone-700 text-stone-200 p-4 text-sm resize-none
-            placeholder:text-stone-600 focus:outline-none focus:border-amber-400 transition-colors"
-          placeholder="Kleebi oma tekst siia…"
-          value={pasteValue}
-          onChange={(e) => setPasteValue(e.target.value)}
-        />
         <div className="w-full max-w-xl flex items-center mb-2 justify-between">
         {onBack && (
           <button
