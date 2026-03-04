@@ -10,9 +10,14 @@ export const PREDEFINED_BOOKS = [
     path: "/books/korboja_peremees.md",
   },
   {
+    title: "Noored hinged",
+    author: "Anton Hansen Tammsaare",
+    path: "/books/noored_hinged.md",
+  },
+  {
     title: "Tõde ja õigus I",
     author: "Anton Hansen Tammsaare",
     path: "/books/tode_ja_oigus_I.md",
   },
-  // { title: "Minu Sõbrad", author: "Ernst Enno", path: "/books/minu_sobrad.md" },
+  { title: "Minu Sõbrad", author: "Ernst Enno", path: "/books/minu_sobrad.md" },
 ];

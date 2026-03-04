@@ -34,14 +34,14 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
         }
 
         // TODO: uncomment when need to test Download extracted text as .md for testing
-        // const mdName = file.name.replace(/\.[^.]+$/, '') + '.md';
-        // const blob = new Blob([text], { type: 'text/markdown' });
-        // const url = URL.createObjectURL(blob);
-        // const a = document.createElement('a');
-        // a.href = url;
-        // a.download = mdName;
-        // a.click();
-        // URL.revokeObjectURL(url);
+        const mdName = file.name.replace(/\.[^.]+$/, '') + '.md';
+        const blob = new Blob([text], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = mdName;
+        a.click();
+        URL.revokeObjectURL(url);
 
         onTextReady(text, file.name.replace(/\.[^.]+$/, ''));
       } catch (err) {

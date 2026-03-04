@@ -1,3 +1,5 @@
+# **Tõde ja õigus I** - Anton Hansen Tammsaare
+
      See oli läinud aastasaja kolmanda veerandi lõpul. Päike lähenes silmapiirile, seistes sedavõrd madalas, et enam ei ulatunud valgustama ei mäkke ronivat hobust, kes puutelgedega vankrit vedas, ei vankril istuvat noort naist ega ka ligi kolmekümnelist meest, kes kõndis vankri kõrval.  
 
      Varsti jõudsid teelised mäerinnakul nii kõrgele, et päikeses helendama lõid mehe nägu – laiavõitu, tugevate lõuapäradega, terassilmadega, lühikese, kuid tiheda musta habemega –, naise nukrad silmad, look ja hobuse kikkis kõrvadega pea.  
