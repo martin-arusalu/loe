@@ -10,7 +10,7 @@ export const PREDEFINED_BOOKS = [
     path: "/books/korboja_peremees.md",
   },
   {
-    title: "Noored hinged",
+    title: "Noored Hinged",
     author: "Anton Hansen Tammsaare",
     path: "/books/noored_hinged.md",
   },
