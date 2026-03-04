@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { registerSW } from "virtual:pwa-register";
 import * as amplitude from "@amplitude/analytics-browser";
 import * as Sentry from "@sentry/react";
-import { GlobalWorkerOptions } from "pdfjs-dist";
 import "./app/globals.css";
 import App from "./App";
 
@@ -37,11 +36,6 @@ amplitude.init("8f28bd7687521f98bbf342a0a78ee136", {
   },
   "serverZone": "EU",
 });
-
-GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url,
-).toString();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
