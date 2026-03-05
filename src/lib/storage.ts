@@ -16,6 +16,7 @@ export interface Book {
   position: number;
   lastOpened: number; // unix ms timestamp
   lastRead?: number; // unix ms timestamp — updated on every scroll
+  slug?: string; // API book slug, present when loaded from the server
 }
 
 export function bookId(title: string): string {

@@ -1,16 +1,23 @@
 import { useState } from 'react';
 import { PREDEFINED_BOOKS } from '@/lib/predefinedBooks';
 import { Book } from '@/lib/storage';
+import { AuthUser } from '@/lib/auth';
+import { ApiBook } from '@/lib/api';
 
 interface HomeScreenProps {
   library: Book[];
+  user: AuthUser | null;
+  apiBooks?: ApiBook[];
   onTextReady: (text: string, title: string) => void;
   onImport: () => void;
   onOpenBook: (book: Book) => void;
+  onOpenApiBook?: (book: ApiBook) => void;
   onDeleteBook: (id: string) => void;
+  onLoginRequest: () => void;
+  onLogout: () => void;
 }
 
-export default function HomeScreen({ library, onTextReady, onImport, onOpenBook, onDeleteBook }: HomeScreenProps) {
+export default function HomeScreen({ library, user, apiBooks, onTextReady, onImport, onOpenBook, onOpenApiBook, onDeleteBook, onLoginRequest, onLogout }: HomeScreenProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,12 +44,40 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
     }
   };
 
-  const stillToRead = PREDEFINED_BOOKS
-                .filter(b => !library.find(e => e.title === b.title)) // hide already imported books
+  // When logged in and API books are available, use them as the catalogue.
+  // Otherwise fall back to the bundled predefined books.
+  const useApiCatalogue = user && apiBooks && apiBooks.length > 0;
+
+  const stillToRead = useApiCatalogue
+    ? apiBooks.filter(b => !library.find(e => e.slug === b.slug || e.title === b.title))
+    : PREDEFINED_BOOKS.filter(b => !library.find(e => e.title === b.title));
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10"
+    <div className="relative min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10"
     >
+      {/* Auth button — top right */}
+      <div className="absolute top-5 right-6">
+        {user ? (
+          <button
+            onClick={onLogout}
+            className="flex items-center gap-2 text-stone-500 hover:text-stone-300 transition-colors text-sm"
+          >
+            {user.picture && (
+              <img src={user.picture} alt={user.name} className="w-6 h-6 rounded-full" />
+            )}
+            <span className="hidden sm:inline">{user.name}</span>
+            <span className="text-stone-600">·</span>
+            <span>Logi välja</span>
+          </button>
+        ) : (
+          <button
+            onClick={onLoginRequest}
+            className="text-stone-500 hover:text-stone-300 transition-colors text-sm"
+          >
+            Logi sisse
+          </button>
+        )}
+      </div>
       {/* Hero header */}
       <div className="text-center select-none">
         <h1
@@ -131,26 +166,42 @@ export default function HomeScreen({ library, onTextReady, onImport, onOpenBook,
           </button>
 
             <div className="border-t border-stone-800">
-              {stillToRead
-                .map((book) => (
-                <button
-                  key={book.path}
-                  onClick={() => handleBookSelect(book)}
-                  disabled={loading !== null}
-                  className="w-full flex items-center justify-between px-6 py-4 text-left transition-colors hover:bg-stone-800
-                    disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <div>
-                    <p className="text-stone-200 font-medium text-sm">{book.title}</p>
-                    <p className="text-stone-200 text-stone-500 text-xs mt-0.5 italic">{book.author}</p>
-                  </div>
-                  {loading === book.path ? (
-                    <span className="text-amber-400 text-xs animate-pulse">Laen…</span>
-                  ) : (
+              {useApiCatalogue
+                ? (stillToRead as ApiBook[]).map((book) => (
+                  <button
+                    key={book.slug}
+                    onClick={() => onOpenApiBook?.(book)}
+                    disabled={loading !== null}
+                    className="w-full flex items-center justify-between px-6 py-4 text-left transition-colors hover:bg-stone-800
+                      disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <div>
+                      <p className="text-stone-200 font-medium text-sm">{book.title}</p>
+                      <p className="text-stone-200 text-stone-500 text-xs mt-0.5 italic">{book.author}</p>
+                    </div>
                     <span className="text-amber-400 text-sm">›</span>
-                  )}
-                </button>
-              ))}
+                  </button>
+                ))
+                : (stillToRead as typeof PREDEFINED_BOOKS).map((book) => (
+                  <button
+                    key={book.path}
+                    onClick={() => handleBookSelect(book)}
+                    disabled={loading !== null}
+                    className="w-full flex items-center justify-between px-6 py-4 text-left transition-colors hover:bg-stone-800
+                      disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <div>
+                      <p className="text-stone-200 font-medium text-sm">{book.title}</p>
+                      <p className="text-stone-200 text-stone-500 text-xs mt-0.5 italic">{book.author}</p>
+                    </div>
+                    {loading === book.path ? (
+                      <span className="text-amber-400 text-xs animate-pulse">Laen…</span>
+                    ) : (
+                      <span className="text-amber-400 text-sm">›</span>
+                    )}
+                  </button>
+                ))
+              }
             </div>
         </div>)}
 
