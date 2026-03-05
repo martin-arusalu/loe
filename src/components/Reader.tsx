@@ -256,7 +256,7 @@ export default function Reader({
 
       {/* ── Go To panel (swipe right to reveal) ── */}
       <div
-        className="relative h-screen min-w-full flex flex-col items-center justify-center bg-stone-950 px-8"
+        className="relative h-screen min-w-full flex flex-col items-center justify-center bg-stone-900 px-8"
         style={{ scrollSnapAlign: "start" }}
       >
         <div className="w-full max-w-xs flex flex-col gap-6">
