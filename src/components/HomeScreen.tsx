@@ -1,6 +1,7 @@
 import { Book } from "@/lib/storage";
 import { AuthUser } from "@/lib/auth";
 import { ApiBook } from "@/lib/api";
+import { LogOut } from "lucide-react";
 
 interface HomeScreenProps {
   library: Book[];
@@ -35,17 +36,18 @@ export default function HomeScreen({
       {/* Auth button — top right */}
       <div className="absolute top-5 right-6">
         {user ? (
-          <button
-            onClick={onLogout}
-            className="flex items-center gap-2 text-stone-500 hover:text-stone-300 transition-colors text-sm"
-          >
+          <div className="flex flex-row gap-2">
             {user.picture && (
               <img src={user.picture} alt={user.name} className="w-6 h-6 rounded-full" />
             )}
-            <span className="hidden sm:inline">{user.name}</span>
-            <span className="text-stone-600">·</span>
-            <span>Logi välja</span>
-          </button>
+            <span className="inline">{user.name}</span>
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-2 text-stone-500 hover:text-stone-300 transition-colors text-sm"
+            >
+              <LogOut size={20} />
+            </button>
+          </div>
         ) : (
           <button
             onClick={onLoginRequest}
@@ -88,12 +90,21 @@ export default function HomeScreen({
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-xs text-stone-600">{formatProgress(book)}</span>
                           <div className="h-0.5 rounded-full w-full overflow-hidden bg-stone-800">
-                            <div
-                              className="h-full rounded-full transition-all bg-yellow-500"
-                              style={{
-                                width: formatProgress(book),
-                              }}
-                            />
+                            {formatProgress(book) === "100%" ? (
+                              <div
+                                className="h-full rounded-full transition-all bg-green-500"
+                                style={{
+                                  width: "100%",
+                                }}
+                              />
+                            ) : (
+                              <div
+                                className="h-full rounded-full transition-all bg-yellow-500"
+                                style={{
+                                  width: formatProgress(book),
+                                }}
+                              />
+                            )}
                           </div>
                         </div>
                       )}

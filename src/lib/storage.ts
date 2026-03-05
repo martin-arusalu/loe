@@ -157,3 +157,18 @@ export function clearPendingProgress(slug: string): void {
   delete map[slug];
   localStorage.setItem(PENDING_PROGRESS_KEY, JSON.stringify(map));
 }
+
+/** Wipe all books, reading position, and pending-progress data. Called on logout. */
+export async function clearAllData(): Promise<void> {
+  // Clear IndexedDB stores
+  const db = await openDB();
+  await new Promise<void>((resolve, reject) => {
+    const tx = db.transaction([BOOKS_STORE, META_STORE], "readwrite");
+    tx.objectStore(BOOKS_STORE).clear();
+    tx.objectStore(META_STORE).clear();
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+  // Clear localStorage progress queue
+  localStorage.removeItem(PENDING_PROGRESS_KEY);
+}

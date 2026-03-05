@@ -10,6 +10,7 @@ import Reader from "@/components/Reader";
 import TermsOfService from "@/components/TermsOfService";
 import { chunkText } from "@/lib/chunker";
 import { AuthUser, clearAuthUser, loadAuthUser } from "@/lib/auth";
+import { clearAllData } from "@/lib/storage";
 import {
   ApiBook,
   getAllReadingProgress,
@@ -92,6 +93,7 @@ function AppInner() {
       }
 
       setLibrary(await loadAllBooks());
+      setLoading(false);
     } catch {
       // API unavailable — continue with local data
     }
@@ -105,9 +107,9 @@ function AppInner() {
         const current = books.find((b) => b.id === currentId) ?? null;
         if (current && user) {
           setState({ view: "read", book: current });
+          setLoading(false);
         }
       }
-      setLoading(false);
     });
   }, []);
 
@@ -262,6 +264,7 @@ function AppInner() {
 
   const handleLogout = () => {
     clearAuthUser();
+    clearAllData().catch(console.error);
     setUser(null);
   };
 
