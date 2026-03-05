@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import HomeScreen from "@/components/HomeScreen";
 import Importer from "@/components/Importer";
 import LandingScreen from "@/components/LandingScreen";
 import LoginScreen from "@/components/LoginScreen";
+import PrivacyPolicy from "@/components/PrivacyPolicy";
 import Reader from "@/components/Reader";
+import TermsOfService from "@/components/TermsOfService";
 import { chunkText } from "@/lib/chunker";
 import { AuthUser, clearAuthUser, loadAuthUser } from "@/lib/auth";
 import {
@@ -321,8 +324,19 @@ function AppInner() {
 
 export default function App() {
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <AppInner />
-    </GoogleOAuthProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route
+          path="*"
+          element={
+            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+              <AppInner />
+            </GoogleOAuthProvider>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }

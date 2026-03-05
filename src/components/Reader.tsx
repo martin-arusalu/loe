@@ -219,6 +219,7 @@ export default function Reader({
                 <div className="max-w-xl w-full">
                   <div className="text-stone-100 text-xl md:text-2xl leading-relaxed font-serif text-balance prose prose-invert prose-p:my-4 prose-strong:font-bold prose-em:italic prose-ul:my-4 prose-ol:my-4 prose-li:my-1">
                     <Streamdown
+                      linkSafety={{ enabled: false }}
                       remarkPlugins={[...Object.values(defaultRemarkPlugins), remarkBreaks]}
                     >
                       {chunks[index]}

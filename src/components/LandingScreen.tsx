@@ -7,6 +7,7 @@ import {
   LibraryBig,
   MonitorSmartphone,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface LandingScreenProps {
   onLogin: () => void;
@@ -20,7 +21,7 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
   };
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center px-5 py-12 gap-10">
+    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center px-5 py-12 gap-6">
       {/* ── Hero ──────────────────────────────────────────── */}
       <header className="text-center select-none pt-6">
         <h1 className="text-2xl font-thin tracking-[0.7rem] text-stone-50 mb-3 font-serif">
@@ -130,11 +131,17 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
         </section>
       </div>
 
-      {/* ── Privacy note ──────────────────────────────────── */}
-      <p className="text-stone-600 text-xs text-center max-w-xs leading-relaxed pb-6">
-        Privaatsus: sinu tasuta üleslaetud raamatufail püsib sinu seadmes. Serverisse salvestame
-        ainult lugemisprogressi ja statistika.
-      </p>
+      <div className="flex flex-col gap-2 text-center">
+        <Link
+          to="/privacy"
+          className="text-stone-500 text-sm hover:text-stone-300 transition-colors"
+        >
+          Loe privaatsuspoliitikat
+        </Link>
+        <Link to="/terms" className="text-stone-500 text-sm hover:text-stone-300 transition-colors">
+          Loe kasutustingimusi
+        </Link>
+      </div>
     </div>
   );
 }
