@@ -14,17 +14,17 @@ export interface Book {
   title: string;
   chunks: string[];
   position: number;
-  lastOpened: number; // unix ms timestamp
   lastRead?: number; // unix ms timestamp — updated on every scroll
   slug?: string; // API book slug, present when loaded from the server
 }
 
 export function bookId(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\u00C0-\u024F]+/gi, "-")
-    .replace(/^-|-$/g, "") ||
-    "book";
+  return (
+    title
+      .toLowerCase()
+      .replace(/[^a-z0-9\u00C0-\u024F]+/gi, "-")
+      .replace(/^-|-$/g, "") || "book"
+  );
 }
 
 function openDB(): Promise<IDBDatabase> {
@@ -72,9 +72,7 @@ export async function loadAllBooks(): Promise<Book[]> {
     const tx = db.transaction(BOOKS_STORE, "readonly");
     const req = tx.objectStore(BOOKS_STORE).getAll();
     req.onsuccess = () => {
-      const books = (req.result as Book[]).sort((a, b) =>
-        (b.lastRead ?? b.lastOpened) - (a.lastRead ?? a.lastOpened)
-      );
+      const books = req.result as Book[];
       resolve(books);
     };
     req.onerror = () => reject(req.error);

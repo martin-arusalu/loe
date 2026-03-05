@@ -3,7 +3,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import remarkBreaks from "remark-breaks";
 import { defaultRemarkPlugins, Streamdown } from "streamdown";
 
-
 interface ReaderProps {
   chunks: string[];
   title: string;
@@ -13,13 +12,17 @@ interface ReaderProps {
 }
 
 // Index chunks.length is used as the virtual "completion card" slot.
-export default function Reader(
-  { chunks, title, initialChunk = 0, onBack, onPositionChange }: ReaderProps,
-) {
+export default function Reader({
+  chunks,
+  title,
+  initialChunk = 0,
+  onBack,
+  onPositionChange,
+}: ReaderProps) {
   // curIndex is the index of the chunk currently centered.
   // chunks.length means the completion card is centered.
   const [curIndex, setCurIndex] = useState(initialChunk);
-  const [goToValue, setGoToValue] = useState('');
+  const [goToValue, setGoToValue] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const hContainerRef = useRef<HTMLDivElement>(null);
   // Flag: we just shifted the window and need to re-center scroll without animation.
@@ -111,11 +114,10 @@ export default function Reader(
     }
   }, [curIndex, prevIndex, nextIndex, chunks.length, title]);
 
-  const progress = chunks.length > 0
-    ? Math.round(
-      ((Math.min(curIndex, chunks.length - 1) + 1) / chunks.length) * 100,
-    )
-    : 0;
+  const progress =
+    chunks.length > 0
+      ? Math.round(((Math.min(curIndex, chunks.length - 1) + 1) / chunks.length) * 100)
+      : 0;
 
   // Build the 2–3 items that are actually in the DOM.
   const windowItems: { id: string; index: number }[] = [];
@@ -134,10 +136,9 @@ export default function Reader(
     needsRecenter.current = true;
     setCurIndex(clamped);
     onPositionChangeRef.current?.(clamped);
-    setGoToValue('');
-    setTimeout(() => hContainerRef.current?.scrollTo({ left: 0, behavior: 'smooth' }), 0);
+    setGoToValue("");
+    setTimeout(() => hContainerRef.current?.scrollTo({ left: 0, behavior: "smooth" }), 0);
     track("chunk goto", { book: title, chunk: clamped, time: new Date().toISOString() });
-
   };
 
   return (
@@ -187,52 +188,45 @@ export default function Reader(
           style={{ scrollSnapType: "y mandatory" }}
         >
           {windowItems.map(({ id, index }) =>
-            index === chunks.length
-              ? (
-                // Completion card
-                <div
-                  key={id}
-                  className="min-h-screen flex items-center justify-center px-8"
-                  style={{ scrollSnapAlign: "center" }}
-                >
-                  <div className="text-center max-w-sm">
-                    <div className="text-5xl mb-6">✓</div>
-                    <h2 className="text-stone-200 text-2xl font-semibold mb-2">
-                      Oled lõpetanud.
-                    </h2>
-                    <p className="text-stone-500 mb-8 text-sm">
-                      {chunks.length} tükki · {title}
-                    </p>
-                    <button
-                      onClick={onBack}
-                      className="px-6 py-3 rounded-xl bg-amber-400 text-stone-950 font-semibold hover:bg-amber-300 transition-colors"
+            index === chunks.length ? (
+              // Completion card
+              <div
+                key={id}
+                className="min-h-screen flex items-center justify-center px-8"
+                style={{ scrollSnapAlign: "center" }}
+              >
+                <div className="text-center max-w-sm">
+                  <div className="text-5xl mb-6">✓</div>
+                  <h2 className="text-stone-200 text-2xl font-semibold mb-2">Oled lõpetanud.</h2>
+                  <p className="text-stone-500 mb-8 text-sm">
+                    {chunks.length} tükki · {title}
+                  </p>
+                  <button
+                    onClick={onBack}
+                    className="px-6 py-3 rounded-xl bg-amber-400 text-stone-950 font-semibold hover:bg-amber-300 transition-colors"
+                  >
+                    Loe midagi muud
+                  </button>
+                </div>
+              </div>
+            ) : (
+              // Regular chunk
+              <div
+                key={id}
+                className="min-h-screen flex items-center justify-center px-8"
+                style={{ scrollSnapAlign: "center" }}
+              >
+                <div className="max-w-xl w-full">
+                  <div className="text-stone-100 text-xl md:text-2xl leading-relaxed font-serif text-balance prose prose-invert prose-p:my-4 prose-strong:font-bold prose-em:italic prose-ul:my-4 prose-ol:my-4 prose-li:my-1">
+                    <Streamdown
+                      remarkPlugins={[...Object.values(defaultRemarkPlugins), remarkBreaks]}
                     >
-                      Loe midagi muud
-                    </button>
+                      {chunks[index]}
+                    </Streamdown>
                   </div>
                 </div>
-              )
-              : (
-                // Regular chunk
-                <div
-                  key={id}
-                  className="min-h-screen flex items-center justify-center px-8"
-                  style={{ scrollSnapAlign: "center" }}
-                >
-                  <div className="max-w-xl w-full">
-                    <div className="text-stone-100 text-xl md:text-2xl leading-relaxed font-serif text-balance prose prose-invert prose-p:my-4 prose-strong:font-bold prose-em:italic prose-ul:my-4 prose-ol:my-4 prose-li:my-1">
-                      <Streamdown
-                        remarkPlugins={[
-                          ...Object.values(defaultRemarkPlugins),
-                          remarkBreaks,
-                        ]}
-                      >
-                        {chunks[index]}
-                      </Streamdown>
-                    </div>
-                  </div>
-                </div>
-              )
+              </div>
+            )
           )}
         </div>
 
@@ -254,12 +248,8 @@ export default function Reader(
       >
         <div className="w-full max-w-xs flex flex-col gap-6">
           <div>
-            <h2 className="text-stone-200 text-2xl font-semibold mb-1">
-              Mine tükile
-            </h2>
-            <p className="text-stone-500 text-sm">
-              1 – {chunks.length}
-            </p>
+            <h2 className="text-stone-200 text-2xl font-semibold mb-1">Mine tükile</h2>
+            <p className="text-stone-500 text-sm">1 – {chunks.length}</p>
           </div>
 
           <input
@@ -276,7 +266,7 @@ export default function Reader(
 
           <button
             onClick={() => goToChunk(goToValue)}
-            disabled={goToValue === ''}
+            disabled={goToValue === ""}
             className="w-full py-3 rounded-xl bg-amber-400 text-stone-950 font-semibold hover:bg-amber-300 transition-colors disabled:opacity-40 disabled:pointer-events-none"
           >
             Mine

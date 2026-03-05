@@ -1,5 +1,12 @@
-import { useRef } from 'react';
-import { Upload, BookmarkCheck, BarChart2, Flame, LibraryBig, MonitorSmartphone } from 'lucide-react';
+import { useRef } from "react";
+import {
+  Upload,
+  BookmarkCheck,
+  BarChart2,
+  Flame,
+  LibraryBig,
+  MonitorSmartphone,
+} from "lucide-react";
 
 interface LandingScreenProps {
   onLogin: () => void;
@@ -9,26 +16,23 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
   const premiumRef = useRef<HTMLDivElement>(null);
 
   const scrollToPremium = () => {
-    premiumRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    premiumRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center px-5 py-12 gap-10">
-
       {/* ── Hero ──────────────────────────────────────────── */}
       <header className="text-center select-none pt-6">
         <h1 className="text-2xl font-thin tracking-[0.7rem] text-stone-50 mb-3 font-serif">
           Lauselt
         </h1>
-        <p className="text-stone-400 text-base">
-          Kasuta väikseid hetki, et saada palju loetud.
-        </p>
+        <p className="text-stone-400 text-base">Kasuta väikseid hetki, et saada palju loetud.</p>
       </header>
 
       {/* ── Description ───────────────────────────────────── */}
       <p className="text-stone-400 text-sm leading-relaxed text-center max-w-xs">
-        Muuda lugemine lihtsaks. Loe raamatuid väikeste tükkidena — täpselt nii kiiresti
-        kui ise tahad. Avasta olemasolevaid Eesti klassikuid või lae üles oma raamat.
+        Muuda lugemine lihtsaks. Loe raamatuid väikeste tükkidena — täpselt nii kiiresti kui ise
+        tahad. Avasta olemasolevaid Eesti klassikuid või lae üles oma raamat.
       </p>
 
       {/* ── CTA ───────────────────────────────────────────── */}
@@ -56,7 +60,6 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
 
       {/* ── Feature cards ─────────────────────────────────── */}
       <div className="w-full max-w-xs flex flex-col gap-4">
-
         {/* Free card */}
         <section
           aria-labelledby="free-heading"
@@ -71,8 +74,11 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
 
           <ul className="flex flex-col gap-3" role="list">
             {[
-              { Icon: Upload,        text: 'Importida oma raamatu (raamat salvestub sinu seadmesse).' },
-              { Icon: BookmarkCheck, text: 'Jätkata pooleli jäänud kohast (progress sünkib kontoga).' },
+              { Icon: Upload, text: "Importida oma raamatu (raamat salvestub sinu seadmesse)." },
+              {
+                Icon: BookmarkCheck,
+                text: "Jätkata pooleli jäänud kohast (progress sünkib kontoga).",
+              },
             ].map(({ Icon, text }) => (
               <li key={text} className="flex items-start gap-3 text-stone-300 text-sm">
                 <Icon size={16} className="mt-0.5 shrink-0 text-stone-500" aria-hidden="true" />
@@ -105,9 +111,15 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
 
           <ul className="flex flex-col gap-3" role="list">
             {[
-              { Icon: Flame,            text: 'Tekita järjepidev lugemisharjumus (päevas vähemalt 50 jututükki).' },
-              { Icon: LibraryBig,       text: 'Ligipääs valitud raamatutele (toimetatud ja kontrollitud).' },
-              { Icon: MonitorSmartphone, text: 'Raamatud igas seadmes (ei pea eraldi importima).' },
+              {
+                Icon: Flame,
+                text: "Tekita järjepidev lugemisharjumus (päevas vähemalt 50 jututükki).",
+              },
+              {
+                Icon: LibraryBig,
+                text: "Ligipääs valitud raamatutele (toimetatud ja kontrollitud).",
+              },
+              { Icon: MonitorSmartphone, text: "Raamatud igas seadmes (ei pea eraldi importima)." },
             ].map(({ Icon, text }) => (
               <li key={text} className="flex items-start gap-3 text-stone-300 text-sm">
                 <Icon size={16} className="mt-0.5 shrink-0 text-amber-400/70" aria-hidden="true" />
@@ -120,8 +132,8 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
 
       {/* ── Privacy note ──────────────────────────────────── */}
       <p className="text-stone-600 text-xs text-center max-w-xs leading-relaxed pb-6">
-        Privaatsus: sinu tasuta üleslaetud raamatufail püsib sinu seadmes.
-        Serverisse salvestame ainult lugemisprogressi ja statistika.
+        Privaatsus: sinu tasuta üleslaetud raamatufail püsib sinu seadmes. Serverisse salvestame
+        ainult lugemisprogressi ja statistika.
       </p>
     </div>
   );

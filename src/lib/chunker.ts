@@ -135,16 +135,5 @@ export function chunkText(text: string): string[] {
     }
   }
 
-  // TODO: Comment in when needed. dev stats: average chunk character length
-  // if (finalChunks.length > 0) {
-  //   const total = finalChunks.reduce((sum, c) => sum + c.length, 0);
-  //   const avg = Math.round(total / finalChunks.length);
-  //   const min = Math.min(...finalChunks.map((c) => c.length));
-  //   const max = Math.max(...finalChunks.map((c) => c.length));
-  //   console.log(
-  //     `[chunker] ${finalChunks.length} chunks — avg: ${avg} chars, min: ${min}, max: ${max}`,
-  //   );
-  // }
-
   return finalChunks;
 }

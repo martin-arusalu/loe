@@ -13,21 +13,14 @@ export async function parseEpub(buffer: ArrayBuffer): Promise<string> {
     throw new Error("Vigane EPUB: puudub META-INF/container.xml");
   }
 
-  const containerDoc = new DOMParser().parseFromString(
-    containerXml,
-    "application/xml",
-  );
-  const opfPath = containerDoc
-    .querySelector("rootfile")
-    ?.getAttribute("full-path");
+  const containerDoc = new DOMParser().parseFromString(containerXml, "application/xml");
+  const opfPath = containerDoc.querySelector("rootfile")?.getAttribute("full-path");
   if (!opfPath) throw new Error("Vigane EPUB: OPF faili asukohta ei leitud");
 
   // 2. Parse the OPF to get spine item hrefs in reading order
   const opfXml = await zip.file(opfPath)?.async("text");
   if (!opfXml) {
-    throw new Error(
-      `Vigane EPUB: OPF faili ei õnnestu lugeda asukohas ${opfPath}`,
-    );
+    throw new Error(`Vigane EPUB: OPF faili ei õnnestu lugeda asukohas ${opfPath}`);
   }
 
   const opfDoc = new DOMParser().parseFromString(opfXml, "application/xml");

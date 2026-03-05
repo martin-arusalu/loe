@@ -1,7 +1,6 @@
-import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { parseEpub } from '@/lib/parseEpub';
-
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { parseEpub } from "@/lib/parseEpub";
 
 interface ImporterProps {
   onTextReady: (text: string, title: string) => void;
@@ -9,7 +8,7 @@ interface ImporterProps {
 }
 
 export default function Importer({ onTextReady, onBack }: ImporterProps) {
-  const [pasteValue, setPasteValue] = useState('');
+  const [pasteValue, setPasteValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,9 +18,9 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
       setLoading(true);
       try {
         const buffer = await file.arrayBuffer();
-        let text = '';
+        let text = "";
 
-        if (file.name.endsWith('.epub')) {
+        if (file.name.endsWith(".epub")) {
           text = await parseEpub(buffer);
         } else {
           // plain text
@@ -29,7 +28,7 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
         }
 
         if (!text.trim()) {
-          setError('Failist ei leitud loetavat teksti.');
+          setError("Failist ei leitud loetavat teksti.");
           return;
         }
 
@@ -43,10 +42,10 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
         // a.click();
         // URL.revokeObjectURL(url);
 
-        onTextReady(text, file.name.replace(/\.[^.]+$/, ''));
+        onTextReady(text, file.name.replace(/\.[^.]+$/, ""));
       } catch (err) {
         console.error(err);
-        setError('Faili töötlemine ebaõnnestus. Palun proovi teist faili.');
+        setError("Faili töötlemine ebaõnnestus. Palun proovi teist faili.");
       } finally {
         setLoading(false);
       }
@@ -64,7 +63,7 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'application/epub+zip': ['.epub'],
+      "application/epub+zip": [".epub"],
     },
     multiple: false,
   });
@@ -72,10 +71,9 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
   const handlePasteSubmit = () => {
     const text = pasteValue.trim();
     if (!text) return;
-    onTextReady(text, 'Kleebitud tekst');
-    setPasteValue('');
+    onTextReady(text, "Kleebitud tekst");
+    setPasteValue("");
   };
-
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-12 py-10 gap-10">
@@ -88,7 +86,7 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
       <div
         {...getRootProps()}
         className={`w-full max-w-xl border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-colors
-          ${isDragActive ? 'border-amber-400 bg-amber-400/10' : 'border-stone-700 hover:border-stone-500 bg-stone-900'}`}
+          ${isDragActive ? "border-amber-400 bg-amber-400/10" : "border-stone-700 hover:border-stone-500 bg-stone-900"}`}
       >
         <input {...getInputProps()} />
         {loading ? (
@@ -97,37 +95,43 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
           <p className="text-amber-400 font-medium">Tõsta siia…</p>
         ) : (
           <>
-            <p className="text-stone-300 font-medium mb-1">Tõsta fail siia või klõpsa, et sirvida</p>
+            <p className="text-stone-300 font-medium mb-1">
+              Tõsta fail siia või klõpsa, et sirvida
+            </p>
             <p className="text-stone-500 text-sm">Toetab EPUB formaadis faile</p>
           </>
         )}
       </div>
 
-      {error && (
-        <p className="text-red-400 text-sm -mt-4">{error}</p>
-      )}
+      {/* ── Privacy note ──────────────────────────────────── */}
+      <p className="text-stone-600 text-xs text-center max-w-xs leading-relaxed">
+        Sinu tasuta üleslaetud raamatufail püsib sinu seadmes. Serverisse salvestame ainult
+        lugemisprogressi ja statistika.
+      </p>
+
+      {error && <p className="text-red-400 text-sm -mt-4">{error}</p>}
 
       {/* action area */}
       <div className="w-full max-w-xl flex flex-col gap-3">
         <div className="w-full max-w-xl flex items-center mb-2 justify-between">
-        {onBack && (
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="mr-4 px-4 py-2 rounded-lg bg-stone-800 text-stone-200 hover:bg-stone-700 transition-colors"
+              aria-label="Tagasi avalehele"
+            >
+              ← Tagasi
+            </button>
+          )}
           <button
-            onClick={onBack}
-            className="mr-4 px-4 py-2 rounded-lg bg-stone-800 text-stone-200 hover:bg-stone-700 transition-colors"
-            aria-label="Tagasi avalehele"
-          >
-            ← Tagasi
-          </button>
-        )}
-        <button
-          onClick={handlePasteSubmit}
-          disabled={!pasteValue.trim()}
-          className="self-end px-6 py-2 rounded-xl bg-amber-400 text-stone-950 font-semibold text-sm
+            onClick={handlePasteSubmit}
+            disabled={!pasteValue.trim()}
+            className="self-end px-6 py-2 rounded-xl bg-amber-400 text-stone-950 font-semibold text-sm
             disabled:opacity-30 disabled:cursor-not-allowed hover:bg-amber-300 transition-colors"
-        >
-          Alusta lugemist →
-        </button>
-      </div>
+          >
+            Alusta lugemist →
+          </button>
+        </div>
       </div>
     </div>
   );

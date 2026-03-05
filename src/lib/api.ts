@@ -102,11 +102,7 @@ export async function getBookDetail(slug: string): Promise<BookDetail> {
   return res.json() as Promise<BookDetail>;
 }
 
-export async function getBookChunks(
-  slug: string,
-  from = 0,
-  to = 20,
-): Promise<BookChunksResponse> {
+export async function getBookChunks(slug: string, from = 0, to = 20): Promise<BookChunksResponse> {
   const res = await apiFetch(`/books/${slug}/chunks?from=${from}&to=${to}`);
   if (!res.ok) {
     throw new Error(`GET /books/${slug}/chunks failed: ${res.status}`);
@@ -125,10 +121,7 @@ export async function openBook(bookSlug: string): Promise<ReadingOpenResponse> {
   return res.json() as Promise<ReadingOpenResponse>;
 }
 
-export async function recordScroll(
-  bookSlug: string,
-  chunkIndex: number,
-): Promise<ScrollResponse> {
+export async function recordScroll(bookSlug: string, chunkIndex: number): Promise<ScrollResponse> {
   const res = await apiFetch("/reading/scroll", {
     method: "POST",
     body: JSON.stringify({ bookSlug, chunkIndex }),
@@ -143,9 +136,7 @@ export async function getCurrentReading(): Promise<CurrentReadingResponse> {
   return res.json() as Promise<CurrentReadingResponse>;
 }
 
-export async function getAllReadingProgress(): Promise<
-  AllReadingProgressResponse
-> {
+export async function getAllReadingProgress(): Promise<AllReadingProgressResponse> {
   const res = await apiFetch("/reading/progress");
   if (!res.ok) throw new Error(`GET /reading/progress failed: ${res.status}`);
   return res.json() as Promise<AllReadingProgressResponse>;

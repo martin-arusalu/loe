@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { GoogleLogin } from '@react-oauth/google';
-import { AuthUser, loginWithGoogle } from '@/lib/auth';
+import { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import { AuthUser, loginWithGoogle } from "@/lib/auth";
 
 interface LoginScreenProps {
   onBack: () => void;
@@ -35,7 +35,7 @@ export default function LoginScreen({ onBack, onLogin }: LoginScreenProps) {
           onSuccess={(credentialResponse) => {
             const idToken = credentialResponse.credential;
             if (!idToken) {
-              setError('Google ei tagastanud tokenit.');
+              setError("Google ei tagastanud tokenit.");
               return;
             }
             setLoading(true);
@@ -44,22 +44,18 @@ export default function LoginScreen({ onBack, onLogin }: LoginScreenProps) {
               .then((user) => onLogin(user))
               .catch((err) => {
                 console.error(err);
-                setError('Sisselogimine ebaõnnestus. Palun proovi uuesti.');
+                setError("Sisselogimine ebaõnnestus. Palun proovi uuesti.");
               })
               .finally(() => setLoading(false));
           }}
-          onError={() => setError('Google sisselogimine ebaõnnestus.')}
+          onError={() => setError("Google sisselogimine ebaõnnestus.")}
           theme="filled_black"
           shape="rectangular"
           text="signin_with"
         />
 
-        {loading && (
-          <p className="text-stone-500 text-sm animate-pulse">Sisselogimine…</p>
-        )}
-        {error && (
-          <p className="text-red-400 text-sm text-center">{error}</p>
-        )}
+        {loading && <p className="text-stone-500 text-sm animate-pulse">Sisselogimine…</p>}
+        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
       </div>
     </div>
   );

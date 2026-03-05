@@ -1,6 +1,6 @@
 # Reedfeed
 
->A simple e-book reader built with [React](https://react.dev/) and [Vite](https://vitejs.dev/).
+> A simple e-book reader built with [React](https://react.dev/) and [Vite](https://vitejs.dev/).
 
 ## Getting Started
 
