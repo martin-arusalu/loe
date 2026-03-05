@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { parseEpub } from "@/lib/parseEpub";
+import { track } from "@amplitude/analytics-browser";
 
 interface ImporterProps {
   onTextReady: (text: string, title: string) => void;
@@ -43,6 +44,9 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
         // URL.revokeObjectURL(url);
 
         onTextReady(text, file.name.replace(/\.[^.]+$/, ""));
+        track("imported file", {
+          book: file.name.replace(/\.[^.]+$/, ""),
+        });
       } catch (err) {
         console.error(err);
         setError("Faili töötlemine ebaõnnestus. Palun proovi teist faili.");

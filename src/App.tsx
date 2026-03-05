@@ -33,6 +33,7 @@ import {
   saveBook,
   setCurrentBookId,
 } from "@/lib/storage";
+import { track } from "@amplitude/analytics-browser";
 
 const GOOGLE_CLIENT_ID = "382553774833-b3673gncnf51ha3td8s2t8j90kipd4ao.apps.googleusercontent.com";
 
@@ -166,6 +167,7 @@ function AppInner() {
   // Force-logout when the refresh token itself is rejected by the server.
   useEffect(() => {
     const handleSessionExpired = () => {
+      track("session expired");
       setUser(null);
       setApiBooks([]);
       setState({ view: "home" });
@@ -179,6 +181,8 @@ function AppInner() {
     if (!navigator.onLine) return;
     const pending = getPendingProgress();
     if (pending.length === 0) return;
+
+    track("flush pending", { pending: pending.length });
     await Promise.all(
       pending.map(async ({ slug, chunkIndex }) => {
         try {
@@ -233,6 +237,7 @@ function AppInner() {
     if (book.slug) {
       openBook(book.slug).catch(() => {});
     }
+    track("open book", { book: book?.title });
   };
 
   const handleOpenApiBook = async (apiBook: ApiBook) => {
@@ -266,6 +271,8 @@ function AppInner() {
     await setCurrentBookId(localId);
     setLibrary(await loadAllBooks());
     setState({ view: "read", book });
+
+    track("open api book", { book: book?.title });
   };
 
   const handleDeleteBookProgress = async (id: string) => {
@@ -273,22 +280,30 @@ function AppInner() {
     if (existing) {
       await saveBook({ ...existing, position: 0, lastRead: undefined });
     }
+    track("delete progress", { book: existing?.title ?? id });
     const books = await loadAllBooks();
     setLibrary(books);
   };
 
   const handleBack = async () => {
+    track("back");
     const books = await loadAllBooks();
     setLibrary(books);
     setState({ view: "home" });
   };
 
   const handleLogin = (loggedInUser: AuthUser) => {
+    track("login", {
+      user: loggedInUser?.email,
+    });
     setUser(loggedInUser);
     setState({ view: "home" });
   };
 
   const handleLogout = () => {
+    track("logout", {
+      user: user?.email,
+    });
     clearAuthUser();
     clearAllData().catch(console.error);
     setUser(null);
