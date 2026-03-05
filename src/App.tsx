@@ -13,9 +13,11 @@ import { AuthUser, clearAuthUser, loadAuthUser } from "@/lib/auth";
 import { clearAllData } from "@/lib/storage";
 import {
   ApiBook,
+  UserStats,
   getAllReadingProgress,
   getBookChunks,
   getBooks,
+  getStats,
   openBook,
   recordScroll,
 } from "@/lib/api";
@@ -47,6 +49,17 @@ function AppInner() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<AuthUser | null>(() => loadAuthUser());
   const [apiBooks, setApiBooks] = useState<ApiBook[]>([]);
+  const [stats, setStats] = useState<UserStats | null>(null);
+
+  const fetchStats = useCallback(async () => {
+    if (!user) return;
+    try {
+      const s = await getStats();
+      setStats(s);
+    } catch {
+      // Stats unavailable — fail silently
+    }
+  }, [user]);
 
   // Sync API books and reading progress when user is logged in
   const syncApiData = async () => {
@@ -118,12 +131,19 @@ function AppInner() {
     if (user) {
       setLoading(true);
       syncApiData();
+      fetchStats();
     } else {
       setApiBooks([]);
+      setStats(null);
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  // Refresh stats whenever the view changes
+  useEffect(() => {
+    fetchStats();
+  }, [state.view, fetchStats]);
 
   const handleTextReady = async (text: string, title: string) => {
     const chunks = chunkText(text);
@@ -196,11 +216,13 @@ function AppInner() {
     // Sync scroll position to API; queue locally when offline so the position
     // is flushed automatically once the connection is restored.
     if (updatedBook.slug) {
-      recordScroll(updatedBook.slug, position).catch(() => {
-        if (updatedBook.slug) {
-          queuePendingProgress(updatedBook.slug, position);
-        }
-      });
+      recordScroll(updatedBook.slug, position)
+        .then(() => fetchStats())
+        .catch(() => {
+          if (updatedBook.slug) {
+            queuePendingProgress(updatedBook.slug, position);
+          }
+        });
     }
   };
 
@@ -295,6 +317,7 @@ function AppInner() {
         initialChunk={state.book.position}
         onBack={handleBack}
         onPositionChange={handlePositionChange}
+        stats={stats}
       />
     );
   }
@@ -316,6 +339,7 @@ function AppInner() {
       library={library}
       user={user}
       apiBooks={apiBooks}
+      stats={stats}
       onTextReady={handleTextReady}
       onImport={() => setState({ view: "import" })}
       onOpenBook={handleOpenBook}

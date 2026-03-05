@@ -1,12 +1,13 @@
 import { Book } from "@/lib/storage";
 import { AuthUser } from "@/lib/auth";
-import { ApiBook } from "@/lib/api";
-import { LogOut } from "lucide-react";
+import { ApiBook, UserStats } from "@/lib/api";
+import { Check, LogOut } from "lucide-react";
 
 interface HomeScreenProps {
   library: Book[];
   user: AuthUser | null;
   apiBooks?: ApiBook[];
+  stats?: UserStats | null;
   onTextReady: (text: string, title: string) => void;
   onImport: () => void;
   onOpenBook: (book: Book) => void;
@@ -19,6 +20,7 @@ interface HomeScreenProps {
 export default function HomeScreen({
   library,
   user,
+  stats,
   onImport,
   onOpenBook,
   onDeleteBook,
@@ -65,6 +67,67 @@ export default function HomeScreen({
 
         <p className="text-stone-500 text-base">Kasuta väikseid hetki, et saada palju loetud.</p>
       </div>
+
+      {/* Streak & today stats — shown only when logged in and stats are available */}
+      {user && stats && (
+        <div className="w-full max-w-sm">
+          <div
+            className={`rounded-2xl border p-4 flex gap-4 transition-colors ${
+              stats.today.goalMet
+                ? "bg-amber-950/30 border-amber-700/40"
+                : "bg-stone-900 border-stone-800"
+            }`}
+          >
+            {/* Streak */}
+            <div className="flex-1 flex flex-col items-center justify-center gap-1 py-1">
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold text-amber-400 tabular-nums leading-none">
+                  {stats.streak.current}
+                </span>
+                {stats.today.goalMet && (
+                  <span className="text-amber-400 text-base leading-none">
+                    <Check />
+                  </span>
+                )}
+              </div>
+              <span className="text-xs text-stone-500 text-center leading-tight">
+                Järjest päevi loetud
+              </span>
+            </div>
+
+            {/* Divider */}
+            <div className="w-px bg-stone-800" />
+
+            {/* Today */}
+            <div className="flex-1 flex flex-col justify-center gap-2 py-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-stone-500">Täna loetud</span>
+                <span className="text-xs text-stone-400 tabular-nums">
+                  {stats.today.chunksScrolled}
+                  <span className="text-stone-600">/{stats.today.dailyGoal}</span>
+                </span>
+              </div>
+              <div className="h-1.5 rounded-full bg-stone-800 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-500 ${
+                    stats.today.goalMet ? "bg-amber-400" : "bg-stone-500"
+                  }`}
+                  style={{
+                    width: `${Math.min(100, (stats.today.chunksScrolled / stats.today.dailyGoal) * 100)}%`,
+                  }}
+                />
+              </div>
+              {stats.today.goalMet ? (
+                <span className="text-xs text-amber-400">✓ Tänane eesmärk täidetud</span>
+              ) : (
+                <span className="text-xs text-stone-600">
+                  {stats.today.remaining} tükki eesmärgini
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="w-full max-w-sm flex flex-col gap-3">
         {/* Saved library */}

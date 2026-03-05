@@ -2,6 +2,7 @@ import { track } from "@amplitude/analytics-browser";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import remarkBreaks from "remark-breaks";
 import { defaultRemarkPlugins, Streamdown } from "streamdown";
+import { UserStats } from "@/lib/api";
 
 interface ReaderProps {
   chunks: string[];
@@ -9,6 +10,7 @@ interface ReaderProps {
   initialChunk?: number;
   onBack: () => void;
   onPositionChange?: (position: number) => void;
+  stats?: UserStats | null;
 }
 
 // Index chunks.length is used as the virtual "completion card" slot.
@@ -18,6 +20,7 @@ export default function Reader({
   initialChunk = 0,
   onBack,
   onPositionChange,
+  stats,
 }: ReaderProps) {
   // curIndex is the index of the chunk currently centered.
   // chunks.length means the completion card is centered.
@@ -240,6 +243,15 @@ export default function Reader({
             </div>
           </div>
         )}
+
+        {/* Subtle streak completion indicator */}
+        {stats?.today.goalMet && (
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none">
+            <div className="flex items-center gap-1.5 bg-stone-900/70 backdrop-blur-sm border border-amber-900/40 text-amber-600 text-xs px-3 py-1 rounded-full">
+              <span>Tänane eesmärk täidetud</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ── Go To panel (swipe right to reveal) ── */}
@@ -248,6 +260,42 @@ export default function Reader({
         style={{ scrollSnapAlign: "start" }}
       >
         <div className="w-full max-w-xs flex flex-col gap-6">
+          {/* Stats summary */}
+          {stats && (
+            <>
+              <h2 className="text-stone-200 text-2xl font-semibold mb-1">Statistika</h2>
+              <div className="rounded-xl bg-stone-900 items-center border border-stone-800 p-4 flex">
+                <div className="flex-1 flex flex-col items-center gap-1">
+                  <span className="text-2xl font-bold text-amber-400 tabular-nums leading-none">
+                    {stats.streak.current}
+                  </span>
+                  <span className="text-xs text-stone-500">
+                    päev{stats.streak.current !== 1 && "a"} järjest
+                  </span>
+                </div>
+                <div className="w-px bg-stone-800 mx-2" />
+                <div className="flex-1 flex flex-col items-center gap-2">
+                  <p className="text-2xl font-bold text-stone-200 tabular-nums leading-none">
+                    {stats.today.chunksScrolled}
+                    <span className="text-stone-600 text-base">/{stats.today.dailyGoal}</span>
+                  </p>
+                  <span className="text-xs text-stone-500">täna loetud</span>
+                  {stats.today.goalMet ? (
+                    <span className="text-xs text-amber-400">✓ eesmärk täidetud</span>
+                  ) : (
+                    <div className="w-full h-1 rounded-full bg-stone-800 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-stone-500 transition-all"
+                        style={{
+                          width: `${Math.min(100, (stats.today.chunksScrolled / stats.today.dailyGoal) * 100)}%`,
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
           <div>
             <h2 className="text-stone-200 text-2xl font-semibold mb-1">Mine tükile</h2>
             <p className="text-stone-500 text-sm">1 – {chunks.length}</p>
