@@ -12,7 +12,7 @@ interface HomeScreenProps {
   onImport: () => void;
   onOpenBook: (book: Book) => void;
   onOpenApiBook?: (book: ApiBook) => void;
-  onDeleteBook: (id: string) => void;
+  onDeleteProgress: (id: string) => void;
   onLoginRequest: () => void;
   onLogout: () => void;
 }
@@ -23,7 +23,7 @@ export default function HomeScreen({
   stats,
   onImport,
   onOpenBook,
-  onDeleteBook,
+  onDeleteProgress,
   onLoginRequest,
   onLogout,
 }: HomeScreenProps) {
@@ -175,7 +175,7 @@ export default function HomeScreen({
                     <span className="text-stone-600 text-sm ml-3 shrink-0">›</span>
                   </button>
                   <button
-                    onClick={() => onDeleteBook(book.id)}
+                    onClick={() => onDeleteProgress(book.id)}
                     className="px-4 py-4 text-stone-600 hover:text-red-400 text-lg leading-none shrink-0 transition-colors duration-150"
                     title="Kustuta"
                   >

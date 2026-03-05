@@ -25,7 +25,6 @@ import {
   Book,
   bookId,
   clearPendingProgress,
-  deleteBook,
   getCurrentBookId,
   getPendingProgress,
   loadAllBooks,
@@ -269,8 +268,11 @@ function AppInner() {
     setState({ view: "read", book });
   };
 
-  const handleDeleteBook = async (id: string) => {
-    await deleteBook(id);
+  const handleDeleteBookProgress = async (id: string) => {
+    const existing = await loadBook(id);
+    if (existing) {
+      await saveBook({ ...existing, position: 0, lastRead: undefined });
+    }
     const books = await loadAllBooks();
     setLibrary(books);
   };
@@ -344,7 +346,7 @@ function AppInner() {
       onImport={() => setState({ view: "import" })}
       onOpenBook={handleOpenBook}
       onOpenApiBook={handleOpenApiBook}
-      onDeleteBook={handleDeleteBook}
+      onDeleteProgress={handleDeleteBookProgress}
       onLoginRequest={() => setState({ view: "login" })}
       onLogout={handleLogout}
     />
