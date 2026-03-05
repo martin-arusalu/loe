@@ -44,13 +44,16 @@ export function clearAuthUser(): void {
   localStorage.removeItem(TOKENS_KEY);
 }
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://api.lauselt.ee";
 
 /**
  * Wrapper around fetch that automatically attaches the stored Bearer token
  * for requests to the API. Falls back to a normal fetch for external URLs.
  */
-export function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
+export function apiFetch(
+  path: string,
+  init: RequestInit = {},
+): Promise<Response> {
   const tokens = loadAuthTokens();
   const headers = new Headers(init.headers);
   if (tokens?.accessToken) {
