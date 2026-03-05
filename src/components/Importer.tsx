@@ -76,7 +76,7 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
   };
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-12 py-10 gap-10">
+    <div className="min-h-screen bg-stone-900 text-stone-100 flex flex-col items-center justify-center px-12 py-10 gap-10">
       <div className="text-center">
         <h1 className="text-4xl font-bold tracking-tight text-stone-50 mb-2">Oma raamat</h1>
         <p className="text-stone-400 text-lg">Lae üles oma raamat, et alustada lugemist</p>
@@ -126,7 +126,7 @@ export default function Importer({ onTextReady, onBack }: ImporterProps) {
           <button
             onClick={handlePasteSubmit}
             disabled={!pasteValue.trim()}
-            className="self-end px-6 py-2 rounded-xl bg-amber-400 text-stone-950 font-semibold text-sm
+            className="self-end px-6 py-2 rounded-xl bg-amber-400 text-stone-900 font-semibold text-sm
             disabled:opacity-30 disabled:cursor-not-allowed hover:bg-amber-300 transition-colors"
           >
             Alusta lugemist →

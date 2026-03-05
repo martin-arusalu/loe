@@ -70,7 +70,7 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
             onClick={onLogin}
             aria-label="Logi sisse ja alusta lugemist"
             className="group relative w-full max-w-xs sm:max-w-sm rounded-2xl
-                       bg-gradient-to-r from-amber-500 to-amber-600 text-stone-950
+                       bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900
                        font-semibold py-3.5 sm:py-4 text-base sm:text-lg
                        shadow-lg shadow-amber-900/20
                        hover:from-amber-400 hover:to-amber-500 hover:shadow-amber-800/30

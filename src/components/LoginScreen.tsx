@@ -12,7 +12,7 @@ export default function LoginScreen({ onBack, onLogin }: LoginScreenProps) {
   const [error, setError] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-8">
+    <div className="min-h-screen bg-stone-900 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-8">
       {/* Back */}
       <button
         onClick={onBack}

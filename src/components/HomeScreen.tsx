@@ -34,7 +34,7 @@ export default function HomeScreen({
   };
 
   return (
-    <div className="relative min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10">
+    <div className="relative min-h-screen bg-stone-900 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10">
       {/* Auth button — top right */}
       <div className="absolute top-5 right-6">
         {user ? (

@@ -296,7 +296,7 @@ function AppInner() {
 
   if (loading) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center gap-4 bg-stone-950">
+      <div className="flex h-screen flex-col items-center justify-center gap-4 bg-stone-900">
         <p className="text-stone-500 text-lg tracking-wide">Laen…</p>
         <div className="flex gap-1.5">
           {[0, 1, 2].map((i) => (
