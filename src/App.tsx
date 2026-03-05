@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import HomeScreen from "@/components/HomeScreen";
 import Importer from "@/components/Importer";
@@ -18,10 +18,13 @@ import {
 import {
   Book,
   bookId,
+  clearPendingProgress,
   deleteBook,
   getCurrentBookId,
+  getPendingProgress,
   loadAllBooks,
   loadBook,
+  queuePendingProgress,
   saveBook,
   setCurrentBookId,
 } from "@/lib/storage";
@@ -97,7 +100,7 @@ function AppInner() {
       setLibrary(books);
       if (currentId) {
         const current = books.find((b) => b.id === currentId) ?? null;
-        if (current) {
+        if (current && user) {
           setState({ view: "read", book: current });
         }
       }
@@ -134,14 +137,63 @@ function AppInner() {
     setState({ view: "read", book });
   };
 
+  // Force-logout when the refresh token itself is rejected by the server.
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setUser(null);
+      setApiBooks([]);
+      setState({ view: "home" });
+    };
+    window.addEventListener("auth:sessionExpired", handleSessionExpired);
+    return () => window.removeEventListener("auth:sessionExpired", handleSessionExpired);
+  }, []);
+
+  // Flush any progress that was queued while offline.
+  const flushPendingProgress = useCallback(async () => {
+    if (!navigator.onLine) return;
+    const pending = getPendingProgress();
+    if (pending.length === 0) return;
+    await Promise.all(
+      pending.map(async ({ slug, chunkIndex }) => {
+        try {
+          await recordScroll(slug, chunkIndex);
+          clearPendingProgress(slug);
+        } catch {
+          // Still offline — leave entry for the next attempt
+        }
+      })
+    );
+  }, []);
+
+  // Listen for the browser coming back online and poll every 30 s as a fallback
+  // (the `online` event can be unreliable in PWA/service-worker contexts).
+  useEffect(() => {
+    const handleOnline = () => {
+      flushPendingProgress();
+    };
+    window.addEventListener("online", handleOnline);
+    const interval = setInterval(() => {
+      if (navigator.onLine) flushPendingProgress();
+    }, 30_000);
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      clearInterval(interval);
+    };
+  }, [flushPendingProgress]);
+
   const handlePositionChange = async (position: number) => {
     if (state.view !== "read") return;
     const updatedBook: Book = { ...state.book, position, lastRead: Date.now() };
     await saveBook(updatedBook);
     setState({ view: "read", book: updatedBook });
-    // Sync scroll position to API (fire-and-forget)
+    // Sync scroll position to API; queue locally when offline so the position
+    // is flushed automatically once the connection is restored.
     if (updatedBook.slug) {
-      recordScroll(updatedBook.slug, position).catch(() => {});
+      recordScroll(updatedBook.slug, position).catch(() => {
+        if (updatedBook.slug) {
+          queuePendingProgress(updatedBook.slug, position);
+        }
+      });
     }
   };
 

@@ -115,3 +115,45 @@ export async function setCurrentBookId(id: string): Promise<void> {
     tx.onerror = () => reject(tx.error);
   });
 }
+
+// ── Offline pending-progress queue ────────────────────────────────────────
+// Stores the most-recent unsynced chunk position per book slug in localStorage.
+// Only the latest position matters because the API accepts the final index.
+
+const PENDING_PROGRESS_KEY = "reedfeed_pending_progress";
+
+type PendingProgressMap = Record<string, number>; // slug → chunkIndex
+
+function loadPendingProgressMap(): PendingProgressMap {
+  try {
+    const raw = localStorage.getItem(PENDING_PROGRESS_KEY);
+    return raw ? (JSON.parse(raw) as PendingProgressMap) : {};
+  } catch {
+    return {};
+  }
+}
+
+/** Persist (or overwrite) the latest unsynced position for a book. */
+export function queuePendingProgress(slug: string, chunkIndex: number): void {
+  const map = loadPendingProgressMap();
+  map[slug] = chunkIndex;
+  localStorage.setItem(PENDING_PROGRESS_KEY, JSON.stringify(map));
+}
+
+/** Return all pending (slug, chunkIndex) pairs. */
+export function getPendingProgress(): Array<
+  { slug: string; chunkIndex: number }
+> {
+  const map = loadPendingProgressMap();
+  return Object.entries(map).map(([slug, chunkIndex]) => ({
+    slug,
+    chunkIndex,
+  }));
+}
+
+/** Remove a successfully-synced entry. */
+export function clearPendingProgress(slug: string): void {
+  const map = loadPendingProgressMap();
+  delete map[slug];
+  localStorage.setItem(PENDING_PROGRESS_KEY, JSON.stringify(map));
+}

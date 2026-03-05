@@ -48,22 +48,81 @@ export function clearAuthUser(): void {
 const API_BASE = "https://api.lauselt.ee";
 
 /**
- * Wrapper around fetch that automatically attaches the stored Bearer token
- * for requests to the API. Falls back to a normal fetch for external URLs.
+ * Calls POST /auth/refresh with the stored refresh token and persists the
+ * new token pair. Returns the new tokens, or null if the refresh fails.
+ * Concurrent callers share a single in-flight request via the module-level
+ * promise so that multiple 401s only trigger one refresh.
  */
-export function apiFetch(
+let _refreshPromise: Promise<AuthTokens | null> | null = null;
+
+export async function refreshTokens(): Promise<AuthTokens | null> {
+  const tokens = loadAuthTokens();
+  if (!tokens?.refreshToken) return null;
+  try {
+    const res = await fetch(`${API_BASE}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken: tokens.refreshToken }),
+    });
+    if (!res.ok) {
+      if (res.status === 401) {
+        // Refresh token is invalid/expired — wipe local credentials and notify the app.
+        clearAuthUser();
+        window.dispatchEvent(new CustomEvent("auth:sessionExpired"));
+      }
+      return null;
+    }
+    const data = await res.json();
+    const newTokens: AuthTokens = {
+      accessToken: data.accessToken ?? data.access_token,
+      // Keep the old refresh token if the server doesn't issue a new one
+      refreshToken: data.refreshToken ?? data.refresh_token ??
+        tokens.refreshToken,
+    };
+    saveAuthTokens(newTokens);
+    return newTokens;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Wrapper around fetch that automatically attaches the stored Bearer token.
+ * On a 401 response it attempts a token refresh once and retries the original
+ * request with the new access token.
+ */
+export async function apiFetch(
   path: string,
   init: RequestInit = {},
 ): Promise<Response> {
+  const makeRequest = (accessToken: string | undefined): Promise<Response> => {
+    const headers = new Headers(init.headers);
+    if (accessToken) {
+      headers.set("Authorization", `Bearer ${accessToken}`);
+    }
+    if (!headers.has("Content-Type") && !(init.body instanceof FormData)) {
+      headers.set("Content-Type", "application/json");
+    }
+    return fetch(`${API_BASE}${path}`, { ...init, headers });
+  };
+
   const tokens = loadAuthTokens();
-  const headers = new Headers(init.headers);
-  if (tokens?.accessToken) {
-    headers.set("Authorization", `Bearer ${tokens.accessToken}`);
+  let res = await makeRequest(tokens?.accessToken);
+
+  if (res.status === 401 && tokens?.refreshToken) {
+    // Deduplicate concurrent refresh attempts into a single request
+    if (!_refreshPromise) {
+      _refreshPromise = refreshTokens().finally(() => {
+        _refreshPromise = null;
+      });
+    }
+    const newTokens = await _refreshPromise;
+    if (newTokens) {
+      res = await makeRequest(newTokens.accessToken);
+    }
   }
-  if (!headers.has("Content-Type") && !(init.body instanceof FormData)) {
-    headers.set("Content-Type", "application/json");
-  }
-  return fetch(`${API_BASE}${path}`, { ...init, headers });
+
+  return res;
 }
 
 export async function loginWithGoogle(idToken: string): Promise<AuthUser> {
