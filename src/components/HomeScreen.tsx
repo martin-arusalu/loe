@@ -1,7 +1,7 @@
 import { Book } from "@/lib/storage";
 import { AuthUser } from "@/lib/auth";
 import { ApiBook, UserStats } from "@/lib/api";
-import { Check, LogOut } from "lucide-react";
+import { Flame, LogOut } from "lucide-react";
 
 interface HomeScreenProps {
   library: Book[];
@@ -38,14 +38,14 @@ export default function HomeScreen({
       {/* Auth button — top right */}
       <div className="absolute top-5 right-6">
         {user ? (
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row gap-2 items-center">
             {user.picture && (
               <img src={user.picture} alt={user.name} className="w-6 h-6 rounded-full" />
             )}
-            <span className="inline">{user.name}</span>
+            <span className="inline">Tere, {user.name}!</span>
             <button
               onClick={onLogout}
-              className="flex items-center gap-2 text-stone-500 hover:text-stone-300 transition-colors text-sm"
+              className="flex items-center bg-stone-800 border border-stone-700/50 py-1.5 px-1.5 rounded-lg text-stone-500 hover:text-stone-300 transition-colors text-sm"
             >
               <LogOut size={20} />
             </button>
@@ -72,9 +72,9 @@ export default function HomeScreen({
       {user && stats && (
         <div className="w-full max-w-sm">
           <div
-            className={`rounded-2xl border p-4 flex gap-4 transition-colors ${
+            className={`rounded-2xl border p-4 flex gap-4 transition-colors backdrop-blur-sm ${
               stats.today.goalMet
-                ? "bg-amber-950/30 border-amber-700/40"
+                ? "bg-gradient-to-r from-amber-800/10 to-amber-950/10 border-amber-700/10"
                 : "bg-stone-900 border-stone-800"
             }`}
           >
@@ -86,7 +86,7 @@ export default function HomeScreen({
                 </span>
                 {stats.today.goalMet && (
                   <span className="text-amber-400 text-base leading-none">
-                    <Check />
+                    <Flame size={20} className="text-amber-600/70" aria-hidden="true" />
                   </span>
                 )}
               </div>
@@ -132,7 +132,7 @@ export default function HomeScreen({
       <div className="w-full max-w-sm flex flex-col gap-3">
         {/* Saved library */}
         {library.length > 0 && (
-          <div className="rounded-2xl bg-stone-900 border border-stone-800 overflow-hidden">
+          <div className="rounded-2xl bg-stone-950/50 border border-stone-800 overflow-hidden">
             <p className="px-6 py-3 text-xs font-semibold uppercase tracking-widest text-stone-500 border-b border-stone-800">
               Minu raamatukogu
             </p>
@@ -189,7 +189,7 @@ export default function HomeScreen({
         {/* Import option */}
         <button
           onClick={onImport}
-          className="w-full rounded-2xl bg-stone-900 border border-stone-800 px-6 py-5 text-left hover:bg-stone-800 transition-colors"
+          className="w-full rounded-2xl bg-stone-950/50 border border-stone-800 px-6 py-5 text-left hover:bg-stone-800 transition-colors"
         >
           <div className="flex items-start gap-3">
             <div>
