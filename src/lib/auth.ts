@@ -44,6 +44,7 @@ export function clearAuthUser(): void {
   localStorage.removeItem(TOKENS_KEY);
 }
 
+// TODO: Move to env
 const API_BASE = "https://api.lauselt.ee";
 
 /**
