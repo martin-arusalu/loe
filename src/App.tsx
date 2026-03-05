@@ -116,9 +116,11 @@ function AppInner() {
   // Sync API data whenever the user changes (login / logout)
   useEffect(() => {
     if (user) {
+      setLoading(true);
       syncApiData();
     } else {
       setApiBooks([]);
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);

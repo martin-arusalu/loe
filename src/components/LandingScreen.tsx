@@ -1,12 +1,5 @@
 import { useRef } from "react";
-import {
-  Upload,
-  BookmarkCheck,
-  BarChart2,
-  Flame,
-  LibraryBig,
-  MonitorSmartphone,
-} from "lucide-react";
+import { Upload, BookmarkCheck, Flame, LibraryBig, MonitorSmartphone } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface LandingScreenProps {
@@ -15,10 +8,6 @@ interface LandingScreenProps {
 
 export default function LandingScreen({ onLogin }: LandingScreenProps) {
   const premiumRef = useRef<HTMLDivElement>(null);
-
-  const scrollToPremium = () => {
-    premiumRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center px-5 py-12 gap-6">
@@ -31,7 +20,7 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
       </header>
 
       {/* ── Description ───────────────────────────────────── */}
-      <p className="text-stone-400 text-sm leading-relaxed text-center max-w-xs">
+      <p className="text-stone-400 text-sm leading-relaxed text-center max-w-md">
         Muuda lugemine lihtsaks. Loe raamatuid väikeste tükkidena — täpselt nii kiiresti kui ise
         tahad. Avasta olemasolevaid Eesti klassikuid või lae üles oma raamat.
       </p>
@@ -48,29 +37,20 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
         </button>
 
         <p className="text-stone-500 text-sm">Lugemine algab esimesest lausest.</p>
-
-        <button
-          onClick={scrollToPremium}
-          aria-label="Vaata Lauselt+ eeliseid"
-          className="text-amber-400/80 hover:text-amber-300 text-sm transition-colors
-                     underline underline-offset-2 decoration-amber-400/40"
-        >
-          Vaata Lauselt+ eeliseid ↓
-        </button>
       </div>
 
       {/* ── Feature cards ─────────────────────────────────── */}
-      <div className="w-full max-w-xs flex flex-col gap-4">
+      <div className="w-full flex flex-col md:flex-row justify-center items-center md:items-stretch md:align-top gap-4">
         {/* Free card */}
         <section
           aria-labelledby="free-heading"
-          className="rounded-2xl bg-stone-900 border border-stone-800 px-5 py-5 flex flex-col gap-4"
+          className="rounded-2xl max-w-xs bg-stone-900 border border-stone-800 px-5 py-5 flex flex-col gap-4"
         >
           <h2
             id="free-heading"
             className="text-xs font-semibold uppercase tracking-widest text-stone-500"
           >
-            Sisse logides saad
+            Tasuta kasutajana saad
           </h2>
 
           <ul className="flex flex-col gap-3" role="list">
@@ -94,7 +74,7 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
           ref={premiumRef}
           id="premium"
           aria-labelledby="premium-heading"
-          className="relative rounded-2xl bg-stone-900 border border-amber-800/40
+          className="relative rounded-2xl max-w-xs bg-stone-900 border border-amber-800/40
                      px-5 py-5 flex flex-col gap-4 overflow-hidden"
         >
           {/* Subtle amber glow */}
