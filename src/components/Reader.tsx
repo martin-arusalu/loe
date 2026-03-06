@@ -9,7 +9,7 @@ interface ReaderProps {
   title: string;
   initialChunk?: number;
   onBack: () => void;
-  onPositionChange?: (position: number) => void;
+  onPositionChange?: (position: number, forward: boolean) => void;
   stats?: UserStats | null;
 }
 
@@ -82,11 +82,11 @@ export default function Reader({
       if (scrolledToPrev) {
         needsRecenter.current = true;
         setCurIndex(prevIndex!);
-        onPositionChangeRef.current?.(prevIndex!);
+        onPositionChangeRef.current?.(prevIndex!, false);
       } else if (scrolledToNext) {
         needsRecenter.current = true;
         setCurIndex(nextIndex!);
-        onPositionChangeRef.current?.(nextIndex!);
+        onPositionChangeRef.current?.(nextIndex!, true);
       }
 
       track("chunk scrolled", {
@@ -138,7 +138,7 @@ export default function Reader({
     const clamped = Math.max(1, Math.min(num, chunks.length)) - 1; // 1-based → 0-based
     needsRecenter.current = true;
     setCurIndex(clamped);
-    onPositionChangeRef.current?.(clamped);
+    onPositionChangeRef.current?.(clamped, false);
     setGoToValue("");
     setTimeout(() => hContainerRef.current?.scrollTo({ left: 0, behavior: "smooth" }), 0);
     track("chunk goto", { book: title, chunk: clamped, time: new Date().toISOString() });

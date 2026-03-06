@@ -186,7 +186,7 @@ function AppInner() {
     await Promise.all(
       pending.map(async ({ slug, chunkIndex }) => {
         try {
-          await recordScroll(slug, chunkIndex);
+          await recordScroll(slug, chunkIndex, false);
           clearPendingProgress(slug);
         } catch {
           // Still offline — leave entry for the next attempt
@@ -211,7 +211,7 @@ function AppInner() {
     };
   }, [flushPendingProgress]);
 
-  const handlePositionChange = async (position: number) => {
+  const handlePositionChange = async (position: number, forward: boolean) => {
     if (state.view !== "read") return;
     const updatedBook: Book = { ...state.book, position, lastRead: Date.now() };
     await saveBook(updatedBook);
@@ -219,7 +219,7 @@ function AppInner() {
     // Sync scroll position to API; queue locally when offline so the position
     // is flushed automatically once the connection is restored.
     if (updatedBook.slug) {
-      recordScroll(updatedBook.slug, position)
+      recordScroll(updatedBook.slug, position, forward)
         .then(() => fetchStats())
         .catch(() => {
           if (updatedBook.slug) {
@@ -273,16 +273,6 @@ function AppInner() {
     setState({ view: "read", book });
 
     track("open api book", { book: book?.title });
-  };
-
-  const handleDeleteBookProgress = async (id: string) => {
-    const existing = await loadBook(id);
-    if (existing) {
-      await saveBook({ ...existing, position: 0, lastRead: undefined });
-    }
-    track("delete progress", { book: existing?.title ?? id });
-    const books = await loadAllBooks();
-    setLibrary(books);
   };
 
   const handleBack = async () => {
@@ -361,7 +351,6 @@ function AppInner() {
       onImport={() => setState({ view: "import" })}
       onOpenBook={handleOpenBook}
       onOpenApiBook={handleOpenApiBook}
-      onDeleteProgress={handleDeleteBookProgress}
       onLoginRequest={() => setState({ view: "login" })}
       onLogout={handleLogout}
     />
