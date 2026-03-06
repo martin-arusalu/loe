@@ -145,6 +145,14 @@ export default function Reader({
     track("chunk goto", { book: title, chunk: clamped, time: new Date().toISOString() });
   };
 
+  const handleAppRefresh = async () => {
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+    window.location.reload();
+  };
+
   return (
     /* Horizontal snap container: reader (left) + Go To (right) */
     <div
@@ -329,7 +337,15 @@ export default function Reader({
             ← Tagasi
           </button>
         </div>
-        <div className="text-xs text-stone-700 self-bottom">Rakenduse versioon: {APP_VERSION}</div>
+        <div className="flex flex-col gap-1 text-xs text-stone-600">
+          <div>Rakenduse versioon: {APP_VERSION}</div>
+          <button
+            className="border p-2 rounded-xl border-stone-700 text-stone-500 hover:text-stone-300 text-sm transition-colors text-center"
+            onClick={handleAppRefresh}
+          >
+            Värskenda
+          </button>
+        </div>
       </div>
     </div>
   );
