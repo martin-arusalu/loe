@@ -76,6 +76,10 @@ export interface UserStats {
   };
 }
 
+export interface SystemStats {
+  appVersion: string;
+}
+
 export interface DailyRecord {
   date: string;
   chunksScrolled: number;
@@ -153,6 +157,12 @@ export async function getAllReadingProgress(): Promise<
 }
 
 // ── Stats ──────────────────────────────────────────────────────────────────
+
+export async function getSystemStats(): Promise<SystemStats> {
+  const res = await apiFetch("/stats/system");
+  if (!res.ok) throw new Error(`GET /stats/system failed: ${res.status}`);
+  return res.json() as Promise<SystemStats>;
+}
 
 export async function getStats(): Promise<UserStats> {
   const res = await apiFetch("/stats");

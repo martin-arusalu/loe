@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import HomeScreen from "@/components/HomeScreen";
@@ -18,6 +18,7 @@ import {
   getBookChunks,
   getBooks,
   getStats,
+  getSystemStats,
   openBook,
   recordScroll,
 } from "@/lib/api";
@@ -34,6 +35,8 @@ import {
   setCurrentBookId,
 } from "@/lib/storage";
 import { track } from "@amplitude/analytics-browser";
+import { toast, Toaster } from "sonner";
+import { APP_VERSION } from "./lib/constants";
 
 const GOOGLE_CLIENT_ID = "382553774833-b3673gncnf51ha3td8s2t8j90kipd4ao.apps.googleusercontent.com";
 
@@ -50,6 +53,7 @@ function AppInner() {
   const [user, setUser] = useState<AuthUser | null>(() => loadAuthUser());
   const [apiBooks, setApiBooks] = useState<ApiBook[]>([]);
   const [stats, setStats] = useState<UserStats | null>(null);
+  const [showAppRefresh, setShowAppRefresh] = useState(false);
 
   const fetchStats = useCallback(async () => {
     if (!user) return;
@@ -60,6 +64,37 @@ function AppInner() {
       // Stats unavailable — fail silently
     }
   }, [user]);
+
+  const handleAppRefresh = async () => {
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+    window.location.reload();
+  };
+
+  const checkAppVersion = async () => {
+    try {
+      const system = await getSystemStats();
+      if (system.appVersion && system.appVersion !== APP_VERSION) {
+        setShowAppRefresh(true);
+      }
+    } catch {
+      // System info unavailable — fail silently
+    }
+  };
+
+  useEffect(() => {
+    if (!showAppRefresh) return;
+    toast("Rakenduse värskendus on saadaval", {
+      duration: Infinity,
+      action: {
+        label: "Värskenda",
+        onClick: handleAppRefresh,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showAppRefresh]);
 
   // Sync API books and reading progress when user is logged in
   const syncApiData = async () => {
@@ -142,6 +177,7 @@ function AppInner() {
 
   // Refresh stats whenever the view changes
   useEffect(() => {
+    checkAppVersion();
     fetchStats();
   }, [state.view, fetchStats]);
 
@@ -299,8 +335,10 @@ function AppInner() {
     setUser(null);
   };
 
+  let content: ReactNode;
+
   if (loading) {
-    return (
+    content = (
       <div className="flex h-screen flex-col items-center justify-center gap-4 bg-stone-900">
         <p className="text-stone-500 text-lg tracking-wide">Laen…</p>
         <div className="flex gap-1.5">
@@ -314,10 +352,8 @@ function AppInner() {
         </div>
       </div>
     );
-  }
-
-  if (state.view === "read") {
-    return (
+  } else if (state.view === "read") {
+    content = (
       <Reader
         chunks={state.book.chunks}
         title={state.book.title}
@@ -327,33 +363,43 @@ function AppInner() {
         stats={stats}
       />
     );
-  }
-
-  if (state.view === "import") {
-    return <Importer onTextReady={handleTextReady} onBack={handleBack} />;
-  }
-
-  if (state.view === "login") {
-    return <LoginScreen onBack={handleBack} onLogin={handleLogin} />;
-  }
-
-  if (state.view === "home" && !user) {
-    return <LandingScreen onLogin={() => setState({ view: "login" })} />;
+  } else if (state.view === "import") {
+    content = <Importer onTextReady={handleTextReady} onBack={handleBack} />;
+  } else if (state.view === "login") {
+    content = <LoginScreen onBack={handleBack} onLogin={handleLogin} />;
+  } else if (state.view === "home" && !user) {
+    content = <LandingScreen onLogin={() => setState({ view: "login" })} />;
+  } else {
+    content = (
+      <HomeScreen
+        library={library}
+        user={user}
+        apiBooks={apiBooks}
+        stats={stats}
+        onTextReady={handleTextReady}
+        onImport={() => setState({ view: "import" })}
+        onOpenBook={handleOpenBook}
+        onOpenApiBook={handleOpenApiBook}
+        onLoginRequest={() => setState({ view: "login" })}
+        onLogout={handleLogout}
+      />
+    );
   }
 
   return (
-    <HomeScreen
-      library={library}
-      user={user}
-      apiBooks={apiBooks}
-      stats={stats}
-      onTextReady={handleTextReady}
-      onImport={() => setState({ view: "import" })}
-      onOpenBook={handleOpenBook}
-      onOpenApiBook={handleOpenApiBook}
-      onLoginRequest={() => setState({ view: "login" })}
-      onLogout={handleLogout}
-    />
+    <>
+      {content}
+      <Toaster
+        theme="dark"
+        position="bottom-center"
+        toastOptions={{
+          classNames: {
+            toast: "!bg-stone-800 !border-stone-700 !text-stone-200",
+            actionButton: "!bg-amber-500 !text-stone-900 hover:!bg-amber-400",
+          },
+        }}
+      />
+    </>
   );
 }
 

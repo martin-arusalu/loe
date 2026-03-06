@@ -3,6 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import remarkBreaks from "remark-breaks";
 import { defaultRemarkPlugins, Streamdown } from "streamdown";
 import { UserStats } from "@/lib/api";
+import { APP_VERSION } from "@/lib/constants";
 
 interface ReaderProps {
   chunks: string[];
@@ -256,7 +257,7 @@ export default function Reader({
 
       {/* ── Go To panel (swipe right to reveal) ── */}
       <div
-        className="relative h-screen min-w-full flex flex-col items-center justify-center bg-stone-900 px-8"
+        className="relative h-screen min-w-full flex flex-col items-center bg-stone-900 px-8 justify-around"
         style={{ scrollSnapAlign: "start" }}
       >
         <div className="w-full max-w-xs flex flex-col gap-6">
@@ -328,6 +329,7 @@ export default function Reader({
             ← Tagasi
           </button>
         </div>
+        <div className="text-xs text-stone-700 self-bottom">Rakenduse versioon: {APP_VERSION}</div>
       </div>
     </div>
   );

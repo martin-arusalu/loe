@@ -59,7 +59,7 @@ export default function HomeScreen({
       </div>
       {/* Hero header */}
       <div className="text-center select-none">
-        <h1 className="text-2xl font-thin tracking-[0.7rem] text-stone-50 mb-2 mt-6 font-serif">
+        <h1 className="text-2xl font-thin tracking-[0.7rem] text-stone-50 mb-2 mt-20 font-serif">
           Lauselt
         </h1>
 
