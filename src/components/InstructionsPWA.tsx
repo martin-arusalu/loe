@@ -192,10 +192,10 @@ export default function InstructionsPWA() {
       <div className="w-full max-w-xl">
         <button
           type="button"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           className="mb-6 inline-flex items-center text-sm text-stone-400 hover:text-stone-200 transition-colors"
         >
-          <span className="mr-1">←</span> Tagasi
+          <span className="mr-1">←</span> Tagasi avalehele
         </button>
 
         <div className="rounded-3xl border border-stone-800 bg-stone-950/60 p-6 sm:p-8 shadow-lg shadow-black/30">
