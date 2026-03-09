@@ -43,14 +43,15 @@ function detectPlatform(): PlatformKey {
 }
 
 function Instructions({ platform }: { platform: PlatformKey }) {
-  if (platform === "ios-safari") {
+  if (platform === "ios-safari" || platform === "ios-other") {
     return (
       <ol className="list-decimal list-inside space-y-2 text-sm text-stone-200">
         <li>
-          Ava <span className="font-bold">Lauselt</span> Safaris (Apple’i vaikimisi brauser).
+          Ava <span className="font-bold">Lauselt</span> oma iPhone’i või iPadi brauseris.
         </li>
         <li>
-          Vajuta ekraani allosas asuvat <span className="font-semibold">Share</span> ikooni.
+          Vajuta brauseri <span className="font-semibold">Share / Jaga</span> nuppu
+          (ruut ülespoole noolega).
         </li>
         <li>
           Kerige alla ja vali <span className="font-semibold">Add to Home Screen</span>.
@@ -63,26 +64,6 @@ function Instructions({ platform }: { platform: PlatformKey }) {
           rakenduse avalehelt.
         </li>
       </ol>
-    );
-  }
-
-  if (platform === "ios-other") {
-    return (
-      <div className="space-y-3 text-sm text-stone-200">
-        <p>
-          iOS-is (iPhone / iPad) töötab <span className="font-semibold">“Add to Home Screen”</span>{" "}
-          täielikult ainult Safari ja Chrome brauserites.
-        </p>
-        <ol className="list-decimal list-inside space-y-2">
-          <li>Kopeeri see aadressiriba link.</li>
-          <li>
-            Ava <span className="font-semibold">Safari</span> ja kleebi link sinna.
-          </li>
-          <li>
-            Järgi juhiseid valikuga <span className="font-semibold">iPhone / iPad – Safari</span>.
-          </li>
-        </ol>
-      </div>
     );
   }
 

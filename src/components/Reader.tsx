@@ -4,6 +4,7 @@ import remarkBreaks from "remark-breaks";
 import { defaultRemarkPlugins, Streamdown } from "streamdown";
 import { UserStats } from "@/lib/api";
 import { APP_VERSION } from "@/lib/constants";
+import { Flame } from "lucide-react";
 
 interface ReaderProps {
   chunks: string[];
@@ -31,6 +32,8 @@ export default function Reader({
   const hContainerRef = useRef<HTMLDivElement>(null);
   // Flag: we just shifted the window and need to re-center scroll without animation.
   const needsRecenter = useRef(false);
+  const [streakJustCompleted, setStreakJustCompleted] = useState(false);
+  const prevGoalMetRef = useRef<boolean>(stats?.today.goalMet ?? false);
 
   const prevIndex = curIndex > 0 ? curIndex - 1 : null;
   const nextIndex = curIndex < chunks.length ? curIndex + 1 : null;
@@ -122,6 +125,29 @@ export default function Reader({
     chunks.length > 0
       ? Math.round(((Math.min(curIndex, chunks.length - 1) + 1) / chunks.length) * 100)
       : 0;
+
+  useEffect(() => {
+    const prevGoalMet = prevGoalMetRef.current;
+    const currentGoalMet = stats?.today.goalMet ?? false;
+
+    if (!prevGoalMet && currentGoalMet) {
+      setStreakJustCompleted(true);
+    }
+
+    prevGoalMetRef.current = currentGoalMet;
+  }, [stats?.today.goalMet]);
+
+  useEffect(() => {
+    if (!streakJustCompleted) return;
+
+    const timeout = window.setTimeout(() => {
+      setStreakJustCompleted(false);
+    }, 1200);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [streakJustCompleted]);
 
   // Build the 2–3 items that are actually in the DOM.
   const windowItems: { id: string; index: number }[] = [];
@@ -256,8 +282,15 @@ export default function Reader({
         {/* Subtle streak completion indicator */}
         {stats?.today.goalMet && (
           <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none">
-            <div className="flex items-center gap-1.5 bg-stone-900/70 backdrop-blur-sm border border-amber-900/40 text-amber-600 text-xs px-3 py-1 rounded-full">
-              <span>Täna loetud küll</span>
+            <div
+              className={`flex items-center gap-1.5 bg-stone-900/70 backdrop-blur-sm border border-amber-900/40 text-amber-600 text-xs px-3 py-1 rounded-full ${
+                streakJustCompleted ? "animate-bounce" : ""
+              }`}
+            >
+              <Flame size={16} className="text-amber-500" aria-hidden="true" />
+              <span className="tabular-nums">
+                {stats.streak.current} päev{stats.streak.current !== 1 && "a"}
+              </span>
             </div>
           </div>
         )}

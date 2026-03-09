@@ -85,9 +85,19 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
 
           <Link
             to="/kuidas-kasutada"
-            className="mt-4 inline-flex items-center justify-center rounded-full border border-amber-600/40 px-4 py-1.5 text-xs sm:text-sm text-amber-400 hover:bg-amber-500/10 hover:border-amber-400/80 transition-colors"
+            className="mt-5 w-full max-w-sm rounded-2xl border border-amber-500/50 bg-amber-500/5 px-5 py-4 text-left hover:bg-amber-500/12 hover:border-amber-400/80 transition-colors"
           >
-            Kuidas saada endale Lauselt rakendus?
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center">
+                <MonitorSmartphone size={18} className="text-amber-300" aria-hidden="true" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-amber-100">Lauselt rakendus</p>
+                <p className="text-xs text-amber-200/80 mt-1">
+                  Samm-sammulised juhised, kuidas kasutada Lauselt rakendusena.
+                </p>
+              </div>
+            </div>
           </Link>
         </div>
 
