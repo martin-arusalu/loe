@@ -14,6 +14,11 @@ export default defineConfig({
       manifest: false, // use the existing site.webmanifest in public/
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,md,woff,woff2}"],
+        // Serve the cached app shell for any navigation request when offline.
+        // Without this the service worker throws "FetchEvent.respondWith received
+        // an error" because it intercepts the request but has nothing to return.
+        navigateFallback: "/index.html",
+        navigateFallbackDenylist: [/^\/api/],
       },
     }),
   ],

@@ -143,7 +143,9 @@ function AppInner() {
       setLibrary(await loadAllBooks());
       setLoading(false);
     } catch {
-      // API unavailable — continue with local data
+      // API unavailable — continue with local data already in IndexedDB.
+      setLibrary(await loadAllBooks());
+      setLoading(false);
     }
   };
 
@@ -164,6 +166,14 @@ function AppInner() {
   // Sync API data whenever the user changes (login / logout)
   useEffect(() => {
     if (user) {
+      if (!navigator.onLine) {
+        // Offline — skip API calls and serve whatever is cached locally.
+        loadAllBooks().then((books) => {
+          setLibrary(books);
+          setLoading(false);
+        });
+        return;
+      }
       setLoading(true);
       syncApiData();
       fetchStats();
@@ -292,7 +302,13 @@ function AppInner() {
       chunks = chunksRes.chunks;
       startChunk = existing?.slug === apiBook.slug ? existing.position : openRes.currentChunk;
     } catch {
-      // API unavailable — nothing to open
+      // API unavailable — open from the locally cached copy if we have one.
+      if (existing?.chunks?.length) {
+        await setCurrentBookId(existing.id);
+        setLibrary(await loadAllBooks());
+        setState({ view: "read", book: existing });
+        track("open api book offline", { book: existing.title });
+      }
       return;
     }
 
