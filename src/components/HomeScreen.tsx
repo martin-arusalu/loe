@@ -2,6 +2,7 @@ import { Book } from "@/lib/storage";
 import { AuthUser } from "@/lib/auth";
 import { ApiBook, UserStats } from "@/lib/api";
 import { Flame, LogOut } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface HomeScreenProps {
   library: Book[];
@@ -127,7 +128,7 @@ export default function HomeScreen({
         </div>
       )}
 
-      <div className="w-full max-w-sm flex flex-col gap-3">
+      <div className="w-full max-w-sm flex flex-col gap-4">
         {/* Saved library */}
         {library.length > 0 && (
           <div className="rounded-2xl bg-stone-950/50 border border-stone-800 overflow-hidden">
@@ -189,6 +190,24 @@ export default function HomeScreen({
             </div>
           </div>
         </button>
+
+        {/* PWA instructions — prominent CTA */}
+        <Link
+          to="/kuidas-kasutada"
+          className="w-full rounded-2xl border border-amber-500/40 bg-amber-500/5 px-6 py-4 text-left hover:bg-amber-500/10 hover:border-amber-400/60 transition-colors"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="font-semibold text-amber-200 text-sm">Lisa Lauselt oma avalehele</p>
+              <p className="text-amber-200/80 text-xs mt-1">
+                Ava rakendus ühe puudutusega – samm-sammuline juhend.
+              </p>
+            </div>
+            <span className="text-amber-300 text-lg" aria-hidden="true">
+              ⤴
+            </span>
+          </div>
+        </Link>
       </div>
     </div>
   );

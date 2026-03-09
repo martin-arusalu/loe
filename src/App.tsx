@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import HomeScreen from "@/components/HomeScreen";
 import Importer from "@/components/Importer";
+import InstructionsPWA from "@/components/InstructionsPWA";
 import LandingScreen from "@/components/LandingScreen";
 import LoginScreen from "@/components/LoginScreen";
 import PrivacyPolicy from "@/components/PrivacyPolicy";
@@ -425,6 +426,7 @@ export default function App() {
       <Routes>
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/kuidas-kasutada" element={<InstructionsPWA />} />
         <Route
           path="*"
           element={

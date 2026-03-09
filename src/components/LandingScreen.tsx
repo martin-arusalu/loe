@@ -82,6 +82,13 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
           <p className="text-stone-500 text-xs sm:text-sm mt-3.5">
             Lugemine algab esimesest lausest.
           </p>
+
+          <Link
+            to="/kuidas-kasutada"
+            className="mt-4 inline-flex items-center justify-center rounded-full border border-amber-600/40 px-4 py-1.5 text-xs sm:text-sm text-amber-400 hover:bg-amber-500/10 hover:border-amber-400/80 transition-colors"
+          >
+            Kuidas saada endale Lauselt rakendus?
+          </Link>
         </div>
 
         {/* ── Feature cards ─────────────────────────────── */}
@@ -196,9 +203,9 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
         </div>
 
         {/* ── Footer links ────────────────────────────────── */}
-        <footer className="relative z-10 mt-14 sm:mt-20 pb-10 sm:pb-14 flex flex-col items-center gap-1">
+        <footer className="relative z-10 mt-14 sm:mt-20 pb-10 sm:pb-14 flex flex-col items-center gap-2">
           <div className="w-8 h-px bg-stone-700/50 mb-5" aria-hidden="true" />
-          <div className="flex items-center gap-4 text-stone-500 text-xs sm:text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-stone-500 text-xs sm:text-sm">
             <Link to="/privacy" className="hover:text-stone-300 transition-colors duration-200">
               Privaatsus
             </Link>
@@ -207,6 +214,15 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
             </span>
             <Link to="/terms" className="hover:text-stone-300 transition-colors duration-200">
               Kasutustingimused
+            </Link>
+            <span aria-hidden="true" className="text-stone-700">
+              ·
+            </span>
+            <Link
+              to="/kuidas-kasutada"
+              className="hover:text-stone-300 transition-colors duration-200"
+            >
+              Kuidas kasutada rakendusena
             </Link>
           </div>
         </footer>
