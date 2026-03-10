@@ -1,10 +1,10 @@
-import { track } from "@amplitude/analytics-browser";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import remarkBreaks from "remark-breaks";
 import { defaultRemarkPlugins, Streamdown } from "streamdown";
 import { UserStats } from "@/lib/api";
 import { APP_VERSION } from "@/lib/constants";
 import { Flame } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface ReaderProps {
   chunks: string[];
@@ -93,7 +93,7 @@ export default function Reader({
         onPositionChangeRef.current?.(nextIndex!, true);
       }
 
-      track("chunk scrolled", {
+      trackEvent("chunk scrolled", {
         book: title,
         chunk: nextIndex,
         direction: scrolledToNext ? "next" : "prev",
@@ -168,7 +168,7 @@ export default function Reader({
     onPositionChangeRef.current?.(clamped, false);
     setGoToValue("");
     setTimeout(() => hContainerRef.current?.scrollTo({ left: 0, behavior: "smooth" }), 0);
-    track("chunk goto", { book: title, chunk: clamped, time: new Date().toISOString() });
+    trackEvent("chunk goto", { book: title, chunk: clamped, time: new Date().toISOString() });
   };
 
   const handleAppRefresh = async () => {

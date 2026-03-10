@@ -35,7 +35,7 @@ import {
   saveBook,
   setCurrentBookId,
 } from "@/lib/storage";
-import { track } from "@amplitude/analytics-browser";
+import { syncAmplitudeUserFromLocalStorage, trackEvent } from "@/lib/analytics";
 import { toast, Toaster } from "sonner";
 import { APP_VERSION } from "./lib/constants";
 
@@ -166,6 +166,7 @@ function AppInner() {
 
   // Sync API data whenever the user changes (login / logout)
   useEffect(() => {
+    syncAmplitudeUserFromLocalStorage();
     if (user) {
       if (!navigator.onLine) {
         // Offline — skip API calls and serve whatever is cached locally.
@@ -214,7 +215,7 @@ function AppInner() {
   // Force-logout when the refresh token itself is rejected by the server.
   useEffect(() => {
     const handleSessionExpired = () => {
-      track("session expired");
+      trackEvent("session expired");
       setUser(null);
       setApiBooks([]);
       setState({ view: "home" });
@@ -229,7 +230,7 @@ function AppInner() {
     const pending = getPendingProgress();
     if (pending.length === 0) return;
 
-    track("flush pending", { pending: pending.length });
+    trackEvent("flush pending", { pending: pending.length });
     await Promise.all(
       pending.map(async ({ slug, chunkIndex }) => {
         try {
@@ -284,7 +285,7 @@ function AppInner() {
     if (book.slug) {
       openBook(book.slug).catch(() => {});
     }
-    track("open book", { book: book?.title });
+    trackEvent("open book", { book: book?.title });
   };
 
   const handleOpenApiBook = async (apiBook: ApiBook) => {
@@ -308,7 +309,7 @@ function AppInner() {
         await setCurrentBookId(existing.id);
         setLibrary(await loadAllBooks());
         setState({ view: "read", book: existing });
-        track("open api book offline", { book: existing.title });
+        trackEvent("open api book offline", { book: existing.title });
       }
       return;
     }
@@ -325,18 +326,18 @@ function AppInner() {
     setLibrary(await loadAllBooks());
     setState({ view: "read", book });
 
-    track("open api book", { book: book?.title });
+    trackEvent("open api book", { book: book?.title });
   };
 
   const handleBack = async () => {
-    track("back");
+    trackEvent("back");
     const books = await loadAllBooks();
     setLibrary(books);
     setState({ view: "home" });
   };
 
   const handleLogin = (loggedInUser: AuthUser) => {
-    track("login", {
+    trackEvent("login", {
       user: loggedInUser?.email,
     });
     setUser(loggedInUser);
@@ -344,7 +345,7 @@ function AppInner() {
   };
 
   const handleLogout = () => {
-    track("logout", {
+    trackEvent("logout", {
       user: user?.email,
     });
     clearAuthUser();
