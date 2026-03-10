@@ -336,6 +336,44 @@ export default function Reader({
                   )}
                 </div>
               </div>
+              <div className="mt-3 rounded-xl bg-stone-950/30 border border-stone-800 p-4">
+                <div className="flex items-baseline justify-between">
+                  <h3 className="text-stone-300 text-sm font-semibold">Kokku</h3>
+                  <span className="text-stone-600 text-xs">kõik ajad</span>
+                </div>
+                <div className="mt-3 grid grid-cols-3 gap-3">
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-lg font-semibold text-stone-200 tabular-nums leading-none">
+                      {stats.totals.chunksRead}
+                    </span>
+                    <span className="text-[11px] text-stone-500 text-center leading-tight">
+                      tükki
+                      <br />
+                      loetud
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-lg font-semibold text-stone-200 tabular-nums leading-none">
+                      {stats.totals.daysActive}
+                    </span>
+                    <span className="text-[11px] text-stone-500 text-center leading-tight">
+                      aktiivset
+                      <br />
+                      päeva
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-lg font-semibold text-stone-200 tabular-nums leading-none">
+                      {stats.totals.booksStarted}
+                    </span>
+                    <span className="text-[11px] text-stone-500 text-center leading-tight">
+                      raamatut
+                      <br />
+                      alustatud
+                    </span>
+                  </div>
+                </div>
+              </div>
             </>
           )}
           <div>
