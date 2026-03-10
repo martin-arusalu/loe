@@ -284,7 +284,7 @@ export default function Reader({
           <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none">
             <div
               className={`flex items-center gap-1.5 bg-stone-900/70 backdrop-blur-sm border border-amber-900/40 text-amber-600 text-xs px-3 py-1 rounded-full ${
-                streakJustCompleted ? "animate-bounce" : ""
+                streakJustCompleted ? "streak-celebrate" : ""
               }`}
             >
               <Flame size={16} className="text-amber-500" aria-hidden="true" />
