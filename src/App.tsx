@@ -108,22 +108,22 @@ function AppInner() {
         books.map(async (apiBook) => {
           const localId = bookId(apiBook.title);
           const existing = await loadBook(localId);
-          // Only download chunks when the book is missing or belongs to a different slug
-          if (!existing || existing.slug !== apiBook.slug) {
-            try {
-              const chunksRes = await getBookChunks(apiBook.slug, 0, apiBook.totalChunks);
-              const book: Book = {
-                id: localId,
-                title: apiBook.title,
-                author: apiBook.author,
-                chunks: chunksRes.chunks,
-                position: existing?.position ?? 0,
-                slug: apiBook.slug,
-              };
-              await saveBook(book);
-            } catch {
-              // Skip this book if chunks can't be fetched
-            }
+          // Always overwrite local book with API data to avoid stale metadata/content.
+          // Preserve local position/lastRead so users keep their place.
+          try {
+            const chunksRes = await getBookChunks(apiBook.slug, 0, apiBook.totalChunks);
+            const book: Book = {
+              id: localId,
+              title: apiBook.title,
+              author: apiBook.author,
+              chunks: chunksRes.chunks,
+              position: existing?.position ?? 0,
+              lastRead: existing?.lastRead,
+              slug: apiBook.slug,
+            };
+            await saveBook(book);
+          } catch {
+            // Skip this book if chunks can't be fetched
           }
         })
       );
