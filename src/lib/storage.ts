@@ -12,6 +12,7 @@ const CURRENT_KEY = "currentBookId";
 export interface Book {
   id: string; // stable slug derived from title
   title: string;
+  author?: string;
   chunks: string[];
   position: number;
   lastRead?: number; // unix ms timestamp — updated on every scroll
