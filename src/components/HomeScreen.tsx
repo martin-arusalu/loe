@@ -144,7 +144,7 @@ export default function HomeScreen({
                 >
                   <button
                     onClick={() => onOpenBook(book)}
-                    className="flex-1 flex min-w-0 items-center justify-between px-6 py-4 text-left hover:bg-stone-700 transition-colors duration-150"
+                    className="flex-1 flex min-w-0 items-center justify-between px-6 py-4 text-left hover:bg-stone-900 transition-colors duration-150"
                   >
                     <div className="min-w-0 flex-1">
                       <p className="text-stone-200 font-medium text-sm truncate">{book.title}</p>
@@ -186,7 +186,7 @@ export default function HomeScreen({
         {/* Import option */}
         <button
           onClick={onImport}
-          className="w-full rounded-2xl bg-stone-950/50 border border-stone-800 px-6 py-5 text-left hover:bg-stone-700 transition-colors"
+          className="w-full rounded-2xl bg-stone-950/50 border border-stone-800 px-6 py-5 text-left hover:bg-stone-900 transition-colors"
         >
           <div className="flex items-start gap-3">
             <div>
