@@ -115,6 +115,7 @@ function AppInner() {
               const book: Book = {
                 id: localId,
                 title: apiBook.title,
+                author: apiBook.author,
                 chunks: chunksRes.chunks,
                 position: existing?.position ?? 0,
                 slug: apiBook.slug,
