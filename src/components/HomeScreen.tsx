@@ -40,7 +40,7 @@ export default function HomeScreen({
 
       {/* ── Header ────────────────────────────────────────── */}
       <header
-        className="relative z-10 px-6 pt-5 pb-3 flex items-center justify-between glass-subtle animate-fade-in"
+        className="bg-gradient-to-t from-stone-950/10 to-stone-950 relative z-10 px-6 pt-5 pb-3 flex items-center justify-between animate-fade-in"
         style={{ borderLeft: "none", borderRight: "none", borderTop: "none" }}
       >
         <h1 className="flex items-center text-lg font-semibold tracking-[0.3em] text-stone-200 select-none">
