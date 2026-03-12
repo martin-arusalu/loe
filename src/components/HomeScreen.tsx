@@ -1,7 +1,7 @@
 import { Book } from "@/lib/storage";
 import { AuthUser } from "@/lib/auth";
 import { ApiBook, UserStats } from "@/lib/api";
-import { Flame, LogOut } from "lucide-react";
+import { Flame, LogOut, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface HomeScreenProps {
@@ -13,7 +13,6 @@ interface HomeScreenProps {
   onImport: () => void;
   onOpenBook: (book: Book) => void;
   onOpenApiBook?: (book: ApiBook) => void;
-  onLoginRequest: () => void;
   onLogout: () => void;
 }
 
@@ -23,7 +22,6 @@ export default function HomeScreen({
   stats,
   onImport,
   onOpenBook,
-  onLoginRequest,
   onLogout,
 }: HomeScreenProps) {
   const formatProgress = (book: Book) => {
@@ -33,177 +31,199 @@ export default function HomeScreen({
   };
 
   return (
-    <div className="relative min-h-screen bg-stone-900 text-stone-100 flex flex-col items-center justify-center px-6 py-10 gap-10">
-      {/* Auth button — top right */}
-      <div className="absolute top-5 right-6">
+    <div className="min-h-screen bg-stone-900/50 text-stone-100 flex flex-col relative overflow-hidden transition-colors">
+      {/* Background glows */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-[60vw] h-[40vw] max-w-[500px] max-h-[300px] rounded-full bg-amber-900/5 blur-3xl animate-glow-drift-slow" />
+        <div className="absolute bottom-[20%] right-[-10%] w-[35vw] h-[35vw] max-w-[300px] max-h-[300px] rounded-full bg-stone-700/5 blur-3xl animate-glow-drift" />
+      </div>
+
+      {/* ── Header ────────────────────────────────────────── */}
+      <header
+        className="relative z-10 px-6 pt-5 pb-3 flex items-center justify-between glass-subtle animate-fade-in"
+        style={{ borderLeft: "none", borderRight: "none", borderTop: "none" }}
+      >
+        <h1 className="flex items-center text-lg font-semibold tracking-[0.3em] text-stone-200 select-none">
+          <img src="/favicon.svg" alt="Lauselt" className="w-6 h-6 mr-3 rounded-sm" />
+          Lauselt
+        </h1>
         {user ? (
-          <div className="flex flex-row gap-2 items-center">
+          <div className="flex items-center gap-2.5">
             {user.picture && (
-              <img src={user.picture} alt={user.name} className="w-6 h-6 rounded-full" />
+              <img
+                src={user.picture}
+                alt=""
+                className="w-7 h-7 rounded-full ring-1 ring-stone-700/50 ring-offset-1 ring-offset-[#0c0a09]"
+              />
             )}
-            <span className="inline">Tere, {user.name}!</span>
+            <span className="text-sm text-stone-400 inline">{user.name}</span>
             <button
               onClick={onLogout}
-              className="flex items-center bg-stone-800 border border-stone-700/50 py-1.5 px-1.5 rounded-lg text-stone-500 hover:text-stone-300 transition-colors text-sm"
+              className="p-1.5 rounded-lg text-stone-600 hover:text-stone-300 hover:bg-stone-800/50 transition-all duration-200"
+              aria-label="Logi välja"
             >
-              <LogOut size={20} />
+              <LogOut size={16} />
             </button>
           </div>
         ) : (
-          <button
-            onClick={onLoginRequest}
-            className="text-stone-500 hover:text-stone-300 transition-colors text-sm"
+          <Link
+            to="/login"
+            className="text-stone-500 hover:text-stone-300 transition-colors duration-200 text-sm"
           >
             Logi sisse
-          </button>
+          </Link>
         )}
-      </div>
-      {/* Hero header */}
-      <div className="text-center select-none">
-        <h1 className="text-2xl font-thin tracking-[0.7rem] text-stone-50 mb-2 mt-20 font-serif">
-          Lauselt
-        </h1>
+      </header>
 
-        <p className="text-stone-500 text-base">Kasuta väikseid hetki, et saada palju loetud.</p>
-      </div>
-
-      {/* Streak & today stats — shown only when logged in and stats are available */}
-      {user && stats && (
-        <div className="w-full max-w-sm">
-          <div
-            className={`rounded-2xl border p-4 flex gap-4 transition-colors backdrop-blur-sm ${
-              stats.today.goalMet
-                ? "bg-gradient-to-r from-amber-800/10 to-amber-950/10 border-amber-700/10"
-                : "bg-stone-900 border-stone-800"
-            }`}
-          >
-            {/* Streak */}
-            <div className="flex-1 flex flex-col items-center justify-center gap-1 py-1">
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-amber-400 tabular-nums leading-none">
-                  {stats.streak.current}
+      {/* ── Content ───────────────────────────────────────── */}
+      <div className="relative z-10 flex-1 flex flex-col items-center px-6 pb-10">
+        <div className="w-full max-w-sm flex flex-col gap-5 mt-6">
+          {/* Streak & today stats */}
+          {user && stats && (
+            <div
+              className={`glass rounded-2xl p-4 flex gap-4 transition-all duration-500 animate-fade-in-up delay-1 ${
+                stats.today.goalMet ? "!border-amber-700/25 animate-pulse-glow" : ""
+              }`}
+            >
+              {/* Streak */}
+              <div className="flex-1 flex flex-col items-center justify-center gap-1 py-1">
+                <div className="flex items-baseline gap-1">
+                  <span
+                    className="text-2xl font-bold text-gradient-amber tabular-nums leading-none"
+                    style={{ fontFamily: "var(--font-heading)" }}
+                  >
+                    {stats.streak.current}
+                  </span>
+                  {stats.today.goalMet && (
+                    <Flame size={16} className="text-amber-500/80" aria-hidden="true" />
+                  )}
+                </div>
+                <span className="text-[11px] text-stone-500 text-center leading-tight">
+                  Järjest päevi
                 </span>
-                {stats.today.goalMet && (
-                  <span className="text-amber-400 text-base leading-none">
-                    <Flame size={20} className="text-amber-600/70" aria-hidden="true" />
+              </div>
+
+              {/* Divider */}
+              <div className="w-px bg-gradient-to-b from-transparent via-stone-700/50 to-transparent" />
+
+              {/* Today */}
+              <div className="flex-1 flex flex-col justify-center gap-2 py-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] text-stone-500">Täna</span>
+                  <span className="text-[11px] text-stone-400 tabular-nums">
+                    {stats.today.chunksScrolled}
+                    <span className="text-stone-600">/{stats.today.dailyGoal}</span>
+                  </span>
+                </div>
+                <div className="h-1.5 rounded-full bg-stone-800/80 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-700 ease-out ${
+                      stats.today.goalMet
+                        ? "bg-gradient-to-r from-amber-500 to-amber-400 progress-glow"
+                        : "bg-stone-600"
+                    }`}
+                    style={{
+                      width: `${Math.min(100, (stats.today.chunksScrolled / stats.today.dailyGoal) * 100)}%`,
+                    }}
+                  />
+                </div>
+                {stats.today.goalMet ? (
+                  <span className="text-[11px] text-amber-400/90">✓ Eesmärk täidetud</span>
+                ) : (
+                  <span className="text-[11px] text-stone-600">
+                    {stats.today.remaining} lõiku eesmärgini
                   </span>
                 )}
               </div>
-              <span className="text-xs text-stone-500 text-center leading-tight">
-                Järjest päevi loetud
-              </span>
             </div>
+          )}
 
-            {/* Divider */}
-            <div className="w-px bg-stone-800" />
-
-            {/* Today */}
-            <div className="flex-1 flex flex-col justify-center gap-2 py-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-stone-500">Täna loetud</span>
-                <span className="text-xs text-stone-400 tabular-nums">
-                  {stats.today.chunksScrolled}
-                  <span className="text-stone-600">/{stats.today.dailyGoal}</span>
-                </span>
+          {/* ── Library ─────────────────────────────────────── */}
+          {library.length > 0 && (
+            <div className="animate-fade-in-up delay-2">
+              <p
+                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-500 mb-3 px-1"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                Raamatukogu
+              </p>
+              <div className="glass rounded-2xl overflow-hidden">
+                {[...library]
+                  .sort((a, b) => (b.lastRead ?? 0) - (a.lastRead ?? 0))
+                  .map((book, i, arr) => (
+                    <button
+                      key={book.id}
+                      onClick={() => onOpenBook(book)}
+                      className={`w-full flex items-center justify-between px-5 py-4 text-left
+                        hover:bg-stone-800/30 transition-all duration-200 group
+                        ${i < arr.length - 1 ? "border-b border-stone-800/40" : ""}`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="text-stone-200 text-sm font-medium truncate group-hover:text-stone-50 transition-colors">
+                          {book.title}
+                        </p>
+                        {book.author && (
+                          <p className="text-stone-600 text-xs truncate mt-0.5">{book.author}</p>
+                        )}
+                        {book.chunks.length > 0 && (
+                          <div className="flex items-center gap-2 mt-2">
+                            <div className="h-[3px] rounded-full flex-1 bg-stone-800/80 overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-500 ${
+                                  formatProgress(book) === "100%"
+                                    ? "bg-gradient-to-r from-green-600/70 to-green-500/70"
+                                    : "bg-gradient-to-r from-amber-600/50 to-amber-500/50"
+                                }`}
+                                style={{ width: formatProgress(book) }}
+                              />
+                            </div>
+                            <span className="text-[11px] text-stone-600 tabular-nums w-8 text-right">
+                              {formatProgress(book)}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-stone-700 ml-3 shrink-0 group-hover:text-stone-400 group-hover:translate-x-0.5 transition-all duration-200">
+                        ›
+                      </span>
+                    </button>
+                  ))}
               </div>
-              <div className="h-1.5 rounded-full bg-stone-800 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    stats.today.goalMet ? "bg-amber-400" : "bg-stone-500"
-                  }`}
-                  style={{
-                    width: `${Math.min(100, (stats.today.chunksScrolled / stats.today.dailyGoal) * 100)}%`,
-                  }}
+            </div>
+          )}
+
+          {/* ── Import ──────────────────────────────────────── */}
+          <button
+            onClick={onImport}
+            className="w-full rounded-2xl border border-dashed border-stone-700/50 px-5 py-4 text-left
+              hover:border-amber-700/30 hover:bg-amber-950/5 transition-all duration-300 group
+              animate-fade-in-up delay-3"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-stone-800/60 flex items-center justify-center group-hover:bg-amber-900/20 group-hover:border-amber-700/20 transition-all duration-300 border border-transparent">
+                <Plus
+                  size={16}
+                  className="text-stone-400 group-hover:text-amber-400/80 transition-colors duration-300"
                 />
               </div>
-              {stats.today.goalMet ? (
-                <span className="text-xs text-amber-400">✓ Tänane eesmärk täidetud</span>
-              ) : (
-                <span className="text-xs text-stone-600">
-                  {stats.today.remaining} lõiku eesmärgini
-                </span>
-              )}
+              <div>
+                <p className="text-stone-300 text-sm font-medium group-hover:text-stone-100 transition-colors">
+                  Lae üles oma raamat
+                </p>
+                <p className="text-stone-600 text-xs mt-0.5">EPUB formaadis fail</p>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </button>
 
-      <div className="w-full max-w-sm flex flex-col gap-3">
-        {/* Saved library */}
-        {library.length > 0 && (
-          <div className="rounded-2xl bg-stone-950/50 border border-stone-800 overflow-hidden">
-            <p className="px-6 py-3 text-xs font-semibold uppercase tracking-widest text-stone-500 border-b border-stone-800">
-              Minu raamatukogu
-            </p>
-            {[...library]
-              .sort((a, b) => (b.lastRead ?? 0) - (a.lastRead ?? 0))
-              .map((book) => (
-                <div
-                  key={book.id}
-                  className="flex items-center border-b border-stone-800 last:border-0"
-                >
-                  <button
-                    onClick={() => onOpenBook(book)}
-                    className="flex-1 flex min-w-0 items-center justify-between px-6 py-4 text-left hover:bg-stone-900 transition-colors duration-150"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <p className="text-stone-200 font-medium text-sm truncate">{book.title}</p>
-                      {book.author && (
-                        <p className="text-stone-500 text-xs truncate leading-snug mt-0.5">
-                          {book.author}
-                        </p>
-                      )}
-                      {book.chunks.length > 0 && (
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-stone-600">{formatProgress(book)}</span>
-                          <div className="h-0.5 rounded-full w-full overflow-hidden bg-stone-800">
-                            {formatProgress(book) === "100%" ? (
-                              <div
-                                className="h-full rounded-full transition-all bg-green-500"
-                                style={{
-                                  width: "100%",
-                                }}
-                              />
-                            ) : (
-                              <div
-                                className="h-full rounded-full transition-all bg-yellow-500"
-                                style={{
-                                  width: formatProgress(book),
-                                }}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <span className="text-stone-600 text-sm ml-3 shrink-0">›</span>
-                  </button>
-                </div>
-              ))}
+          {/* PWA helper */}
+          <div className="flex justify-center pt-2 animate-fade-in delay-5">
+            <Link
+              to="/kuidas-kasutada"
+              className="text-[11px] text-stone-600 hover:text-stone-400 transition-colors duration-200"
+            >
+              Kuidas saada Lauselt avalehele?
+            </Link>
           </div>
-        )}
-
-        {/* Import option */}
-        <button
-          onClick={onImport}
-          className="w-full rounded-2xl bg-stone-950/50 border border-stone-800 px-6 py-5 text-left hover:bg-stone-900 transition-colors"
-        >
-          <div className="flex items-start gap-3">
-            <div>
-              <p className="font-semibold text-stone-50 text-base">Lae üles oma raamat</p>
-              <p className="text-stone-600 text-sm mt-0.5 italic">EPUB formaadis failid</p>
-            </div>
-          </div>
-        </button>
-
-        {/* PWA instructions — subtle helper link */}
-        <div className="w-full flex justify-center">
-          <Link
-            to="/kuidas-kasutada"
-            className="text-[11px] text-stone-500 hover:text-stone-300 underline underline-offset-4 decoration-stone-700 hover:decoration-stone-300 transition-colors"
-          >
-            Kuidas saada Lauselt oma telefoni avalehele?
-          </Link>
         </div>
       </div>
     </div>

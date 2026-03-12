@@ -225,7 +225,7 @@ export default function Reader({
       style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none" }}
     >
       {/* ── Back panel (swipe left to go home) ── */}
-      <div className="h-screen min-w-full bg-stone-900" style={{ scrollSnapAlign: "start" }} />
+      <div className="h-screen min-w-full bg-stone-950" style={{ scrollSnapAlign: "start" }} />
 
       {/* ── Reader panel ── */}
       <div
@@ -255,8 +255,8 @@ export default function Reader({
         {/* Progress bar */}
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-stone-800 z-20">
           <div
-            className="h-full bg-amber-400 transition-all duration-300"
-            style={{ width: `${progress}%` }}
+            className="h-full bg-gradient-to-r from-amber-600 to-amber-400 transition-all duration-500 ease-out"
+            style={{ width: `${progress}%`, boxShadow: "0 0 8px rgba(245,158,11,0.3)" }}
           />
         </div>
 
@@ -274,15 +274,22 @@ export default function Reader({
                 className="min-h-screen flex items-center justify-center px-8"
                 style={{ scrollSnapAlign: "center" }}
               >
-                <div className="text-center max-w-sm">
-                  <div className="text-5xl mb-6">✓</div>
-                  <h2 className="text-stone-200 text-2xl font-semibold mb-2">Oled lõpetanud.</h2>
-                  <p className="text-stone-500 mb-8 text-sm">
+                <div className="text-center max-w-sm animate-fade-in-up">
+                  <div className="w-16 h-16 rounded-2xl glass-amber flex items-center justify-center mx-auto mb-6">
+                    <span className="text-2xl">✓</span>
+                  </div>
+                  <h2
+                    className="text-stone-200 text-xl font-semibold tracking-[0.12em] mb-2"
+                    style={{ fontFamily: "var(--font-heading)" }}
+                  >
+                    Lõpetatud
+                  </h2>
+                  <p className="text-stone-600 mb-8 text-sm">
                     {chunks.length} lõiku · {title}
                   </p>
                   <button
                     onClick={onBack}
-                    className="px-6 py-3 rounded-xl bg-amber-400 text-stone-950 font-semibold hover:bg-amber-300 transition-colors"
+                    className="btn-primary px-8 py-3 rounded-xl text-sm font-semibold"
                   >
                     Loe midagi muud
                   </button>
@@ -324,7 +331,7 @@ export default function Reader({
         {stats?.today.goalMet && (
           <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none">
             <div
-              className={`flex items-center gap-1.5 bg-stone-900/70 backdrop-blur-sm border border-amber-900/40 text-amber-600 text-xs px-3 py-1 rounded-full ${
+              className={`flex items-center gap-1.5 glass border-amber-900/30 text-amber-500 text-xs px-3 py-1.5 rounded-full transition-all duration-300 ${
                 streakJustCompleted ? "streak-celebrate" : ""
               }`}
             >
@@ -339,13 +346,18 @@ export default function Reader({
 
       {/* ── Go To panel (swipe right to reveal) ── */}
       <div
-        className="relative h-screen min-w-full flex flex-col items-center bg-stone-900 px-8 justify-around"
+        className="relative h-screen min-w-full flex flex-col items-center bg-stone-900/50 px-8 justify-around"
         style={{ scrollSnapAlign: "start" }}
       >
         <div className="w-full max-w-xs flex flex-col gap-6">
           <div>
-            <h2 className="text-stone-200 text-2xl font-semibold mb-1">Mine lõigule</h2>
-            <p className="text-stone-500 text-sm">1 – {chunks.length}</p>
+            <h2
+              className="text-stone-200 text-lg font-semibold tracking-[0.12em] mb-1"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              Mine lõigule
+            </h2>
+            <p className="text-stone-600 text-sm">1 – {chunks.length}</p>
           </div>
 
           <input
@@ -363,14 +375,19 @@ export default function Reader({
           <button
             onClick={() => goToChunk(goToValue)}
             disabled={goToValue === ""}
-            className="w-full py-3 rounded-xl bg-amber-400 text-stone-950 font-semibold hover:bg-amber-300 transition-colors disabled:opacity-40 disabled:pointer-events-none"
+            className="w-full py-3 rounded-xl bg-amber-500 text-stone-950 font-semibold hover:bg-amber-400 active:scale-[0.98] transition-all duration-150 disabled:opacity-40 disabled:pointer-events-none"
           >
             Mine
           </button>
           {/* Stats summary */}
           {stats && (
             <>
-              <h2 className="text-stone-200 text-2xl font-semibold mb-1">Statistika</h2>
+              <h2
+                className="text-stone-200 text-lg font-semibold tracking-[0.12em] mb-1"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                Statistika
+              </h2>
               <div className="rounded-2xl bg-stone-950/50 border border-stone-800 p-5">
                 <div className="flex items-baseline justify-between gap-4">
                   <span className="text-sm font-semibold text-stone-200">Ülevaade</span>

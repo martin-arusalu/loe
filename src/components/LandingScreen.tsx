@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import {
   Upload,
   BookmarkCheck,
@@ -10,37 +9,34 @@ import {
 import { Link } from "react-router-dom";
 import { useIsPWA } from "../hooks/isPwa";
 
-interface LandingScreenProps {
-  onLogin: () => void;
-}
-
-export default function LandingScreen({ onLogin }: LandingScreenProps) {
-  const premiumRef = useRef<HTMLDivElement>(null);
+export default function LandingScreen() {
   const isPWA = useIsPWA();
 
   return (
     <div className="min-h-screen text-stone-100 flex flex-col relative overflow-hidden">
       {/* ── Top dark section (hero) ───────────────────────── */}
       <div className="relative bg-[#0c0a09]">
-        {/* Decorative glow in hero */}
+        {/* Animated decorative glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <div className="absolute top-[-30%] left-1/2 -translate-x-1/2 w-[80vw] h-[50vw] max-w-[700px] max-h-[400px] rounded-full bg-amber-800/6 blur-3xl" />
+          <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[70vw] h-[45vw] max-w-[600px] max-h-[350px] rounded-full bg-amber-700/8 blur-3xl animate-glow-drift" />
+          <div className="absolute top-[10%] right-[-5%] w-[30vw] h-[30vw] max-w-[250px] max-h-[250px] rounded-full bg-amber-900/6 blur-3xl animate-glow-drift-slow" />
         </div>
 
-        <header className="relative z-10 flex flex-col items-center text-center select-none pt-16 sm:pt-24 lg:pt-32 pb-16 sm:pb-24 lg:pb-32 px-6">
-          <div className="mb-6 sm:mb-8 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-600/10 border border-amber-500/20 flex items-center justify-center">
-            <BookOpen size={28} className="text-amber-400/80 sm:w-8 sm:h-8" />
+        <header className="relative z-10 flex flex-col items-center text-center select-none pt-16 sm:pt-24 lg:pt-32 pb-20 sm:pb-28 lg:pb-36 px-6">
+          {/* App icon */}
+          <div className="mb-6 sm:mb-8 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl glass-amber flex items-center justify-center animate-fade-in-scale animate-float">
+            <BookOpen size={26} className="text-amber-400/90 sm:w-7 sm:h-7" />
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-thin tracking-[0.5em] sm:tracking-[0.7em] text-stone-50 mb-4 sm:mb-5 font-serif">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl tracking-[0.5em] text-stone-300 mb-4 sm:mb-5 animate-fade-in-up delay-1">
             Lauselt
           </h1>
-          <p className="text-stone-400 text-base sm:text-lg lg:text-xl max-w-lg leading-relaxed">
+          <p className="text-stone-400 text-base sm:text-lg lg:text-xl max-w-lg leading-relaxed animate-fade-in-up delay-2">
             Kasuta väikseid hetki, et saada palju loetud.
           </p>
         </header>
 
-        {/* Curved transition to warm section */}
+        {/* Curved transition */}
         <div className="absolute bottom-0 left-0 right-0 overflow-hidden" aria-hidden="true">
           <svg
             viewBox="0 0 1440 60"
@@ -55,33 +51,30 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
 
       {/* ── Warm body section ─────────────────────────────── */}
       <div className="relative bg-stone-900 flex-1">
-        {/* Subtle warm texture */}
+        {/* Animated warm texture glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <div className="absolute top-20 right-[-10%] w-[40vw] h-[40vw] max-w-[400px] max-h-[400px] rounded-full bg-amber-900/6 blur-3xl" />
-          <div className="absolute bottom-20 left-[-5%] w-[30vw] h-[30vw] max-w-[300px] max-h-[300px] rounded-full bg-stone-600/8 blur-3xl" />
+          <div className="absolute top-20 right-[-10%] w-[40vw] h-[40vw] max-w-[400px] max-h-[400px] rounded-full bg-amber-900/6 blur-3xl animate-glow-drift-slow" />
+          <div className="absolute bottom-40 left-[-5%] w-[30vw] h-[30vw] max-w-[300px] max-h-[300px] rounded-full bg-stone-600/6 blur-3xl animate-glow-drift" />
         </div>
 
         {/* ── Description + CTA ─────────────────────────── */}
         <div className="relative z-10 flex flex-col items-center px-6 pt-10 sm:pt-14">
-          <p className="text-stone-400 text-sm sm:text-base leading-relaxed text-center max-w-md lg:max-w-lg mb-8 sm:mb-10">
-            Muuda lugemine lihtsaks. Loe raamatuid väikeste lõikudena — täpselt nii kiiresti kui ise
-            tahad. Avasta olemasolevaid Eesti klassikuid või lae üles oma raamat.
+          <p className="text-stone-400 text-sm sm:text-base leading-relaxed text-center max-w-md lg:max-w-lg mb-8 sm:mb-10 animate-fade-in-up delay-3">
+            Loe raamatuid väikeste lõikudena — täpselt nii kiiresti kui ise tahad. Avasta
+            olemasolevaid Eesti klassikuid või lae üles oma raamat.
           </p>
 
           {isPWA ? (
-            <>
-              <button
-                onClick={onLogin}
+            <div className="animate-fade-in-up delay-4 flex flex-col items-center">
+              <Link
+                to="/login"
                 aria-label="Logi sisse ja alusta lugemist"
-                className="group relative w-full max-w-xs sm:max-w-sm rounded-2xl
-                           bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900
-                           font-semibold py-3.5 sm:py-4 text-base sm:text-lg
-                           shadow-lg shadow-amber-900/20
-                           hover:from-amber-400 hover:to-amber-500 hover:shadow-amber-800/30
-                           active:scale-[0.97] transition-all duration-200 cursor-pointer"
+                className="btn-primary w-full max-w-xs sm:max-w-sm rounded-2xl
+                           text-stone-900 font-semibold py-3.5 sm:py-4 text-base sm:text-lg
+                           cursor-pointer text-center"
               >
                 Logi sisse ja alusta lugemist
-              </button>
+              </Link>
 
               <p className="text-stone-500 text-xs sm:text-sm mt-3.5">
                 Lugemine algab esimesest lausest.
@@ -89,40 +82,37 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
 
               <Link
                 to="/kuidas-kasutada"
-                className="mt-4 text-xs sm:text-sm text-amber-300 hover:text-amber-200 underline underline-offset-4"
+                className="mt-4 text-xs sm:text-sm text-amber-400/70 hover:text-amber-300 transition-colors duration-200"
               >
-                Kuidas paigaldada Lauselt rakendusena?
+                Kuidas paigaldada rakendusena?
               </Link>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="animate-fade-in-up delay-4 flex flex-col items-center w-full">
               <Link
                 to="/kuidas-kasutada"
                 aria-label="Paigalda Lauselt rakendus"
-                className="group relative w-full max-w-xs sm:max-w-sm rounded-2xl
-                           bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900
-                           font-semibold py-3.5 sm:py-4 text-base sm:text-lg
-                           shadow-lg shadow-amber-900/20
-                           hover:from-amber-400 hover:to-amber-500 hover:shadow-amber-800/30
-                           active:scale-[0.97] transition-all duration-200 cursor-pointer text-center"
+                className="btn-primary w-full max-w-xs sm:max-w-sm rounded-2xl
+                           text-stone-900 font-semibold py-3.5 sm:py-4 text-base sm:text-lg
+                           cursor-pointer text-center"
               >
                 Paigalda Lauselt rakendus
               </Link>
 
-              <button
-                onClick={onLogin}
+              <Link
+                to="/login"
                 aria-label="Logi sisse olemasoleva kontoga"
-                className="mt-4 w-full max-w-xs sm:max-w-sm rounded-2xl border border-stone-600/70
-                           bg-stone-900/40 text-stone-100 font-medium py-3 text-sm sm:text-base
-                           hover:border-stone-500 hover:bg-stone-800/70 transition-all duration-200 cursor-pointer"
+                className="mt-4 w-full max-w-xs sm:max-w-sm rounded-2xl glass
+                           text-stone-100 font-medium py-3 text-sm sm:text-base
+                           hover:border-stone-500 hover:bg-stone-800/60 transition-all duration-200 cursor-pointer text-center"
               >
                 Logi sisse või registreeri
-              </button>
+              </Link>
 
               <p className="text-stone-500 text-xs sm:text-sm mt-3.5">
-                Lugemine algab rakenduse paigaldamisest või esimesest lausest.
+                Lugemine algab esimesest lausest.
               </p>
-            </>
+            </div>
           )}
         </div>
 
@@ -132,18 +122,20 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
             {/* Free card */}
             <section
               aria-labelledby="free-heading"
-              className="group rounded-2xl sm:rounded-3xl bg-stone-800/50 backdrop-blur-sm
-                         border border-stone-700/40 px-6 py-6 sm:px-7 sm:py-7
+              className="group glass rounded-2xl sm:rounded-3xl
+                         px-6 py-6 sm:px-7 sm:py-7
                          flex flex-col gap-5
-                         hover:border-stone-600/60 hover:bg-stone-800/70 transition-all duration-300"
+                         card-hover
+                         animate-fade-in-up delay-5"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-stone-700/60 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-stone-700/40 flex items-center justify-center group-hover:bg-stone-700/60 transition-colors duration-300">
                   <Upload size={14} className="text-stone-300" aria-hidden="true" />
                 </div>
                 <h2
                   id="free-heading"
-                  className="text-xs font-semibold uppercase tracking-widest text-stone-400"
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400"
+                  style={{ fontFamily: "var(--font-heading)" }}
                 >
                   Tasuta kasutajana saad
                 </h2>
@@ -173,33 +165,35 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
 
             {/* Premium card */}
             <section
-              ref={premiumRef}
-              id="premium"
               aria-labelledby="premium-heading"
-              className="group relative rounded-2xl sm:rounded-3xl bg-stone-800/50 backdrop-blur-sm
-                         border border-amber-700/20
+              className="group relative glass-amber rounded-2xl sm:rounded-3xl
                          px-6 py-6 sm:px-7 sm:py-7
                          flex flex-col gap-5 overflow-hidden
-                         hover:border-amber-600/35 hover:bg-stone-800/70 transition-all duration-300"
+                         card-hover
+                         animate-fade-in-up delay-6"
             >
-              {/* Subtle amber glow */}
+              {/* Animated amber glow */}
               <div
                 className="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-amber-500/8 blur-2xl
-                           group-hover:bg-amber-500/15 transition-all duration-500"
+                           group-hover:bg-amber-500/15 transition-all duration-700 animate-glow-drift-slow"
                 aria-hidden="true"
               />
               <div
-                className="absolute inset-0 bg-gradient-to-br from-amber-800/8 via-transparent to-transparent pointer-events-none"
+                className="absolute inset-0 bg-gradient-to-br from-amber-800/6 via-transparent to-transparent pointer-events-none"
                 aria-hidden="true"
               />
 
               <div className="relative flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-amber-800/25 border border-amber-600/15 flex items-center justify-center">
+                <div
+                  className="w-8 h-8 rounded-lg bg-amber-800/20 border border-amber-600/15 flex items-center justify-center
+                              group-hover:bg-amber-800/30 group-hover:border-amber-500/25 transition-all duration-300"
+                >
                   <Flame size={14} className="text-amber-400/80" aria-hidden="true" />
                 </div>
                 <h2
                   id="premium-heading"
-                  className="text-xs font-semibold uppercase tracking-widest text-amber-400/80"
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-gradient-amber"
+                  style={{ fontFamily: "var(--font-heading)" }}
                 >
                   Lauselt+
                 </h2>
@@ -237,9 +231,12 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
           </div>
         </div>
 
-        {/* ── Footer links ────────────────────────────────── */}
+        {/* ── Footer ──────────────────────────────────────── */}
         <footer className="relative z-10 mt-14 sm:mt-20 pb-10 sm:pb-14 flex flex-col items-center gap-2">
-          <div className="w-8 h-px bg-stone-700/50 mb-5" aria-hidden="true" />
+          <div
+            className="w-8 h-px bg-gradient-to-r from-transparent via-stone-700/50 to-transparent mb-5"
+            aria-hidden="true"
+          />
           <div className="flex flex-wrap items-center justify-center gap-4 text-stone-500 text-xs sm:text-sm">
             <Link to="/privacy" className="hover:text-stone-300 transition-colors duration-200">
               Privaatsus

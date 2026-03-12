@@ -153,33 +153,43 @@ export default function InstructionsPWA() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-stone-900 text-stone-100 flex flex-col items-center px-6 py-8">
-      <div className="w-full max-w-xl">
+    <div className="min-h-screen bg-[#0c0a09] text-stone-100 flex flex-col items-center px-6 py-8 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[50vw] h-[40vw] max-w-[400px] max-h-[300px] rounded-full bg-amber-900/4 blur-3xl animate-glow-drift-slow" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-xl">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="mb-6 inline-flex items-center text-sm text-stone-400 hover:text-stone-200 transition-colors"
+          className="mb-8 text-sm text-stone-600 hover:text-stone-300 transition-colors duration-200 animate-fade-in"
         >
-          <span className="mr-1">←</span> Tagasi avalehele
+          ← Tagasi avalehele
         </button>
 
-        <div className="rounded-3xl border border-stone-800 bg-stone-950/60 p-6 sm:p-8 shadow-lg shadow-black/30">
-          <h1 className="text-xl sm:text-2xl font-semibold mb-2">
-            Kuidas kasutada <span className="font-bold">Lauselt</span> rakendusena
+        <div className="glass rounded-2xl p-6 sm:p-8 animate-fade-in-up delay-1">
+          <h1
+            className="text-lg sm:text-xl font-semibold tracking-[0.12em] text-stone-200 mb-2"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            Paigaldamine
           </h1>
-          <p className="text-stone-400 text-sm sm:text-base mb-6">
-            Lisa <span className="font-bold">Lauselt</span> oma seadme avalehele, et kasutada seda
-            nagu tavalist rakendust – täisekraanil ja kiirelt kättesaadavana.
+          <p className="text-stone-500 text-sm mb-6 leading-relaxed">
+            Lisa Lauselt oma seadme avalehele, et kasutada seda nagu tavalist rakendust.
           </p>
 
-          <div className="mt-4 border-t border-stone-800 pt-4">
+          <div className="border-t border-stone-700/40 pt-5">
             <Instructions platform={selected} />
           </div>
 
-          <label className="block mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
-            Vale seadme juhised? Vali seade:
+          <label
+            className="block mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-500"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            Vali seade:
             <select
-              className="mt-2 w-full rounded-xl bg-stone-900 border border-stone-700 px-3 py-2 text-sm text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500/80 focus:border-amber-500/80"
+              className="mt-2 w-full rounded-xl bg-stone-800/60 backdrop-blur-sm border border-stone-700/50 px-3 py-2.5 text-sm text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-shadow duration-200"
               value={selected}
               onChange={(e) => setSelected(e.target.value as PlatformKey)}
             >

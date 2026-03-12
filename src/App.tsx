@@ -5,7 +5,7 @@ import HomeScreen from "@/components/HomeScreen";
 import Importer from "@/components/Importer";
 import InstructionsPWA from "@/components/InstructionsPWA";
 import LandingScreen from "@/components/LandingScreen";
-import LoginScreen from "@/components/LoginScreen";
+import LoginPage from "@/components/LoginPage";
 import PrivacyPolicy from "@/components/PrivacyPolicy";
 import Reader from "@/components/Reader";
 import TermsOfService from "@/components/TermsOfService";
@@ -41,11 +41,7 @@ import { APP_VERSION } from "./lib/constants";
 
 const GOOGLE_CLIENT_ID = "382553774833-b3673gncnf51ha3td8s2t8j90kipd4ao.apps.googleusercontent.com";
 
-type AppState =
-  | { view: "home" }
-  | { view: "import" }
-  | { view: "login" }
-  | { view: "read"; book: Book };
+type AppState = { view: "home" } | { view: "import" } | { view: "read"; book: Book };
 
 function AppInner() {
   const [state, setState] = useState<AppState>({ view: "home" });
@@ -337,14 +333,6 @@ function AppInner() {
     setState({ view: "home" });
   };
 
-  const handleLogin = (loggedInUser: AuthUser) => {
-    trackEvent("login", {
-      user: loggedInUser?.email,
-    });
-    setUser(loggedInUser);
-    setState({ view: "home" });
-  };
-
   const handleLogout = () => {
     trackEvent("logout", {
       user: user?.email,
@@ -358,13 +346,13 @@ function AppInner() {
 
   if (loading) {
     content = (
-      <div className="flex h-screen flex-col items-center justify-center gap-4 bg-stone-900">
-        <p className="text-stone-500 text-lg tracking-wide">Laen…</p>
+      <div className="flex h-screen flex-col items-center justify-center gap-4 bg-[#0c0a09]">
+        <p className="text-stone-600 text-sm tracking-wide">Laen…</p>
         <div className="flex gap-1.5">
           {[0, 1, 2].map((i) => (
             <span
               key={i}
-              className="h-2 w-2 rounded-full bg-stone-500 animate-bounce"
+              className="h-1.5 w-1.5 rounded-full bg-stone-600 animate-bounce"
               style={{ animationDelay: `${i * 0.15}s` }}
             />
           ))}
@@ -384,10 +372,8 @@ function AppInner() {
     );
   } else if (state.view === "import") {
     content = <Importer onTextReady={handleTextReady} onBack={handleBack} />;
-  } else if (state.view === "login") {
-    content = <LoginScreen onBack={handleBack} onLogin={handleLogin} />;
   } else if (state.view === "home" && !user) {
-    content = <LandingScreen onLogin={() => setState({ view: "login" })} />;
+    content = <LandingScreen />;
   } else {
     content = (
       <HomeScreen
@@ -399,7 +385,6 @@ function AppInner() {
         onImport={() => setState({ view: "import" })}
         onOpenBook={handleOpenBook}
         onOpenApiBook={handleOpenApiBook}
-        onLoginRequest={() => setState({ view: "login" })}
         onLogout={handleLogout}
       />
     );
@@ -422,6 +407,8 @@ function AppInner() {
   );
 }
 
+// LoginPage moved to its own component to simplify navigation/analytics
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -429,6 +416,7 @@ export default function App() {
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/kuidas-kasutada" element={<InstructionsPWA />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route
           path="*"
           element={
