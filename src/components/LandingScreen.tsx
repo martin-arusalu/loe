@@ -62,7 +62,7 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
         {/* ── Description + CTA ─────────────────────────── */}
         <div className="relative z-10 flex flex-col items-center px-6 pt-10 sm:pt-14">
           <p className="text-stone-400 text-sm sm:text-base leading-relaxed text-center max-w-md lg:max-w-lg mb-8 sm:mb-10">
-            Muuda lugemine lihtsaks. Loe raamatuid väikeste tükkidena — täpselt nii kiiresti kui ise
+            Muuda lugemine lihtsaks. Loe raamatuid väikeste lõikudena — täpselt nii kiiresti kui ise
             tahad. Avasta olemasolevaid Eesti klassikuid või lae üles oma raamat.
           </p>
 
@@ -184,7 +184,7 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
                 {[
                   {
                     Icon: Flame,
-                    text: "Tekita järjepidev lugemisharjumus (päevas vähemalt 50 jututükki).",
+                    text: "Tekita järjepidev lugemisharjumus (päevas vähemalt 50 lõiku).",
                   },
                   {
                     Icon: LibraryBig,

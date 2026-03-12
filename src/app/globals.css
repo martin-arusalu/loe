@@ -149,6 +149,10 @@ body {
   margin-bottom: 0.5rem;
   letter-spacing: 0.1ch;
 }
+[data-streamdown="horizontal-rule"] {
+  padding-top: 2rem;
+  margin-top: 1rem;
+}
 
 /* Disable scrollbars on every element */
 * {

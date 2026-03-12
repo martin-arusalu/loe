@@ -237,7 +237,7 @@ export default function Reader({
                   <div className="text-5xl mb-6">✓</div>
                   <h2 className="text-stone-200 text-2xl font-semibold mb-2">Oled lõpetanud.</h2>
                   <p className="text-stone-500 mb-8 text-sm">
-                    {chunks.length} tükki · {title}
+                    {chunks.length} lõiku · {title}
                   </p>
                   <button
                     onClick={onBack}
@@ -302,82 +302,8 @@ export default function Reader({
         style={{ scrollSnapAlign: "start" }}
       >
         <div className="w-full max-w-xs flex flex-col gap-6">
-          {/* Stats summary */}
-          {stats && (
-            <>
-              <h2 className="text-stone-200 text-2xl font-semibold mb-1">Statistika</h2>
-              <div className="rounded-xl bg-stone-900 items-center border border-stone-800 p-4 flex">
-                <div className="flex-1 flex flex-col items-center gap-1">
-                  <span className="text-2xl font-bold text-amber-400 tabular-nums leading-none">
-                    {stats.streak.current}
-                  </span>
-                  <span className="text-xs text-stone-500">
-                    päev{stats.streak.current !== 1 && "a"} järjest
-                  </span>
-                </div>
-                <div className="w-px bg-stone-800 mx-2" />
-                <div className="flex-1 flex flex-col items-center gap-2">
-                  <p className="text-2xl font-bold text-stone-200 tabular-nums leading-none">
-                    {stats.today.chunksScrolled}
-                    <span className="text-stone-600 text-base">/{stats.today.dailyGoal}</span>
-                  </p>
-                  <span className="text-xs text-stone-500">täna loetud</span>
-                  {stats.today.goalMet ? (
-                    <span className="text-xs text-amber-400">✓ eesmärk täidetud</span>
-                  ) : (
-                    <div className="w-full h-1 rounded-full bg-stone-800 overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-stone-500 transition-all"
-                        style={{
-                          width: `${Math.min(100, (stats.today.chunksScrolled / stats.today.dailyGoal) * 100)}%`,
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mt-3 rounded-xl bg-stone-950/30 border border-stone-800 p-4">
-                <div className="flex items-baseline justify-between">
-                  <h3 className="text-stone-300 text-sm font-semibold">Kokku</h3>
-                  <span className="text-stone-600 text-xs">kõik ajad</span>
-                </div>
-                <div className="mt-3 grid grid-cols-3 gap-3">
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-lg font-semibold text-stone-200 tabular-nums leading-none">
-                      {stats.totals.chunksRead}
-                    </span>
-                    <span className="text-[11px] text-stone-500 text-center leading-tight">
-                      tükki
-                      <br />
-                      loetud
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-lg font-semibold text-stone-200 tabular-nums leading-none">
-                      {stats.totals.daysActive}
-                    </span>
-                    <span className="text-[11px] text-stone-500 text-center leading-tight">
-                      aktiivset
-                      <br />
-                      päeva
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-lg font-semibold text-stone-200 tabular-nums leading-none">
-                      {stats.totals.booksStarted}
-                    </span>
-                    <span className="text-[11px] text-stone-500 text-center leading-tight">
-                      raamatut
-                      <br />
-                      alustatud
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
           <div>
-            <h2 className="text-stone-200 text-2xl font-semibold mb-1">Mine tükile</h2>
+            <h2 className="text-stone-200 text-2xl font-semibold mb-1">Mine lõigule</h2>
             <p className="text-stone-500 text-sm">1 – {chunks.length}</p>
           </div>
 
@@ -389,7 +315,7 @@ export default function Reader({
             value={goToValue}
             onChange={(e) => setGoToValue(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && goToChunk(goToValue)}
-            placeholder="Tüki number"
+            placeholder="Lõigu number"
             className="w-full rounded-xl bg-stone-800 text-stone-100 placeholder-stone-600 px-4 py-3 text-lg outline-none focus:ring-2 focus:ring-amber-400 tabular-nums"
           />
 
@@ -400,6 +326,78 @@ export default function Reader({
           >
             Mine
           </button>
+          {/* Stats summary */}
+          {stats && (
+            <>
+              <h2 className="text-stone-200 text-2xl font-semibold mb-1">Statistika</h2>
+              <div className="rounded-2xl bg-stone-950/50 border border-stone-800 p-5">
+                <div className="flex items-baseline justify-between gap-4">
+                  <span className="text-sm font-semibold text-stone-200">Ülevaade</span>
+                  {stats.today.goalMet ? (
+                    <span className="text-xs text-amber-400">✓ eesmärk täidetud</span>
+                  ) : (
+                    <span className="text-xs text-stone-600">
+                      {stats.today.remaining} lõiku eesmärgini
+                    </span>
+                  )}
+                </div>
+
+                <table className="w-full text-sm mt-4">
+                  <tbody className="divide-y divide-stone-800">
+                    <tr>
+                      <td className="py-3 text-stone-500">Järjest</td>
+                      <td className="py-3 text-right tabular-nums">
+                        <span className="text-stone-200 font-semibold">{stats.streak.current}</span>{" "}
+                        <span className="text-stone-600">
+                          päev{stats.streak.current !== 1 && "a"}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 text-stone-500">Täna loetud</td>
+                      <td className="py-3 text-right tabular-nums">
+                        <span className="text-stone-200 font-semibold">
+                          {stats.today.chunksScrolled}
+                        </span>
+                        <span className="text-stone-600">/{stats.today.dailyGoal}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 text-stone-500">Kokku loetud</td>
+                      <td className="py-3 text-right tabular-nums">
+                        <span className="text-stone-200 font-semibold">
+                          {stats.totals.chunksRead}
+                        </span>{" "}
+                        <span className="text-stone-600">lõiku</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 text-stone-500">Aktiivseid päevi</td>
+                      <td className="py-3 text-right tabular-nums">
+                        <span className="text-stone-200 font-semibold">
+                          {stats.totals.daysActive}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                {!stats.today.goalMet && (
+                  <div className="mt-4 h-1.5 rounded-full bg-stone-800 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-stone-500 transition-all"
+                      style={{
+                        width: `${Math.min(
+                          100,
+                          (stats.today.chunksScrolled / stats.today.dailyGoal) * 100
+                        )}%`,
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
 
           <button
             onClick={() => hContainerRef.current?.scrollTo({ left: 0, behavior: "smooth" })}

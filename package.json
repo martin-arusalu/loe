@@ -1,10 +1,10 @@
 {
   "name": "reedfeed",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview",
     "lint": "eslint",
     "format": "prettier --write .",

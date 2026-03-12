@@ -120,7 +120,7 @@ export default function HomeScreen({
                 <span className="text-xs text-amber-400">✓ Tänane eesmärk täidetud</span>
               ) : (
                 <span className="text-xs text-stone-600">
-                  {stats.today.remaining} tükki eesmärgini
+                  {stats.today.remaining} lõiku eesmärgini
                 </span>
               )}
             </div>
