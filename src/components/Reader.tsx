@@ -45,10 +45,12 @@ export default function Reader({
   }, [onPositionChange]);
 
   // On first mount, scroll so the current chunk is centered (position 1 when prev exists, else 0).
+  // Also center the horizontal container on the reader panel (index 1, between back and Go To panels).
   useLayoutEffect(() => {
     const el = containerRef.current;
-    if (!el) return;
-    el.scrollTop = prevIndex !== null ? el.clientHeight : 0;
+    if (el) el.scrollTop = prevIndex !== null ? el.clientHeight : 0;
+    const hEl = hContainerRef.current;
+    if (hEl) hEl.scrollLeft = hEl.clientWidth;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -121,6 +123,35 @@ export default function Reader({
     }
   }, [curIndex, prevIndex, nextIndex, chunks.length, title]);
 
+  // Detect horizontal swipe left (snap to back panel) → go home.
+  useEffect(() => {
+    const el = hContainerRef.current;
+    if (!el) return;
+
+    const handleHScrollEnd = () => {
+      if (Math.round(el.scrollLeft / el.clientWidth) === 0) {
+        onBack();
+      }
+    };
+
+    const supportsScrollEnd = "onscrollend" in window;
+    if (supportsScrollEnd) {
+      el.addEventListener("scrollend", handleHScrollEnd);
+      return () => el.removeEventListener("scrollend", handleHScrollEnd);
+    } else {
+      let timer: ReturnType<typeof setTimeout>;
+      const handleHScroll = () => {
+        clearTimeout(timer);
+        timer = setTimeout(handleHScrollEnd, 150);
+      };
+      el.addEventListener("scroll", handleHScroll, { passive: true });
+      return () => {
+        el.removeEventListener("scroll", handleHScroll);
+        clearTimeout(timer);
+      };
+    }
+  }, [onBack]);
+
   const progress =
     chunks.length > 0
       ? Math.round(((Math.min(curIndex, chunks.length - 1) + 1) / chunks.length) * 100)
@@ -167,7 +198,14 @@ export default function Reader({
     setCurIndex(clamped);
     onPositionChangeRef.current?.(clamped, false);
     setGoToValue("");
-    setTimeout(() => hContainerRef.current?.scrollTo({ left: 0, behavior: "smooth" }), 0);
+    setTimeout(
+      () =>
+        hContainerRef.current?.scrollTo({
+          left: hContainerRef.current.clientWidth,
+          behavior: "smooth",
+        }),
+      0
+    );
     trackEvent("chunk goto", { book: title, chunk: clamped, time: new Date().toISOString() });
   };
 
@@ -180,12 +218,15 @@ export default function Reader({
   };
 
   return (
-    /* Horizontal snap container: reader (left) + Go To (right) */
+    /* Horizontal snap container: Go Home (left) + reader (center) + Go To (right) */
     <div
       ref={hContainerRef}
       className="h-screen overflow-x-scroll flex"
       style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none" }}
     >
+      {/* ── Back panel (swipe left to go home) ── */}
+      <div className="h-screen min-w-full bg-stone-900" style={{ scrollSnapAlign: "start" }} />
+
       {/* ── Reader panel ── */}
       <div
         className="relative h-screen min-w-full flex flex-col bg-stone-950 overflow-hidden"
@@ -400,7 +441,12 @@ export default function Reader({
           )}
 
           <button
-            onClick={() => hContainerRef.current?.scrollTo({ left: 0, behavior: "smooth" })}
+            onClick={() =>
+              hContainerRef.current?.scrollTo({
+                left: hContainerRef.current.clientWidth,
+                behavior: "smooth",
+              })
+            }
             className="text-stone-500 hover:text-stone-300 text-sm transition-colors text-center"
           >
             ← Tagasi

@@ -47,21 +47,18 @@ function Instructions({ platform }: { platform: PlatformKey }) {
     return (
       <ol className="list-decimal list-inside space-y-2 text-sm text-stone-200">
         <li>
-          Ava <span className="font-bold">Lauselt</span> oma iPhone’i või iPadi brauseris.
-        </li>
-        <li>
-          Vajuta brauseri <span className="font-semibold">Share / Jaga</span> nuppu
-          (ruut ülespoole noolega).
+          Vajuta brauseri <span className="font-semibold">Share / Jaga</span> nuppu (ruut ülespoole
+          noolega).
         </li>
         <li>
           Kerige alla ja vali <span className="font-semibold">Add to Home Screen</span>.
         </li>
         <li>
-          Kinnita nime valik ja vajuta <span className="font-semibold">Add</span>.
+          Kinnita nime valik ja vajuta <span className="font-semibold">Add / Lisa</span>.
         </li>
         <li>
-          Nüüd saad <span className="font-bold">Lauselt</span> rakenduse avada nagu tavalise
-          rakenduse avalehelt.
+          Nüüd leiad <span className="font-bold">Lauselt</span> oma telefoni avalehelt rakenduste
+          hulgast.
         </li>
       </ol>
     );
@@ -70,9 +67,6 @@ function Instructions({ platform }: { platform: PlatformKey }) {
   if (platform === "android-chrome") {
     return (
       <ol className="list-decimal list-inside space-y-2 text-sm text-stone-200">
-        <li>
-          Ava <span className="font-bold">Lauselt</span> Chrome’i brauseris.
-        </li>
         <li>
           Vajuta paremal üleval <span className="font-semibold">kolme punkti</span> (menüü ikoon).
         </li>
@@ -94,9 +88,6 @@ function Instructions({ platform }: { platform: PlatformKey }) {
     return (
       <ol className="list-decimal list-inside space-y-2 text-sm text-stone-200">
         <li>
-          Ava <span className="font-bold">Lauselt</span> Chrome’i või Edge’i brauseris.
-        </li>
-        <li>
           Vaata aadressiriba paremale – kui näed ikooni{" "}
           <span className="font-semibold">“Install app” / “Paigalda rakendus”</span>, vajuta seda.
         </li>
@@ -110,7 +101,7 @@ function Instructions({ platform }: { platform: PlatformKey }) {
         </li>
         <li>
           Järgi juhiseid – see lisab <span className="font-bold">Lauselt</span> sinu arvutisse
-          eraldi aknana.
+          eraldi rakendusena.
         </li>
       </ol>
     );
@@ -119,9 +110,6 @@ function Instructions({ platform }: { platform: PlatformKey }) {
   if (platform === "desktop-safari") {
     return (
       <ol className="list-decimal list-inside space-y-2 text-sm text-stone-200">
-        <li>
-          Ava <span className="font-bold">Lauselt</span> Maci Safaris.
-        </li>
         <li>
           Ava ülemisest menüüst <span className="font-semibold">File</span>.
         </li>
@@ -139,11 +127,10 @@ function Instructions({ platform }: { platform: PlatformKey }) {
 
   return (
     <div className="space-y-3 text-sm text-stone-200">
-      <p>Kui sinu seadet ei tuvastatud täpselt, proovi järgmist:</p>
       <ol className="list-decimal list-inside space-y-2">
         <li>Otsi brauseri menüüst valikut nagu „Install app“ või „Add to Home screen“.</li>
         <li>
-          Kui sellist valikut pole, vali ülal valikust seade, mis on sinu omale kõige sarnasem.
+          Kui sellist valikut pole, vali all valikust seade, mis on sinu omale kõige sarnasem.
         </li>
         <li>
           Kui miski ei toimi, saad <span className="font-bold">Lauselt</span> alati avada tavalise
@@ -165,9 +152,6 @@ export default function InstructionsPWA() {
     setSelected(p);
   }, []);
 
-  const detectedLabel =
-    PLATFORM_OPTIONS.find((p) => p.key === detected)?.label ?? "Määramata seade või brauser";
-
   return (
     <div className="min-h-screen bg-stone-900 text-stone-100 flex flex-col items-center px-6 py-8">
       <div className="w-full max-w-xl">
@@ -188,16 +172,12 @@ export default function InstructionsPWA() {
             nagu tavalist rakendust – täisekraanil ja kiirelt kättesaadavana.
           </p>
 
-          <div className="mb-6 space-y-2">
-            <p className="text-xs uppercase tracking-[0.2em] text-stone-500">Sinu seade</p>
-            <p className="text-xs text-stone-400">
-              Automaatselt tuvastatud:{" "}
-              <span className="font-medium text-stone-200">{detectedLabel}</span>
-            </p>
+          <div className="mt-4 border-t border-stone-800 pt-4">
+            <Instructions platform={selected} />
           </div>
 
-          <label className="block mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
-            Vali juhised
+          <label className="block mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
+            Vale seadme juhised? Vali seade:
             <select
               className="mt-2 w-full rounded-xl bg-stone-900 border border-stone-700 px-3 py-2 text-sm text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500/80 focus:border-amber-500/80"
               value={selected}
@@ -210,10 +190,6 @@ export default function InstructionsPWA() {
               ))}
             </select>
           </label>
-
-          <div className="mt-4 border-t border-stone-800 pt-4">
-            <Instructions platform={selected} />
-          </div>
         </div>
       </div>
     </div>

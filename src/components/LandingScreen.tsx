@@ -8,6 +8,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useIsPWA } from "../hooks/isPwa";
 
 interface LandingScreenProps {
   onLogin: () => void;
@@ -15,6 +16,7 @@ interface LandingScreenProps {
 
 export default function LandingScreen({ onLogin }: LandingScreenProps) {
   const premiumRef = useRef<HTMLDivElement>(null);
+  const isPWA = useIsPWA();
 
   return (
     <div className="min-h-screen text-stone-100 flex flex-col relative overflow-hidden">
@@ -66,39 +68,62 @@ export default function LandingScreen({ onLogin }: LandingScreenProps) {
             tahad. Avasta olemasolevaid Eesti klassikuid või lae üles oma raamat.
           </p>
 
-          <button
-            onClick={onLogin}
-            aria-label="Logi sisse ja alusta lugemist"
-            className="group relative w-full max-w-xs sm:max-w-sm rounded-2xl
-                       bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900
-                       font-semibold py-3.5 sm:py-4 text-base sm:text-lg
-                       shadow-lg shadow-amber-900/20
-                       hover:from-amber-400 hover:to-amber-500 hover:shadow-amber-800/30
-                       active:scale-[0.97] transition-all duration-200 cursor-pointer"
-          >
-            Logi sisse ja alusta lugemist
-          </button>
+          {isPWA ? (
+            <>
+              <button
+                onClick={onLogin}
+                aria-label="Logi sisse ja alusta lugemist"
+                className="group relative w-full max-w-xs sm:max-w-sm rounded-2xl
+                           bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900
+                           font-semibold py-3.5 sm:py-4 text-base sm:text-lg
+                           shadow-lg shadow-amber-900/20
+                           hover:from-amber-400 hover:to-amber-500 hover:shadow-amber-800/30
+                           active:scale-[0.97] transition-all duration-200 cursor-pointer"
+              >
+                Logi sisse ja alusta lugemist
+              </button>
 
-          <p className="text-stone-500 text-xs sm:text-sm mt-3.5">
-            Lugemine algab esimesest lausest.
-          </p>
+              <p className="text-stone-500 text-xs sm:text-sm mt-3.5">
+                Lugemine algab esimesest lausest.
+              </p>
 
-          <Link
-            to="/kuidas-kasutada"
-            className="mt-5 w-full max-w-sm rounded-2xl border border-amber-500/50 bg-amber-500/5 px-5 py-4 text-left hover:bg-amber-500/12 hover:border-amber-400/80 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center">
-                <MonitorSmartphone size={18} className="text-amber-300" aria-hidden="true" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-amber-100">Lauselt rakendus</p>
-                <p className="text-xs text-amber-200/80 mt-1">
-                  Samm-sammulised juhised, kuidas kasutada Lauselt rakendusena.
-                </p>
-              </div>
-            </div>
-          </Link>
+              <Link
+                to="/kuidas-kasutada"
+                className="mt-4 text-xs sm:text-sm text-amber-300 hover:text-amber-200 underline underline-offset-4"
+              >
+                Kuidas paigaldada Lauselt rakendusena?
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/kuidas-kasutada"
+                aria-label="Paigalda Lauselt rakendus"
+                className="group relative w-full max-w-xs sm:max-w-sm rounded-2xl
+                           bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900
+                           font-semibold py-3.5 sm:py-4 text-base sm:text-lg
+                           shadow-lg shadow-amber-900/20
+                           hover:from-amber-400 hover:to-amber-500 hover:shadow-amber-800/30
+                           active:scale-[0.97] transition-all duration-200 cursor-pointer text-center"
+              >
+                Paigalda Lauselt rakendus
+              </Link>
+
+              <button
+                onClick={onLogin}
+                aria-label="Logi sisse olemasoleva kontoga"
+                className="mt-4 w-full max-w-xs sm:max-w-sm rounded-2xl border border-stone-600/70
+                           bg-stone-900/40 text-stone-100 font-medium py-3 text-sm sm:text-base
+                           hover:border-stone-500 hover:bg-stone-800/70 transition-all duration-200 cursor-pointer"
+              >
+                Logi sisse või registreeri
+              </button>
+
+              <p className="text-stone-500 text-xs sm:text-sm mt-3.5">
+                Lugemine algab rakenduse paigaldamisest või esimesest lausest.
+              </p>
+            </>
+          )}
         </div>
 
         {/* ── Feature cards ─────────────────────────────── */}
