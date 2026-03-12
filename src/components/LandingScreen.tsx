@@ -70,7 +70,7 @@ export default function LandingScreen() {
                 to="/login"
                 aria-label="Logi sisse ja alusta lugemist"
                 className="btn-primary w-full max-w-xs sm:max-w-sm rounded-2xl
-                           text-stone-900 font-semibold py-3.5 sm:py-4 text-base sm:text-lg
+                           text-stone-900 font-semibold px-8 py-3.5 sm:py-4 text-base sm:text-lg
                            cursor-pointer text-center"
               >
                 Logi sisse ja alusta lugemist
