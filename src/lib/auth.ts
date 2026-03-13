@@ -45,7 +45,7 @@ export function clearAuthUser(): void {
 }
 
 // TODO: Move to env
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://api.lauselt.ee";
 
 /**
  * Calls POST /auth/refresh with the stored refresh token and persists the
