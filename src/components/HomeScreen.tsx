@@ -1,6 +1,7 @@
 import { Book } from "@/lib/storage";
 import { AuthUser } from "@/lib/auth";
 import { ApiBook, UserStats } from "@/lib/api";
+import formatNumber from "@/lib/formatNumber";
 import { Flame, LogOut, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -111,8 +112,8 @@ export default function HomeScreen({
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] text-stone-500">Täna</span>
                   <span className="text-[11px] text-stone-400 tabular-nums">
-                    {stats.today.chunksScrolled}
-                    <span className="text-stone-600">/{stats.today.dailyGoal}</span>
+                    {formatNumber(stats.today.chunksScrolled)}
+                    <span className="text-stone-600">/{formatNumber(stats.today.dailyGoal)}</span>
                   </span>
                 </div>
                 <div className="h-1.5 rounded-full bg-stone-800/80 overflow-hidden">
@@ -131,7 +132,7 @@ export default function HomeScreen({
                   <span className="text-[11px] text-amber-400/90">✓ Eesmärk täidetud</span>
                 ) : (
                   <span className="text-[11px] text-stone-600">
-                    {stats.today.remaining} lõiku eesmärgini
+                    {formatNumber(stats.today.remaining)} lõiku eesmärgini
                   </span>
                 )}
               </div>

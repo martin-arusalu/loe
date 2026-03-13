@@ -1,10 +1,13 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import remarkBreaks from "remark-breaks";
 import { defaultRemarkPlugins, Streamdown } from "streamdown";
 import { UserStats } from "@/lib/api";
+import formatNumber from "@/lib/formatNumber";
 import { APP_VERSION } from "@/lib/constants";
 import { Flame } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+
+const ENABLE_GOTO = false;
 
 interface ReaderProps {
   chunks: string[];
@@ -34,6 +37,25 @@ export default function Reader({
   const needsRecenter = useRef(false);
   const [streakJustCompleted, setStreakJustCompleted] = useState(false);
   const prevGoalMetRef = useRef<boolean>(stats?.today.goalMet ?? false);
+  const [showChapterDialog, setShowChapterDialog] = useState(false);
+
+  const chapters = useMemo(() => {
+    return chunks
+      .map((chunk, index) => ({ chunk, index }))
+      .filter(({ chunk }) => chunk.trimStart().startsWith("## "))
+      .map(({ chunk, index }) => {
+        const firstLine = chunk.trimStart().split("\n")[0];
+        const title = firstLine.replace(/^##\s*/, "");
+        return { index, title };
+      });
+  }, [chunks]);
+
+  const currentChapter = useMemo(() => {
+    for (let i = chapters.length - 1; i >= 0; i--) {
+      if (chapters[i].index <= curIndex) return chapters[i];
+    }
+    return null;
+  }, [chapters, curIndex]);
 
   const prevIndex = curIndex > 0 ? curIndex - 1 : null;
   const nextIndex = curIndex < chunks.length ? curIndex + 1 : null;
@@ -217,6 +239,12 @@ export default function Reader({
     window.location.reload();
   };
 
+  const openStatsPanel = () => {
+    const hEl = hContainerRef.current;
+    if (!hEl) return;
+    hEl.scrollTo({ left: hEl.clientWidth * 2, behavior: "smooth" });
+  };
+
   return (
     /* Horizontal snap container: Go Home (left) + reader (center) + Go To (right) */
     <div
@@ -241,10 +269,28 @@ export default function Reader({
             >
               ← Tagasi
             </button>
-            {curIndex < chunks.length && (
-              <span className="text-stone-500 text-sm tabular-nums whitespace-nowrap min-w-0 flex-shrink-0 flex items-center justify-end">
-                {curIndex + 1} / {chunks.length}
-              </span>
+            {stats && curIndex < chunks.length && (
+              <button
+                type="button"
+                onClick={openStatsPanel}
+                className="pointer-events-auto"
+                aria-label="Ava statistika"
+              >
+                <div className="flex gap-2">
+                  {stats.today.goalMet && (
+                    <div
+                      className={`flex items-center gap-1 text-amber-500 text-sm ${
+                        streakJustCompleted ? "streak-celebrate" : ""
+                      }`}
+                    >
+                      <Flame size={14} className="text-amber-500" aria-hidden="true" />
+                    </div>
+                  )}
+                  <span className="text-stone-500 text-sm tabular-nums whitespace-nowrap min-w-0 flex-shrink-0 flex items-center justify-end">
+                    {formatNumber(stats.today.chunksScrolled)}/{formatNumber(stats.today.dailyGoal)}
+                  </span>
+                </div>
+              </button>
             )}
           </div>
           <p className="text-stone-600 text-sm font-medium truncate text-center mt-2 w-full">
@@ -285,7 +331,7 @@ export default function Reader({
                     Lõpetatud
                   </h2>
                   <p className="text-stone-600 mb-8 text-sm">
-                    {chunks.length} lõiku · {title}
+                    {formatNumber(chunks.length)} lõiku · {title}
                   </p>
                   <button
                     onClick={onBack}
@@ -302,7 +348,9 @@ export default function Reader({
                 className="min-h-screen flex items-center justify-center px-8"
                 style={{ scrollSnapAlign: "center" }}
               >
-                <div className="max-w-xl w-full">
+                <div
+                  className={`max-w-xl w-full${chunks[index].trimStart().startsWith("## ") ? " border-l-2 border-amber-600/40 pl-4" : ""}`}
+                >
                   <div className="text-stone-100 text-xl md:text-2xl leading-relaxed font-serif text-balance prose prose-invert prose-p:my-4 prose-strong:font-bold prose-em:italic prose-ul:my-4 prose-ol:my-4 prose-li:my-1">
                     <Streamdown
                       linkSafety={{ enabled: false }}
@@ -327,18 +375,65 @@ export default function Reader({
           </div>
         )}
 
-        {/* Subtle streak completion indicator */}
-        {stats?.today.goalMet && (
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none">
+        {/* Chunk position & chapter */}
+        {curIndex < chunks.length && (
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center items-center gap-3 pointer-events-none">
+            <span className="text-stone-600 text-xs tabular-nums">
+              {formatNumber(curIndex + 1)} / {formatNumber(chunks.length)}
+            </span>
+            {chapters.length > 0 && (
+              <button
+                className="pointer-events-auto text-stone-500 hover:text-stone-300 transition-colors text-xs"
+                onClick={() => setShowChapterDialog(true)}
+              >
+                {currentChapter ? `Peatükk ${currentChapter.title}` : "Peatükk"}
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Chapter selection dialog */}
+        {showChapterDialog && (
+          <div
+            className="absolute inset-0 z-30 bg-stone-950/80 backdrop-blur-sm flex items-center justify-center px-8"
+            onClick={() => setShowChapterDialog(false)}
+          >
             <div
-              className={`flex items-center gap-1.5 glass border-amber-900/30 text-amber-500 text-xs px-3 py-1.5 rounded-full transition-all duration-300 ${
-                streakJustCompleted ? "streak-celebrate" : ""
-              }`}
+              className="w-full max-w-sm bg-stone-900 border border-stone-800 rounded-2xl p-5 max-h-[70vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Flame size={16} className="text-amber-500" aria-hidden="true" />
-              <span className="tabular-nums">
-                {stats.streak.current} päev{stats.streak.current !== 1 && "a"}
-              </span>
+              <h3
+                className="text-stone-200 text-lg font-semibold mb-4"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                Mine peatükile
+              </h3>
+              <div className="flex flex-col gap-1">
+                {chapters.map((ch) => (
+                  <button
+                    key={ch.index}
+                    className={`text-left px-3 py-2.5 rounded-xl text-sm transition-colors ${
+                      ch.index === curIndex
+                        ? "bg-amber-500/10 text-amber-400"
+                        : "text-stone-400 hover:bg-stone-800 hover:text-stone-200"
+                    }`}
+                    onClick={() => {
+                      needsRecenter.current = true;
+                      setCurIndex(ch.index);
+                      onPositionChangeRef.current?.(ch.index, false);
+                      setShowChapterDialog(false);
+                    }}
+                  >
+                    {ch.title}
+                  </button>
+                ))}
+              </div>
+              <button
+                className="mt-4 w-full text-center text-stone-500 hover:text-stone-300 text-sm transition-colors"
+                onClick={() => setShowChapterDialog(false)}
+              >
+                Sulge
+              </button>
             </div>
           </div>
         )}
@@ -350,58 +445,59 @@ export default function Reader({
         style={{ scrollSnapAlign: "start" }}
       >
         <div className="w-full max-w-xs flex flex-col gap-6">
-          <div>
-            <h2
-              className="text-stone-200 text-lg font-semibold tracking-[0.12em] mb-1"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Mine lõigule
-            </h2>
-            <p className="text-stone-600 text-sm">1 – {chunks.length}</p>
-          </div>
-
-          <input
-            type="number"
-            inputMode="numeric"
-            min={1}
-            max={chunks.length}
-            value={goToValue}
-            onChange={(e) => setGoToValue(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && goToChunk(goToValue)}
-            placeholder="Lõigu number"
-            className="w-full rounded-xl bg-stone-800 text-stone-100 placeholder-stone-600 px-4 py-3 text-lg outline-none focus:ring-2 focus:ring-amber-400 tabular-nums"
-          />
-
-          <button
-            onClick={() => goToChunk(goToValue)}
-            disabled={goToValue === ""}
-            className="w-full py-3 rounded-xl bg-amber-500 text-stone-950 font-semibold hover:bg-amber-400 active:scale-[0.98] transition-all duration-150 disabled:opacity-40 disabled:pointer-events-none"
-          >
-            Mine
-          </button>
           {/* Stats summary */}
           {stats && (
-            <>
-              <h2
-                className="text-stone-200 text-lg font-semibold tracking-[0.12em] mb-1"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
-                Statistika
-              </h2>
+            <div className="mt-6">
               <div className="rounded-2xl bg-stone-950/50 border border-stone-800 p-5">
                 <div className="flex items-baseline justify-between gap-4">
-                  <span className="text-sm font-semibold text-stone-200">Ülevaade</span>
+                  <span className="text-lg font-semibold text-stone-200">Statistika</span>
                   {stats.today.goalMet ? (
                     <span className="text-xs text-amber-400">✓ eesmärk täidetud</span>
                   ) : (
                     <span className="text-xs text-stone-600">
-                      {stats.today.remaining} lõiku eesmärgini
+                      {formatNumber(stats.today.remaining)} lõiku eesmärgini
                     </span>
                   )}
                 </div>
 
                 <table className="w-full text-sm mt-4">
                   <tbody className="divide-y divide-stone-800">
+                    <tr>
+                      <td className="py-3 text-stone-500">Kokku loetud</td>
+                      <td className="py-3 text-right tabular-nums">
+                        <span className="text-stone-200 font-semibold">
+                          {formatNumber(stats.totals.chunksRead)}
+                        </span>{" "}
+                        <span className="text-stone-600">lõiku</span>
+                        <div className="text-stone-600 text-[10px] mt-0.5">
+                          Mis on umbes{" "}
+                          {formatNumber(Math.round((stats.totals.chunksRead * 110) / 1500))}{" "}
+                          raamatulehekülge
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 text-stone-500">Keskmine päevas</td>
+                      <td className="py-3 text-right tabular-nums">
+                        <span className="text-stone-200 font-semibold">
+                          {stats.totals.daysActive > 0
+                            ? formatNumber(
+                                Math.round(stats.totals.chunksRead / stats.totals.daysActive)
+                              )
+                            : 0}
+                        </span>{" "}
+                        <span className="text-stone-600">lõiku</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 text-stone-500">Aktiivseid päevi</td>
+                      <td className="py-3 text-right tabular-nums">
+                        <span className="text-stone-200 font-semibold">
+                          {stats.totals.daysActive}
+                        </span>
+                      </td>
+                    </tr>
+
                     <tr>
                       <td className="py-3 text-stone-500">Järjest</td>
                       <td className="py-3 text-right tabular-nums">
@@ -415,25 +511,10 @@ export default function Reader({
                       <td className="py-3 text-stone-500">Täna loetud</td>
                       <td className="py-3 text-right tabular-nums">
                         <span className="text-stone-200 font-semibold">
-                          {stats.today.chunksScrolled}
+                          {formatNumber(stats.today.chunksScrolled)}
                         </span>
-                        <span className="text-stone-600">/{stats.today.dailyGoal}</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 text-stone-500">Kokku loetud</td>
-                      <td className="py-3 text-right tabular-nums">
-                        <span className="text-stone-200 font-semibold">
-                          {stats.totals.chunksRead}
-                        </span>{" "}
-                        <span className="text-stone-600">lõiku</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 text-stone-500">Aktiivseid päevi</td>
-                      <td className="py-3 text-right tabular-nums">
-                        <span className="text-stone-200 font-semibold">
-                          {stats.totals.daysActive}
+                        <span className="text-stone-600">
+                          /{formatNumber(stats.today.dailyGoal)}
                         </span>
                       </td>
                     </tr>
@@ -454,7 +535,39 @@ export default function Reader({
                   </div>
                 )}
               </div>
-            </>
+            </div>
+          )}
+
+          {ENABLE_GOTO && (
+            <div className="flex flex-col gap-3">
+              <h2
+                className="text-stone-200 text-lg font-semibold tracking-[0.12em] mb-1"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                Mine lõigule
+              </h2>
+              <p className="text-stone-600 text-sm">1 – {formatNumber(chunks.length)}</p>
+
+              <input
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={chunks.length}
+                value={goToValue}
+                onChange={(e) => setGoToValue(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && goToChunk(goToValue)}
+                placeholder="Lõigu number"
+                className="w-full rounded-xl bg-stone-800 text-stone-100 placeholder-stone-600 px-4 py-3 text-lg outline-none focus:ring-2 focus:ring-amber-400 tabular-nums"
+              />
+
+              <button
+                onClick={() => goToChunk(goToValue)}
+                disabled={goToValue === ""}
+                className="w-full py-3 rounded-xl bg-amber-500 text-stone-950 font-semibold hover:bg-amber-400 active:scale-[0.98] transition-all duration-150 disabled:opacity-40 disabled:pointer-events-none"
+              >
+                Mine
+              </button>
+            </div>
           )}
 
           <button
