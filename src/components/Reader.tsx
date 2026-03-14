@@ -72,7 +72,17 @@ export default function Reader({
     const el = containerRef.current;
     if (el) el.scrollTop = prevIndex !== null ? el.clientHeight : 0;
     const hEl = hContainerRef.current;
-    if (hEl) hEl.scrollLeft = hEl.clientWidth;
+    if (hEl) {
+      hEl.scrollLeft = hEl.clientWidth;
+      // Safety net for PWA launch: clientWidth may be 0 before the viewport is
+      // fully set up, leaving the blank back panel visible. Retry in the next
+      // animation frame once layout dimensions are available.
+      requestAnimationFrame(() => {
+        if (hEl.clientWidth > 0 && hEl.scrollLeft === 0) {
+          hEl.scrollLeft = hEl.clientWidth;
+        }
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -377,13 +387,13 @@ export default function Reader({
 
         {/* Chunk position & chapter */}
         {curIndex < chunks.length && (
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center items-center gap-3 pointer-events-none">
+          <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center gap-3 pointer-events-none">
             <span className="text-stone-600 text-xs tabular-nums">
               {formatNumber(curIndex + 1)} / {formatNumber(chunks.length)}
             </span>
             {chapters.length > 0 && (
               <button
-                className="pointer-events-auto text-stone-500 hover:text-stone-300 transition-colors text-xs"
+                className="pointer-events-auto text-stone-500 hover:text-stone-300 transition-colors text-sm"
                 onClick={() => setShowChapterDialog(true)}
               >
                 {currentChapter ? `Peatükk ${currentChapter.title}` : "Peatükk"}
@@ -441,7 +451,7 @@ export default function Reader({
 
       {/* ── Go To panel (swipe right to reveal) ── */}
       <div
-        className="relative h-screen min-w-full flex flex-col items-center bg-stone-900/50 px-8 justify-around"
+        className="relative h-screen min-w-full flex flex-col items-center bg-gradient-to-b from-stone-950 to-stone-900/50 px-8 justify-around"
         style={{ scrollSnapAlign: "start" }}
       >
         <div className="w-full max-w-xs flex flex-col gap-6">
