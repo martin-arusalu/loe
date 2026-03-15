@@ -11,6 +11,8 @@ import { useIsPWA } from "../hooks/isPwa";
 
 export default function LandingScreen() {
   const isPWA = useIsPWA();
+  // const loginAsMainCta = !!isPWA
+  const loginAsMainCta = true; // for now always show login first
 
   return (
     <div className="min-h-screen text-stone-100 flex flex-col relative overflow-hidden">
@@ -64,7 +66,7 @@ export default function LandingScreen() {
             olemasolevaid Eesti klassikuid või lae üles oma raamat.
           </p>
 
-          {isPWA ? (
+          {loginAsMainCta ? (
             <div className="animate-fade-in-up delay-4 flex flex-col items-center">
               <Link
                 to="/login"
