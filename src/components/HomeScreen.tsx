@@ -146,7 +146,7 @@ export default function HomeScreen({
                 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-500 mb-3 px-1"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
-                Raamatukogu
+                Raamaturiiul
               </p>
               <div className="glass rounded-2xl overflow-hidden">
                 {[...library]
