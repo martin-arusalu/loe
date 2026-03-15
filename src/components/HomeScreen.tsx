@@ -90,7 +90,7 @@ export default function HomeScreen({
               <div className="flex-1 flex flex-col items-center justify-center gap-1 py-1">
                 <div className="flex items-baseline gap-1">
                   <span
-                    className="text-2xl font-bold text-gradient-amber tabular-nums leading-none"
+                    className={`text-2xl font-bold ${stats.today.goalMet ? "text-gradient-amber" : "text-stone-500"} tabular-nums leading-none`}
                     style={{ fontFamily: "var(--font-heading)" }}
                   >
                     {stats.streak.current}
