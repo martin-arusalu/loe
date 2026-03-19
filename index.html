@@ -1,18 +1,72 @@
 <!doctype html>
-<html lang="en">
+<html lang="et">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <title>Lauselt</title>
+    <meta name="theme-color" content="#0c0a09" />
+    <meta name="application-name" content="Lauselt" />
+    <meta name="apple-mobile-web-app-title" content="Lauselt" />
+
+    <!-- SEO -->
+    <title>Lauselt — Loe raamatuid väikeste lõikudena</title>
     <meta
       name="description"
-      content="Kasuta väikseid hetki, et lugeda pikki raamatuid. Vähehaaval."
+      content="Loe raamatuid väikeste lõikudena — täpselt nii kiiresti kui ise tahad. Avasta Eesti klassikuid või lae üles oma raamat. Tasuta lugemisrakendus."
     />
+    <link rel="canonical" href="https://lauselt.ee/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lauselt.ee/" />
+    <meta property="og:title" content="Lauselt — Loe raamatuid väikeste lõikudena" />
+    <meta
+      property="og:description"
+      content="Kasuta väikseid hetki, et saada palju loetud. Avasta Eesti klassikuid või lae üles oma raamat."
+    />
+    <meta property="og:image" content="https://lauselt.ee/web-app-manifest-512x512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:site_name" content="Lauselt" />
+    <meta property="og:locale" content="et_EE" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Lauselt — Loe raamatuid väikeste lõikudena" />
+    <meta
+      name="twitter:description"
+      content="Kasuta väikseid hetki, et saada palju loetud. Avasta Eesti klassikuid või lae üles oma raamat."
+    />
+    <meta name="twitter:image" content="https://lauselt.ee/web-app-manifest-512x512.png" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Lauselt",
+        "url": "https://lauselt.ee",
+        "description": "Loe raamatuid väikeste lõikudena — täpselt nii kiiresti kui ise tahad. Avasta Eesti klassikuid või lae üles oma raamat.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript",
+        "inLanguage": "et",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR"
+        },
+        "image": "https://lauselt.ee/web-app-manifest-512x512.png"
+      }
+    </script>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
