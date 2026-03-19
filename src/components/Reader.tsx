@@ -269,24 +269,56 @@ export default function Reader({
       >
         {/* Animated background orbs */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-1/4 left-1/3 w-32 h-32 rounded-full bg-amber-900/8 blur-3xl animate-glow-drift-slow" />
-          <div className="absolute bottom-1/3 right-1/4 w-24 h-24 rounded-full bg-stone-700/10 blur-2xl animate-glow-drift" />
+          <div className="absolute top-1/4 left-1/3 w-40 h-40 rounded-full bg-amber-900/8 blur-3xl animate-glow-drift-slow" />
+          <div className="absolute bottom-1/3 right-1/4 w-28 h-28 rounded-full bg-stone-700/10 blur-2xl animate-glow-drift" />
+          <div
+            className="absolute top-1/2 left-1/2 w-64 h-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-950/6 blur-3xl animate-glow-drift-slow"
+            style={{ animationDelay: "4s" }}
+          />
         </div>
 
-        {/* Animated book pages */}
-        <div className="relative w-16 h-20 back-panel-book">
-          <div className="absolute inset-0 rounded-md bg-stone-800/60 border border-stone-700/30" />
-          <div className="absolute top-1 bottom-1 left-2 right-0 rounded-r-sm back-panel-page back-panel-page-1 bg-stone-800/40 border-r border-stone-700/20" />
-          <div className="absolute top-2 bottom-2 left-4 right-0 rounded-r-sm back-panel-page back-panel-page-2 bg-stone-800/30 border-r border-stone-700/15" />
-          <div className="absolute top-3 bottom-3 left-6 right-0 rounded-r-sm back-panel-page back-panel-page-3 bg-stone-800/20 border-r border-stone-700/10" />
+        {/* Floating particles */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div
+            className="absolute w-1 h-1 rounded-full bg-stone-700 back-panel-particle"
+            style={{ top: "28%", left: "22%", animationDelay: "0s" }}
+          />
+          <div
+            className="absolute w-1 h-1 rounded-full bg-stone-700 back-panel-particle"
+            style={{ top: "62%", left: "75%", animationDelay: "0.7s" }}
+          />
+          <div
+            className="absolute w-0.5 h-0.5 rounded-full bg-amber-800/60 back-panel-particle"
+            style={{ top: "42%", left: "15%", animationDelay: "1.3s" }}
+          />
+          <div
+            className="absolute w-0.5 h-0.5 rounded-full bg-stone-600 back-panel-particle"
+            style={{ top: "75%", left: "55%", animationDelay: "0.4s" }}
+          />
+          <div
+            className="absolute w-1 h-1 rounded-full bg-amber-900/50 back-panel-particle"
+            style={{ top: "18%", left: "65%", animationDelay: "1.8s" }}
+          />
+          <div
+            className="absolute w-0.5 h-0.5 rounded-full bg-stone-700 back-panel-particle"
+            style={{ top: "85%", left: "32%", animationDelay: "0.9s" }}
+          />
         </div>
 
-        {/* Arrow + text */}
-        <div className="relative z-10 flex flex-col items-center gap-2">
-          <div className="flex items-center gap-2 text-stone-600 back-panel-slide">
-            <span className="text-lg">←</span>
-            <span className="text-sm">Avalehele</span>
+        {/* Loading spinner */}
+        <div className="relative z-10 flex flex-col items-center gap-5">
+          {/* Spinning ring with dots inside */}
+          <div className="relative flex items-center justify-center">
+            <div className="back-panel-ring w-14 h-14 rounded-full" />
+            <div className="absolute flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-stone-500 back-panel-dot-1" />
+              <div className="w-1.5 h-1.5 rounded-full bg-stone-500 back-panel-dot-2" />
+              <div className="w-1.5 h-1.5 rounded-full bg-stone-500 back-panel-dot-3" />
+            </div>
           </div>
+          <span className="text-stone-700 text-xs tracking-widest uppercase back-panel-label-shimmer">
+            Laen
+          </span>
         </div>
       </div>
 
@@ -506,7 +538,7 @@ export default function Reader({
                         <span className="text-stone-600">lõiku</span>
                         <div className="text-stone-600 text-[10px] mt-0.5">
                           Mis on umbes{" "}
-                          {formatNumber(Math.round((stats.totals.chunksRead * 110) / 1500))}{" "}
+                          {formatNumber(Math.round((stats.totals.chunksRead * 110) / 1300))}{" "}
                           raamatulehekülge
                         </div>
                       </td>
