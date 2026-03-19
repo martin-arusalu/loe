@@ -263,7 +263,32 @@ export default function Reader({
       style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none" }}
     >
       {/* ── Back panel (swipe left to go home) ── */}
-      <div className="h-screen min-w-full bg-stone-950" style={{ scrollSnapAlign: "start" }} />
+      <div
+        className="h-screen min-w-full bg-stone-950 flex flex-col items-center justify-center gap-6 relative overflow-hidden"
+        style={{ scrollSnapAlign: "start" }}
+      >
+        {/* Animated background orbs */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-1/4 left-1/3 w-32 h-32 rounded-full bg-amber-900/8 blur-3xl animate-glow-drift-slow" />
+          <div className="absolute bottom-1/3 right-1/4 w-24 h-24 rounded-full bg-stone-700/10 blur-2xl animate-glow-drift" />
+        </div>
+
+        {/* Animated book pages */}
+        <div className="relative w-16 h-20 back-panel-book">
+          <div className="absolute inset-0 rounded-md bg-stone-800/60 border border-stone-700/30" />
+          <div className="absolute top-1 bottom-1 left-2 right-0 rounded-r-sm back-panel-page back-panel-page-1 bg-stone-800/40 border-r border-stone-700/20" />
+          <div className="absolute top-2 bottom-2 left-4 right-0 rounded-r-sm back-panel-page back-panel-page-2 bg-stone-800/30 border-r border-stone-700/15" />
+          <div className="absolute top-3 bottom-3 left-6 right-0 rounded-r-sm back-panel-page back-panel-page-3 bg-stone-800/20 border-r border-stone-700/10" />
+        </div>
+
+        {/* Arrow + text */}
+        <div className="relative z-10 flex flex-col items-center gap-2">
+          <div className="flex items-center gap-2 text-stone-600 back-panel-slide">
+            <span className="text-lg">←</span>
+            <span className="text-sm">Avalehele</span>
+          </div>
+        </div>
+      </div>
 
       {/* ── Reader panel ── */}
       <div
@@ -275,7 +300,7 @@ export default function Reader({
           <div className="flex items-center justify-between w-full">
             <button
               onClick={onBack}
-              className="pointer-events-auto text-stone-500 hover:text-stone-300 transition-colors text-sm whitespace-nowrap min-w-0 flex-shrink-0 flex items-center"
+              className="pointer-events-auto text-stone-500 hover:text-stone-300 active:text-stone-100 transition-colors text-sm whitespace-nowrap min-w-0 flex-shrink-0 flex items-center gap-1 hover:-translate-x-0.5 active:translate-x-0 transition-all duration-200"
             >
               ← Tagasi
             </button>
@@ -331,7 +356,7 @@ export default function Reader({
                 style={{ scrollSnapAlign: "center" }}
               >
                 <div className="text-center max-w-sm animate-fade-in-up">
-                  <div className="w-16 h-16 rounded-2xl glass-amber flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 rounded-2xl glass-amber flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
                     <span className="text-2xl">✓</span>
                   </div>
                   <h2

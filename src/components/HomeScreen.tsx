@@ -156,8 +156,9 @@ export default function HomeScreen({
                       key={book.id}
                       onClick={() => onOpenBook(book)}
                       className={`w-full flex items-center justify-between px-5 py-4 text-left
-                        hover:bg-stone-800/30 transition-all duration-200 group
+                        hover:bg-stone-800/30 active:bg-stone-800/50 active:scale-[0.99] transition-all duration-200 group
                         ${i < arr.length - 1 ? "border-b border-stone-800/40" : ""}`}
+                      style={{ animationDelay: `${300 + i * 60}ms` }}
                     >
                       <div className="min-w-0 flex-1">
                         <p className="text-stone-200 text-sm font-medium truncate group-hover:text-stone-50 transition-colors">
@@ -197,7 +198,7 @@ export default function HomeScreen({
           <button
             onClick={onImport}
             className="w-full rounded-2xl border border-dashed border-stone-700/50 px-5 py-4 text-left
-              hover:border-amber-700/30 hover:bg-amber-950/5 transition-all duration-300 group
+              hover:border-amber-700/30 hover:bg-amber-950/5 active:scale-[0.98] transition-all duration-300 group
               animate-fade-in-up delay-3"
           >
             <div className="flex items-center gap-3">

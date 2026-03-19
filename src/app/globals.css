@@ -472,3 +472,96 @@ body {
   height: 0 !important;
   display: none !important;
 }
+
+/* ── Back panel animations ───────────────────────────── */
+
+@keyframes back-panel-page-flutter {
+  0%,
+  100% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(-8deg);
+  }
+}
+
+@keyframes back-panel-slide-hint {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(-6px);
+    opacity: 1;
+  }
+}
+
+.back-panel-book {
+  perspective: 200px;
+}
+
+.back-panel-page {
+  transform-origin: left center;
+}
+
+.back-panel-page-1 {
+  animation: back-panel-page-flutter 3s ease-in-out infinite;
+}
+.back-panel-page-2 {
+  animation: back-panel-page-flutter 3s ease-in-out 0.3s infinite;
+}
+.back-panel-page-3 {
+  animation: back-panel-page-flutter 3s ease-in-out 0.6s infinite;
+}
+
+.back-panel-slide {
+  animation: back-panel-slide-hint 2.5s ease-in-out infinite;
+}
+
+/* ── Chunk reading snap transitions ──────────────────── */
+
+@keyframes chunk-enter {
+  from {
+    opacity: 0.6;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+[style*="scroll-snap-align: center"] > div {
+  animation: chunk-enter 300ms ease-out both;
+}
+
+/* ── Button press feedback ───────────────────────────── */
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 80ms;
+}
+
+/* ── Interactive list item press ─────────────────────── */
+
+button:active {
+  transition-duration: 80ms;
+}
+
+/* ── Smooth focus transitions on glass ───────────────── */
+
+.glass,
+.glass-amber,
+.glass-subtle {
+  transition:
+    border-color 300ms ease,
+    background 300ms ease,
+    box-shadow 300ms ease;
+}
+
+/* ── Landing page demo chunk transition ──────────────── */
+
+.transition-all.duration-400 {
+  transition-duration: 400ms;
+}
