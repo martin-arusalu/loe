@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import HomeScreen from "@/components/HomeScreen";
 import Importer from "@/components/Importer";
+import LoadingScreen from "@/components/LoadingScreen";
 import InstructionsPWA from "@/components/InstructionsPWA";
 import LandingScreen from "@/components/LandingScreen";
 import LoginPage from "@/components/LoginPage";
@@ -345,20 +346,7 @@ function AppInner() {
   let content: ReactNode;
 
   if (loading) {
-    content = (
-      <div className="flex h-screen flex-col items-center justify-center gap-4 bg-[#0c0a09]">
-        <p className="text-stone-600 text-sm tracking-wide">Laen…</p>
-        <div className="flex gap-1.5">
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="h-1.5 w-1.5 rounded-full bg-stone-600 animate-bounce"
-              style={{ animationDelay: `${i * 0.15}s` }}
-            />
-          ))}
-        </div>
-      </div>
-    );
+    content = <LoadingScreen />;
   } else if (state.view === "read") {
     content = (
       <Reader
