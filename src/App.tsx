@@ -378,9 +378,13 @@ function AppInner() {
     );
   }
 
+  const viewKey = loading ? "loading" : state.view;
+
   return (
     <>
-      {content}
+      <div key={viewKey} className="animate-view-enter">
+        {content}
+      </div>
       <Toaster
         theme="dark"
         position="bottom-center"

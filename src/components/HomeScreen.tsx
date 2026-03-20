@@ -37,6 +37,27 @@ export default function HomeScreen({
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         <div className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-[60vw] h-[40vw] max-w-[500px] max-h-[300px] rounded-full bg-amber-900/5 blur-3xl animate-glow-drift-slow" />
         <div className="absolute bottom-[20%] right-[-10%] w-[35vw] h-[35vw] max-w-[300px] max-h-[300px] rounded-full bg-stone-700/5 blur-3xl animate-glow-drift" />
+        {/* Floating particles */}
+        <div
+          className="absolute w-1 h-1 rounded-full bg-stone-700/40 back-panel-particle"
+          style={{ top: "22%", left: "18%", animationDelay: "0s" }}
+        />
+        <div
+          className="absolute w-0.5 h-0.5 rounded-full bg-amber-800/25 back-panel-particle"
+          style={{ top: "48%", left: "80%", animationDelay: "1.2s" }}
+        />
+        <div
+          className="absolute w-1 h-1 rounded-full bg-stone-600/30 back-panel-particle"
+          style={{ top: "65%", left: "12%", animationDelay: "0.6s" }}
+        />
+        <div
+          className="absolute w-0.5 h-0.5 rounded-full bg-stone-700/30 back-panel-particle"
+          style={{ top: "78%", left: "55%", animationDelay: "1.8s" }}
+        />
+        <div
+          className="absolute w-0.5 h-0.5 rounded-full bg-amber-900/20 back-panel-particle"
+          style={{ top: "35%", left: "60%", animationDelay: "2.4s" }}
+        />
       </div>
 
       {/* ── Header ────────────────────────────────────────── */}

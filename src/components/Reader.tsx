@@ -380,8 +380,8 @@ export default function Reader({
 
         {/* Scroll hint on first chunk */}
         {curIndex === 0 && (
-          <div className="absolute bottom-8 left-0 right-0 flex justify-center pointer-events-none">
-            <div className="flex flex-col items-center gap-1 text-stone-600 text-xs animate-bounce">
+          <div className="absolute bottom-28 left-0 right-0 flex justify-center pointer-events-none">
+            <div className="flex flex-col items-center gap-1 text-stone-600 text-xs animate-scroll-hint">
               <span>keri</span>
               <span>↓</span>
             </div>
@@ -410,10 +410,12 @@ export default function Reader({
           <div
             className="absolute inset-0 z-30 bg-stone-950/80 backdrop-blur-sm flex items-center justify-center px-8"
             onClick={() => setShowChapterDialog(false)}
+            style={{ animation: "dialog-backdrop-in 200ms ease-out both" }}
           >
             <div
               className="w-full max-w-sm bg-stone-900 border border-stone-800 rounded-2xl p-5 max-h-[70vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
+              style={{ animation: "dialog-panel-in 250ms cubic-bezier(0.16, 1, 0.3, 1) both" }}
             >
               <h3
                 className="text-stone-200 text-lg font-semibold mb-4"
@@ -457,7 +459,24 @@ export default function Reader({
         className="relative h-screen min-w-full flex flex-col items-center bg-gradient-to-b from-stone-950 to-stone-900/50 px-8 justify-around"
         style={{ scrollSnapAlign: "start" }}
       >
-        <div className="w-full max-w-xs flex flex-col gap-6">
+        {/* Background orbs */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+          <div className="absolute top-[15%] left-[20%] w-32 h-32 rounded-full bg-amber-900/6 blur-3xl animate-glow-drift-slow" />
+          <div className="absolute bottom-[25%] right-[15%] w-24 h-24 rounded-full bg-stone-700/8 blur-2xl animate-glow-drift" />
+          <div
+            className="absolute w-1 h-1 rounded-full bg-stone-700/40 back-panel-particle"
+            style={{ top: "25%", left: "15%", animationDelay: "0s" }}
+          />
+          <div
+            className="absolute w-0.5 h-0.5 rounded-full bg-amber-800/30 back-panel-particle"
+            style={{ top: "60%", left: "80%", animationDelay: "1.2s" }}
+          />
+          <div
+            className="absolute w-0.5 h-0.5 rounded-full bg-stone-600/30 back-panel-particle"
+            style={{ top: "40%", left: "70%", animationDelay: "0.5s" }}
+          />
+        </div>
+        <div className="w-full max-w-xs flex flex-col gap-6 relative">
           {/* Stats summary */}
           {stats && (
             <div className="mt-6">
