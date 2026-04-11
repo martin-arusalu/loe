@@ -5,8 +5,9 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { UserStats } from "@/lib/api";
 import formatNumber from "@/lib/formatNumber";
 import { APP_VERSION } from "@/lib/constants";
-import { Flame } from "lucide-react";
+import { Flame, Volume2, Loader2, Square } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { useTts } from "@/hooks/useTts";
 
 const ENABLE_GOTO = false;
 
@@ -39,6 +40,15 @@ export default function Reader({
   const [streakJustCompleted, setStreakJustCompleted] = useState(false);
   const prevGoalMetRef = useRef<boolean>(stats?.today.goalMet ?? false);
   const [showChapterDialog, setShowChapterDialog] = useState(false);
+
+  const tts = useTts({
+    chunks,
+    onAdvance: (nextIndex) => {
+      needsRecenter.current = true;
+      setCurIndex(nextIndex);
+      onPositionChangeRef.current?.(nextIndex, true);
+    },
+  });
 
   const chapters = useMemo(() => {
     return chunks
@@ -213,6 +223,18 @@ export default function Reader({
     };
   }, [streakJustCompleted]);
 
+  // When curIndex changes: notify the TTS hook so it can continue autoplay or stop.
+  useEffect(() => {
+    tts.onChunkChanged(curIndex);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curIndex]);
+
+  // Cleanup on unmount.
+  useEffect(() => {
+    return () => tts.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Build the 2–3 items that are actually in the DOM.
   const windowItems: { id: string; index: number }[] = [];
   if (prevIndex !== null) {
@@ -254,6 +276,14 @@ export default function Reader({
     const hEl = hContainerRef.current;
     if (!hEl) return;
     hEl.scrollTo({ left: hEl.clientWidth * 2, behavior: "smooth" });
+  };
+
+  const handleTtsClick = () => {
+    if (tts.ttsState === "idle") {
+      tts.play(curIndex);
+    } else {
+      tts.stop();
+    }
   };
 
   return (
@@ -391,6 +421,19 @@ export default function Reader({
         {/* Chunk position & chapter */}
         {curIndex < chunks.length && (
           <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center gap-3 pointer-events-none">
+            <button
+              onClick={handleTtsClick}
+              className="pointer-events-auto text-stone-500 hover:text-stone-300 active:text-stone-100 transition-colors"
+              aria-label={tts.ttsState === "idle" ? "Esita" : "Peata"}
+            >
+              {tts.ttsState === "loading" ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : tts.ttsState === "playing" ? (
+                <Square size={14} />
+              ) : (
+                <Volume2 size={16} />
+              )}
+            </button>
             <span className="text-stone-600 text-xs tabular-nums">
               {formatNumber(curIndex + 1)} / {formatNumber(chunks.length)}
             </span>
