@@ -8,7 +8,6 @@ import { APP_VERSION } from "@/lib/constants";
 import { Flame, Volume2, Loader2, Square, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { useTts } from "@/hooks/useTts";
-import { usePremiumTts } from "@/hooks/usePremiumTts";
 
 const ENABLE_GOTO = false;
 
@@ -53,8 +52,7 @@ export default function Reader({
   };
 
   const standardTts = useTts(ttsOptions);
-  const premiumTts = usePremiumTts(ttsOptions);
-  const tts = usePremium ? premiumTts : standardTts;
+  const tts = standardTts;
 
   const chapters = useMemo(() => {
     return chunks
@@ -239,7 +237,6 @@ export default function Reader({
   useEffect(() => {
     return () => {
       standardTts.stop();
-      premiumTts.stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -297,7 +294,6 @@ export default function Reader({
 
   const handleTogglePremium = () => {
     standardTts.stop();
-    premiumTts.stop();
     setUsePremium((prev) => !prev);
   };
 
