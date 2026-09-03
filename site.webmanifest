@@ -1,0 +1,26 @@
+{
+  "name": "Lauselt — Loe raamatuid väikeste lõikudena",
+  "short_name": "Lauselt",
+  "description": "Loe raamatuid väikeste lõikudena — täpselt nii kiiresti kui ise tahad. Avasta Eesti klassikuid või lae üles oma raamat.",
+  "lang": "et",
+  "start_url": "/",
+  "id": "/",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["books", "education"],
+  "theme_color": "#0c0a09",
+  "background_color": "#0c0a09",
+  "display": "standalone"
+}
