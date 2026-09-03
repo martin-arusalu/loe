@@ -1,6 +1,6 @@
 # Kasutustingimused / Lauselt Terms of Service
 
-Viimati uuendatud / Last updated: 05.03.2026
+Viimati uuendatud / Last updated: 03.09.2026
 
 ---
 
@@ -16,7 +16,7 @@ Kui sa tingimustega ei nõustu, ei tohiks sa rakendust kasutada.
 
 ## 2. Teenuse kirjeldus
 
-Lauselt on lugemisrakendus, mis võimaldab lugeda raamatuid lause kaupa ning jälgida lugemisprogressi.
+Lauselt on lugemisrakendus, mida saab kasutada veebis ning iPhone'i ja iPadi rakendusena. See võimaldab lugeda raamatuid lause kaupa ning jälgida lugemisprogressi.
 
 Kasutajad võivad rakendusse importida oma raamatuid.
 
@@ -84,7 +84,7 @@ Seadusega lubatud ulatuses ei vastuta Lauselt:
 
 Võime peatada või sulgeda kontosid, mis rikuvad neid tingimusi.
 
-Kasutaja võib rakenduse kasutamise igal ajal lõpetada.
+Kasutaja võib teenuse kasutamise igal ajal lõpetada. iPhone'i ja iPadi rakenduses saab konto kustutamise algatada statistika vaatest.
 
 ---
 
@@ -116,7 +116,7 @@ If you do not agree, you should not use the App.
 
 ## 2. Description of Service
 
-Lauselt is a reading application that allows users to read books sentence-by-sentence and track reading progress.
+Lauselt is a reading application available on the web and as an app for iPhone and iPad. It allows users to read books sentence-by-sentence and track reading progress.
 
 Users may import their own books into the app.
 
@@ -184,7 +184,7 @@ To the maximum extent permitted by law, Lauselt is not liable for:
 
 We may suspend or terminate accounts that violate these terms.
 
-Users may stop using the app at any time.
+Users may stop using the Service at any time. In the iPhone and iPad app, account deletion can be started from the statistics view.
 
 ---
 

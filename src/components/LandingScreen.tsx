@@ -11,7 +11,7 @@ import {
   Target,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useIsPWA } from "../hooks/isPwa";
+import { APP_STORE_URL } from "@/lib/constants";
 
 const DEMO_CHUNKS = [
   "Kui Arno isaga koolimajja jõudis, olid tunnid juba alanud.",
@@ -23,7 +23,6 @@ const DEMO_CHUNKS = [
 ];
 
 export default function LandingScreen() {
-  const isPWA = useIsPWA();
   const loginAsMainCta = true;
   const [demoIndex, setDemoIndex] = useState(0);
   const [demoVisible, setDemoVisible] = useState(true);
@@ -65,7 +64,7 @@ export default function LandingScreen() {
           </p>
           <p className="text-stone-500 text-sm sm:text-base max-w-md leading-relaxed mt-3 animate-fade-in-up delay-3">
             Nagu TikTok, aga raamatute jaoks — keri alla ja loe järgmine lõik. Ideaalne
-            bussipeatuses, järjekorras või enne uinumist.
+            bussipeatuses, järjekorras või enne uinumist. Kasuta veebis või iPhone&apos;is ja iPadis.
           </p>
         </header>
 
@@ -91,28 +90,38 @@ export default function LandingScreen() {
         </div>
 
         {/* ── CTA ─────────────────────────────────────── */}
-        <div className="relative z-10 flex flex-col items-center px-6 mt-12 sm:mt-16">
+        <div className="relative z-10 flex flex-col items-center px-6 mt-6 sm:mt-8">
           {loginAsMainCta ? (
             <div className="animate-fade-in-up delay-4 flex flex-col items-center">
+              <a
+                href={APP_STORE_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Download on the App Store"
+                className="inline-flex rounded-[13px] transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-4 focus-visible:ring-offset-stone-900"
+              >
+                <img
+                  src="/download-on-the-app-store.svg"
+                  alt="Download on the App Store"
+                  className="h-[64px] w-auto sm:h-[72px]"
+                />
+              </a>
+
               <Link
                 to="/login"
-                aria-label="Logi sisse ja alusta lugemist"
-                className="btn-primary w-full max-w-xs sm:max-w-sm rounded-2xl
-                           text-stone-900 font-semibold px-8 py-3.5 sm:py-4 text-base sm:text-lg
-                           cursor-pointer text-center"
+                aria-label="Loe Lauseltit veebis"
+                className="mt-4 flex h-14 w-full max-w-sm items-center justify-center rounded-2xl border border-stone-700/70 bg-stone-950 px-6 text-base font-medium text-stone-200 transition-colors hover:border-stone-500 hover:bg-stone-800"
               >
-                Alusta lugemist — tasuta
+                Loe veebis
               </Link>
 
-              <p className="text-stone-500 text-xs sm:text-sm mt-3.5">
-                Konto loomine võtab 5 sekundit.
-              </p>
+              <p className="mt-2 text-xs text-stone-500">Konto loomine võtab 5 sekundit.</p>
 
               <Link
                 to="/kuidas-kasutada"
-                className="mt-4 text-xs sm:text-sm text-amber-400/70 hover:text-amber-300 transition-colors duration-200"
+                className="mt-4 text-xs text-stone-600 transition-colors duration-200 hover:text-stone-400"
               >
-                Kuidas paigaldada rakendusena?
+                Kasuta veebirakendusena
               </Link>
             </div>
           ) : (
@@ -383,7 +392,7 @@ export default function LandingScreen() {
               to="/kuidas-kasutada"
               className="hover:text-stone-300 transition-colors duration-200"
             >
-              Kuidas kasutada rakendusena
+              Veebirakenduse paigaldamine
             </Link>
           </div>
         </footer>

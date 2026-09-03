@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { APP_STORE_URL } from "@/lib/constants";
 
 type PlatformKey =
   | "ios-safari"
@@ -15,8 +16,8 @@ interface PlatformOption {
 }
 
 const PLATFORM_OPTIONS: PlatformOption[] = [
-  { key: "ios-safari", label: "iPhone / iPad – Safari" },
-  { key: "ios-other", label: "iPhone / iPad – muu brauser" },
+  { key: "ios-safari", label: "iPhone / iPad – veebirakendus Safaris" },
+  { key: "ios-other", label: "iPhone / iPad – veebirakendus muus brauseris" },
   { key: "android-chrome", label: "Android – Chrome" },
   { key: "desktop-chrome", label: "Arvuti – Chrome / Edge" },
   { key: "desktop-safari", label: "Arvuti – Safari (Mac)" },
@@ -57,8 +58,7 @@ function Instructions({ platform }: { platform: PlatformKey }) {
           Kinnita nime valik ja vajuta <span className="font-semibold">Add / Lisa</span>.
         </li>
         <li>
-          Nüüd leiad <span className="font-bold">Lauselt</span> oma telefoni avalehelt rakenduste
-          hulgast.
+          Nüüd leiad <span className="font-bold">Lauselt</span> oma telefoni avalehelt.
         </li>
       </ol>
     );
@@ -173,13 +173,31 @@ export default function InstructionsPWA() {
             className="text-lg sm:text-xl font-semibold tracking-[0.12em] text-stone-200 mb-2"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            Paigaldamine
+            Kasuta Lauseltit oma seadmes
           </h1>
           <p className="text-stone-500 text-sm mb-6 leading-relaxed">
-            Lisa Lauselt oma seadme avalehele, et kasutada seda nagu tavalist rakendust.
+            iPhone&apos;is ja iPadis on Lauselt saadaval eraldi rakendusena. Veebirakenduse saad lisada
+            avalehele Androidis või arvutis.
           </p>
 
+          <a
+            href={APP_STORE_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="mb-7 inline-flex rounded-[13px] transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-4 focus-visible:ring-offset-stone-900"
+          >
+            <img
+              src="/download-on-the-app-store.svg"
+              alt="Download on the App Store"
+              className="h-[48px] w-auto"
+            />
+          </a>
+
           <div className="border-t border-stone-700/40 pt-5">
+            <p className="mb-4 text-xs leading-relaxed text-stone-500">
+              Eelistad siiski brauserit? Järgi allolevaid juhiseid, et kasutada Lauseltit
+              veebirakendusena.
+            </p>
             <Instructions platform={selected} />
           </div>
 

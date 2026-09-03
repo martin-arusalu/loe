@@ -238,13 +238,13 @@ export default function HomeScreen({
             </div>
           </button>
 
-          {/* PWA helper */}
+          {/* Web app helper */}
           <div className="flex justify-center pt-2 animate-fade-in delay-5">
             <Link
               to="/kuidas-kasutada"
               className="text-[11px] text-stone-600 hover:text-stone-400 transition-colors duration-200"
             >
-              Kuidas saada Lauselt avalehele?
+              Kasuta Lauseltit veebirakendusena
             </Link>
           </div>
         </div>

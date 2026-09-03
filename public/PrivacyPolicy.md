@@ -1,6 +1,6 @@
 # Privaatsuspoliitika / Lauselt Privacy Policy
 
-Viimati uuendatud / Last updated: 05.03.2026
+Viimati uuendatud / Last updated: 03.09.2026
 
 ---
 
@@ -8,7 +8,7 @@ Viimati uuendatud / Last updated: 05.03.2026
 
 ## 1. Sissejuhatus
 
-Lauselt ("rakendus") austab sinu privaatsust. Käesolev privaatsuspoliitika selgitab, millist teavet kogume, kuidas seda kasutame ja kuidas seda kaitseme.
+Lauselt ("teenus") austab sinu privaatsust. Käesolev privaatsuspoliitika selgitab, millist teavet kogume, kuidas seda kasutame ja kuidas seda kaitseme. Teenust saab kasutada veebirakendusena ning iPhone'i ja iPadi rakendusena.
 
 Rakendus võimaldab kasutajatel lugeda raamatuid lause kaupa ning jälgida lugemise edenemist.
 
@@ -25,7 +25,8 @@ Kogume ainult teenuse toimimiseks vajalikku teavet.
 Konto loomisel võime koguda:
 
 - e-posti aadress
-- autentimise identifikaatorid
+- nimi ja profiilipilt, kui sinu valitud sisselogimisteenus selle meile edastab
+- autentimise identifikaatorid (Google või Apple)
 - põhilised konto seaded
 
 ### Kasutusandmed
@@ -36,6 +37,7 @@ Statistika ja lugemisprogressi jaoks võime salvestada:
 - loetud lausete arv
 - lugemisjärjestuse (streak) andmed
 - kasutuse ajatempleid
+- seadme või brauseri tehnilisi andmeid ning rakenduse kasutussündmusi, näiteks lehevaatamisi ja nupukasutust
 
 ### Tellimuse andmed
 
@@ -47,7 +49,7 @@ Me **ei salvesta makseandmeid**.
 
 ## 3. Kohalik andmete salvestamine
 
-Rakendusse imporditud raamatud salvestatakse **ainult sinu seadmesse**.
+Rakendusse imporditud raamatud salvestatakse **ainult sinu seadmesse**: veebirakenduses sinu brauseri salvestusruumi ning iPhone'i ja iPadi rakenduses seadme kohalikku salvestusruumi.
 
 Raamatute sisu **ei laadita meie serveritesse**.
 
@@ -64,6 +66,7 @@ Kasutame kogutud teavet selleks, et:
 - hoida statistikat ja lugemisjärjestusi
 - hallata tellimusi
 - parandada teenust
+- mõista teenuse kasutust ning leida ja parandada vigu
 
 Me ei müü sinu isikuandmeid.
 
@@ -81,7 +84,7 @@ Siiski ei saa ükski internetiteenus tagada täielikku turvalisust.
 
 Hoiame konto- ja kasutusandmeid seni, kuni sinu konto eksisteerib.
 
-Konto kustutamisel eemaldame või anonüümime sinu andmed mõistliku aja jooksul.
+Konto kustutamisel eemaldame või anonüümime sinu andmed mõistliku aja jooksul. iPhone'i ja iPadi rakenduses saad konto kustutamise algatada rakenduse statistika vaates. Muude andmekaitsepäringute puhul kirjuta meile.
 
 ---
 
@@ -99,11 +102,13 @@ Selliste päringute jaoks võta meiega ühendust.
 
 ## 8. Kolmandad osapooled
 
-Rakendus võib kasutada kolmandate osapoolte teenuseid, näiteks:
+Teenuses kasutatakse järgmisi kolmandate osapoolte teenuseid:
 
-- autentimisteenuseid
-- rakenduste poe maksesüsteeme
-- infrastruktuuri teenuseid
+- **Google** – Google'i kontoga sisselogimine
+- **Apple** – Apple'iga sisselogimine iPhone'i ja iPadi rakenduses ning Apple App Store'i levitus- ja makseteenused
+- **Amplitude** – kasutusanalüütika; veebirakenduses võib see hõlmata seansi taasesitust, et mõista kasutusprobleeme
+- **Sentry** – veateated ja tehniline diagnostika
+- infrastruktuuri- ja majutusteenused
 
 Need teenused võivad töödelda piiratud hulgal andmeid rakenduse toimimiseks.
 
@@ -129,7 +134,7 @@ Email: [info@lauselt.ee](mailto:info@lauselt.ee)
 
 ## 1. Introduction
 
-Lauselt ("the App") respects your privacy. This Privacy Policy explains what information we collect, how we use it, and how we protect it.
+Lauselt ("the Service") respects your privacy. This Privacy Policy explains what information we collect, how we use it, and how we protect it. The Service is available as a web app and as an app for iPhone and iPad.
 
 The app allows users to read books sentence-by-sentence and track reading progress.
 
@@ -146,7 +151,8 @@ We collect limited information necessary to operate the service.
 When you create an account we may collect:
 
 - Email address
-- Authentication identifiers
+- Name and profile image, if provided by the sign-in provider you choose
+- Authentication identifiers (Google or Apple)
 - Basic account settings
 
 ### Usage information
@@ -157,6 +163,7 @@ To provide statistics and progress tracking we may store:
 - Number of sentences read
 - Reading streak data
 - Basic usage timestamps
+- Technical device or browser information and product-usage events, such as page views and interactions
 
 ### Subscription information
 
@@ -168,7 +175,7 @@ We do **not store your payment information**.
 
 ## 3. Local Data Storage
 
-Books you import into Lauselt are stored **only on your device**.
+Books you import into Lauselt are stored **only on your device**: in your browser's local storage when using the web app and in local device storage when using the iPhone or iPad app.
 
 The content of your books is **not uploaded to our servers**.
 
@@ -185,6 +192,7 @@ We use collected information to:
 - Maintain reading statistics and streaks
 - Manage subscriptions
 - Improve the service
+- Understand use of the Service and find and fix errors
 
 We do not sell your personal data.
 
@@ -202,7 +210,7 @@ However, no internet service can guarantee absolute security.
 
 We retain account and usage data as long as your account exists.
 
-If you delete your account, we will delete or anonymize your personal data within a reasonable time.
+If you delete your account, we will delete or anonymize your personal data within a reasonable time. In the iPhone and iPad app, you can start account deletion from the statistics view. Contact us for other privacy requests.
 
 ---
 
@@ -220,11 +228,13 @@ To make such requests please contact us.
 
 ## 8. Third-Party Services
 
-The app may rely on third-party services such as:
+The Service uses the following third-party services:
 
-- Authentication providers
-- App store payment systems
-- Infrastructure providers
+- **Google** – sign-in with a Google account
+- **Apple** – Sign in with Apple in the iPhone and iPad app, and Apple App Store distribution and payment services
+- **Amplitude** – product analytics; the web app may use session replay to understand usability problems
+- **Sentry** – error reporting and technical diagnostics
+- Infrastructure and hosting providers
 
 These services may process limited data necessary for the operation of the app.
 

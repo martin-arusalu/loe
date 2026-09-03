@@ -7,7 +7,7 @@ const eslintConfig = defineConfig([
   js.configs.recommended,
   ...tseslint.configs.recommended,
   prettier,
-  globalIgnores(["dist/**"]),
+  globalIgnores(["dist/**", "mobile/**"]),
 ]);
 
 export default eslintConfig;

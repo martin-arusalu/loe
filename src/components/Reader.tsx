@@ -5,9 +5,10 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { UserStats } from "@/lib/api";
 import formatNumber from "@/lib/formatNumber";
 import { APP_VERSION } from "@/lib/constants";
-import { Flame, Volume2, Loader2, Square } from "lucide-react";
+import { Flame, Volume2, Loader2, Square, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { useTts } from "@/hooks/useTts";
+import { usePremiumTts } from "@/hooks/usePremiumTts";
 
 const ENABLE_GOTO = false;
 
@@ -40,15 +41,20 @@ export default function Reader({
   const [streakJustCompleted, setStreakJustCompleted] = useState(false);
   const prevGoalMetRef = useRef<boolean>(stats?.today.goalMet ?? false);
   const [showChapterDialog, setShowChapterDialog] = useState(false);
+  const [usePremium, setUsePremium] = useState(false);
 
-  const tts = useTts({
+  const ttsOptions = {
     chunks,
-    onAdvance: (nextIndex) => {
+    onAdvance: (nextIndex: number) => {
       needsRecenter.current = true;
       setCurIndex(nextIndex);
       onPositionChangeRef.current?.(nextIndex, true);
     },
-  });
+  };
+
+  const standardTts = useTts(ttsOptions);
+  const premiumTts = usePremiumTts(ttsOptions);
+  const tts = usePremium ? premiumTts : standardTts;
 
   const chapters = useMemo(() => {
     return chunks
@@ -231,7 +237,10 @@ export default function Reader({
 
   // Cleanup on unmount.
   useEffect(() => {
-    return () => tts.stop();
+    return () => {
+      standardTts.stop();
+      premiumTts.stop();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -284,6 +293,12 @@ export default function Reader({
     } else {
       tts.stop();
     }
+  };
+
+  const handleTogglePremium = () => {
+    standardTts.stop();
+    premiumTts.stop();
+    setUsePremium((prev) => !prev);
   };
 
   return (
@@ -421,6 +436,18 @@ export default function Reader({
         {/* Chunk position & chapter */}
         {curIndex < chunks.length && (
           <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center gap-3 pointer-events-none">
+            <button
+              onClick={handleTogglePremium}
+              className={`pointer-events-auto transition-colors ${
+                usePremium
+                  ? "text-amber-400 hover:text-amber-300"
+                  : "text-stone-600 hover:text-stone-400"
+              }`}
+              aria-label={usePremium ? "Lülita tavaline hääl" : "Lülita premium hääl"}
+              title={usePremium ? "Premium hääl" : "Tavaline hääl"}
+            >
+              <Sparkles size={14} />
+            </button>
             <button
               onClick={handleTtsClick}
               className="pointer-events-auto text-stone-500 hover:text-stone-300 active:text-stone-100 transition-colors"

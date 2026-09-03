@@ -1,0 +1,100 @@
+{
+  "expo": {
+    "name": "Lauselt",
+    "slug": "lauselt",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "lauselt",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0c0a09"
+    },
+    "backgroundColor": "#0c0a09",
+    "primaryColor": "#f59e0b",
+    "locales": {
+      "et": "./assets/locales/et.json"
+    },
+    "ios": {
+      "bundleIdentifier": "ee.lauselt.app",
+      "appleTeamId": "X3CCAXG289",
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ],
+        "CFBundleLocalizations": [
+          "et",
+          "en"
+        ],
+        "CFBundleDevelopmentRegion": "et",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "ee.lauselt.app",
+      "versionCode": 1,
+      "edgeToEdgeEnabled": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0c0a09"
+      },
+      "permissions": [
+        "INTERNET",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "./plugins/withModularHeaders",
+      "expo-secure-store",
+      "expo-font",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.382553774833-2bncmgdr4e85pikfrn68rtndv8fglrum"
+        }
+      ],
+      "expo-apple-authentication",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0c0a09",
+          "image": "./assets/splash.png",
+          "imageWidth": 160
+        }
+      ],
+      "expo-asset"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "apiBaseUrl": "https://api.lauselt.ee",
+      "googleWebClientId": "382553774833-b3673gncnf51ha3td8s2t8j90kipd4ao.apps.googleusercontent.com",
+      "googleIosClientId": "382553774833-2bncmgdr4e85pikfrn68rtndv8fglrum.apps.googleusercontent.com",
+      "googleIosReversedClientId": "com.googleusercontent.apps.382553774833-2bncmgdr4e85pikfrn68rtndv8fglrum",
+      "router": {},
+      "eas": {
+        "projectId": "05c0bccd-e485-4797-865b-cb98aa2d656b"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "owner": "martin.arusalu"
+  }
+}
