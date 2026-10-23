@@ -5,7 +5,7 @@ export const APP_VERSION = appJson.expo.version;
 
 const extra = (Constants.expoConfig?.extra ?? {}) as Record<string, string>;
 
-export const API_BASE = extra.apiBaseUrl ?? "https://api.lauselt.ee";
+export const API_BASE = extra.apiBaseUrl ?? "https://ecbclpveckdnggldalfy.supabase.co/functions/v1/api";
 export const GOOGLE_WEB_CLIENT_ID = extra.googleWebClientId ?? "";
 export const GOOGLE_IOS_CLIENT_ID = extra.googleIosClientId ?? "";
 
